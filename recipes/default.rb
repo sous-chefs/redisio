@@ -25,7 +25,7 @@ when 'debian','ubuntu'
     end
   end
 when 'redhat','centos','fedora','scientific','suse','amazon'
-  %w[make automake gcc].each do |pkg|
+  %w[tar make automake gcc].each do |pkg|
     package pkg do
       action :install
       end
