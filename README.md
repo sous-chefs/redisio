@@ -33,7 +33,7 @@ stop, or restart the redis service based on certain conditions.
 
 If all you are interested in is having redis started and running as well as set to run in the default run levels, I suggest just using the install recipe followed by the enable recipe and not using the LWRP directly.
 
-I have provided a disable recipe as well which will stop redis and remove it from the defaults run levels.  There is also an uninstall LWRP, which will remove the redis binaries and optionally the init scripts and configuration files. It will NOT delete the redis data files files or the data files, that will have to be done manually.  I have provided for example and use, a redis uninstall recipe which will disable the service, remove the binaries, init scripts, and configuration files for all redis instances listed in the redisio['servers'] array.
+I have provided a disable recipe as well which will stop redis and remove it from the defaults run levels.  There is also an uninstall LWRP, which will remove the redis binaries and optionally the init scripts and configuration files. It will NOT delete the redis data files files, that will have to be done manually.  I have provided for example and use, a redis uninstall recipe which will disable the service, remove the binaries, init scripts, and configuration files for all redis instances listed in the redisio['servers'] array.
 
 It is important to note that changing the configuration options of redis does not make them take effect on the next chef run.  Due to how redis works, you cannot reload a configuration without restarting the redis service.  If you make a configuration change and you want it to take effect, you can either use the service LWRP to issue a restart to the servers you want via a cookbook you write, or you can use knife ssh to restart the redis service on the servers you want to change configuration on.
 
@@ -108,7 +108,7 @@ in the resources/providers section
 install resource
 ----------------
 
-It is important to note that this call has certain expectations for example, it expects the redis package to be in the format `redis-<version>.tar.gz'.  The servers resource expects an array of hashes where each hash is required to contain at a key-value pair of 'port' => '<port numbers'.
+It is important to note that this call has certain expectations for example, it expects the redis package to be in the format `redis-VERSION.tar.gz'.  The servers resource expects an array of hashes where each hash is required to contain at a key-value pair of 'port' => '<port numbers'.
 
 redisio_install "redis-servers" do
   version '2.4.10' 
@@ -271,10 +271,11 @@ end
 License and Author
 ==================
 
-Author:: [Brian Bianco][geekbri] (<brian.bianco@gmail.com>)
+Author:: [Brian Bianco] (<brian.bianco@gmail.com>)
 Author_Website:: http://www.brianbianco.com 
+IRC:: geekbri
 
-Copyright 2010, Brian Bianco
+Copyright 2012, Brian Bianco
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
