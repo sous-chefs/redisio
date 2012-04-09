@@ -24,12 +24,11 @@ when 'debian','ubuntu'
       action :install
     end
   end
-when 'redhat','centos','fedora'
+when 'redhat','centos','fedora','scientific','suse','amazon'
   %w[make automake gcc].each do |pkg|
     package pkg do
       action :install
       end
   end
 end
-
 
