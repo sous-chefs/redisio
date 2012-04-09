@@ -9,8 +9,8 @@ version          '1.0.0'
   supports os
 end
 
-recipe "rvm", "This recipe is used to install the prequisites for building and installing redis, as well as provides the LWRPs"
-recipe "rvm::install", "This recipe is used to install redis and create the configuration files and init scripts"
-recipe "rvm::uninstall", "This recipe is used to uninstall the redis binaries as well as optionally the configuration files and init scripts"
-recipe "rvm::enable", "This recipe is used to start the redis instances and enable them in the default run levels"
-recipe "rvm::disable", "this recipe is used to stop the redis instances and disable them in the default run levels"
+recipe "redisio", "This recipe is used to install the prequisites for building and installing redis, as well as provides the LWRPs"
+recipe "redisio::install", "This recipe is used to install redis and create the configuration files and init scripts"
+recipe "redisio::uninstall", "This recipe is used to uninstall the redis binaries as well as optionally the configuration files and init scripts"
+recipe "redisio::enable", "This recipe is used to start the redis instances and enable them in the default run levels"
+recipe "redisio::disable", "this recipe is used to stop the redis instances and disable them in the default run levels"
