@@ -2,7 +2,7 @@
 # Cookbook Name:: redisio
 # Provider::uninstall
 #
-# Copyright 2012, Brian Bianco <brian.bianco@gmail.com> 
+# Copyright 2012, Brian Bianco <brian.bianco@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,12 +20,12 @@
 action :run do
     #remove redis binaries
     execute "rm -rf /usr/local/bin/redis*" if ::File.exists?("/usr/local/bin/redis-server")
-       
+
     #remove configuration file and init script for servers provided
     unless new_resource.servers.nil?
       new_resource.servers.each do |server|
-        execute "rm -rf /etc/redis/#{server['port']}.conf" if ::File.exists?("/etc/redis/#{server['port']}.conf") 
-        execute "rm -rf /etc/init.d/redis#{server['port']}" if ::File.exists?("/etc/init.d/redis#{server['port']}") 
+        execute "rm -rf /etc/redis/#{server['port']}.conf" if ::File.exists?("/etc/redis/#{server['port']}.conf")
+        execute "rm -rf /etc/init.d/redis#{server['port']}" if ::File.exists?("/etc/init.d/redis#{server['port']}")
       end
     end
 end

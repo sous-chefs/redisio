@@ -2,7 +2,7 @@
 # Cookbook Name:: redisio
 # Provider::install
 #
-# Copyright 2012, Brian Bianco <brian.bianco@gmail.com> 
+# Copyright 2012, Brian Bianco <brian.bianco@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 #
 
 action :run do
-  @tarball = "#{new_resource.base_name}#{new_resource.version}.#{new_resource.artifact_type}" 
+  @tarball = "#{new_resource.base_name}#{new_resource.version}.#{new_resource.artifact_type}"
 
   unless version == new_resource.version
     Chef::Log.info("Installing Redis #{new_resource.version} from source")
@@ -27,16 +27,16 @@ action :run do
     build
     install
   end
-  configure  
+  configure
 end
 
 def version
   redis_exists = Chef::ShellOut.new("which redis-server")
   redis_exists.run_command
-  if redis_exists.exitstatus == 0 
+  if redis_exists.exitstatus == 0
     redis_version = Chef::ShellOut.new("redis-server -v | cut -d ' ' -f 4")
     redis_version.run_command
-    return redis_version.stdout.gsub("\n",'') 
+    return redis_version.stdout.gsub("\n",'')
   end
   false
 end
@@ -53,8 +53,8 @@ def unpack
     when "tar.gz",".tgz"
       execute "cd #{new_resource.download_dir} && tar zxf #{@tarball}"
     else
-      raise Chef::Exceptions::UnsupportedAction, "Current package type #{new_resource.artifact_type} is unsupported" 
-  end 
+      raise Chef::Exceptions::UnsupportedAction, "Current package type #{new_resource.artifact_type} is unsupported"
+  end
 end
 
 def build
@@ -75,17 +75,17 @@ def configure
 
     #Merge the configuration defaults with the provided array of configurations provided
     current = current_defaults_hash.merge(current_instance_hash)
-    
+
     #Create the owner of the redis data directory
     user current['user'] do
       comment "Redis service account"
       supports :manage_home => true
       home current['homedir']
       shell current['shell']
-    end  
+    end
     #Create the redis configuration directory
     directory current['configdir'] do
-      owner 'root' 
+      owner 'root'
       group 'root'
       mode "0755"
       action :create
@@ -129,7 +129,7 @@ def configure
       variables({
         :port => current['port']
       })
-    end     
+    end
 
   end
 end

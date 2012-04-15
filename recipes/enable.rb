@@ -1,8 +1,8 @@
 #
 # Cookbook Name:: redisio
-# Recipe:: enable 
+# Recipe:: enable
 #
-# Copyright 2012, Brian Bianco <brian.bianco@gmail.com> 
+# Copyright 2012, Brian Bianco <brian.bianco@gmail.com>
 #
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
