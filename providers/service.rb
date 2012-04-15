@@ -1,8 +1,8 @@
 #
 # Cookbook Name:: redisio
-# Provider::service 
+# Provider::service
 #
-# Copyright 2012, Brian Bianco <brian.bianco@gmail.com> 
+# Copyright 2012, Brian Bianco <brian.bianco@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 action :start do
   case node.platform
   when 'ubuntu','debian','centos','redhat','fedora'
-    if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")  
+    if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
       execute "/etc/init.d/redis#{new_resource.server_port} start"
     else
       Chef::Log.warn("Cannot start service, init script does not exist")
@@ -31,7 +31,7 @@ end
 action :stop do
   case node.platform
   when 'ubuntu','debian','centos','redhat','fedora'
-    if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")  
+    if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
       execute "/etc/init.d/redis#{new_resource.server_port} stop"
     else
       Chef::Log.warn("Cannot stop service, init script does not exist")
@@ -42,7 +42,7 @@ end
 action :restart do
   case node.platform
   when 'ubuntu','debian','centos','redhat','fedora'
-    if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")  
+    if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
       execute "/etc/init.d/redis#{new_resource.server_port} stop && /etc/init.d/redis#{new_resource.server_port} start"
     else
       Chef::Log.warn("Cannot restart service, init script does not exist")
@@ -53,13 +53,13 @@ end
 action :enable do
   case node.platform
   when 'ubuntu','debian'
-    if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}") 
-      execute "update-rc.d redis#{new_resource.server_port} start 91 2 3 4 5 . stop 91 0 1 6 ." 
+    if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
+      execute "update-rc.d redis#{new_resource.server_port} start 91 2 3 4 5 . stop 91 0 1 6 ."
     else
       Chef::Log.warn("Cannot enable service, init script does not exist")
     end
   when 'redhat','centos','fedora','scientific','amazon','suse'
-    if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}") 
+    if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
       execute "chkconfig --add redis#{new_resource.server_port} && chkconfig --level 2345 redis#{new_resource.server_port} on"
     else
       Chef::Log.warn("Cannot enable service, init script does not exist")
@@ -70,15 +70,15 @@ end
 action :disable do
   case node.platform
   when 'ubuntu','debian'
-    if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}") 
-      execute "update-rc.d -f redis#{new_resource.server_port} remove" 
+    if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
+      execute "update-rc.d -f redis#{new_resource.server_port} remove"
     else
       Chef::Log.warn("Cannot disable service, init script does not exist")
     end
 
   when 'redhat','centos','fedora','scientific','amazon','suse'
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
-      execute "chkconfig --level 2345 redis#{new_resource.server_port} off && chkconfig --del redis#{new_resource.server_port}"  
+      execute "chkconfig --level 2345 redis#{new_resource.server_port} off && chkconfig --del redis#{new_resource.server_port}"
     else
       Chef::Log.warn("Cannot disable service, init script does not exist")
     end

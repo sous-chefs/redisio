@@ -2,7 +2,7 @@
 # Cookbook Name:: redisio
 # Recipe:: install
 #
-# Copyright 2012, Brian Bianco <brian.bianco@gmail.com> 
+# Copyright 2012, Brian Bianco <brian.bianco@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ redis = node['redisio']
 location = "#{redis['mirror']}/#{redis['base_name']}#{redis['version']}.#{redis['artifact_type']}"
 
 redisio_install "redis-servers" do
-  version redis['version'] 
-  download_url location 
-  default_settings redis['default_settings'] 
+  version redis['version']
+  download_url location
+  default_settings redis['default_settings']
   servers redis['servers']
 end

@@ -1,14 +1,14 @@
 Description
 ===========
 
-Website:: https://github.com/brianbianco/redisio 
+Website:: https://github.com/brianbianco/redisio
 
 Installs and configures Redis server instances
 
 Requirements
 ============
 
-This cookbook builds redis from source, so it should work on any architecture for the supported distributions.  Init scripts are installed into /etc/init.d/  
+This cookbook builds redis from source, so it should work on any architecture for the supported distributions.  Init scripts are installed into /etc/init.d/
 
 Platforms
 ---------
@@ -29,7 +29,7 @@ Usage
 
 The redisio cookbook has 3 LWRP's and 4 recipes.  For most use cases it isn't necessary to use the "install" LWRP and you should use the install recipe unless
 you have a good understanding of the required fields for the install LWRP.  The service LWRP can be more useful if you have situations where you want to start,
-stop, or restart the redis service based on certain conditions.  
+stop, or restart the redis service based on certain conditions.
 
 If all you are interested in is having redis started and running as well as set to run in the default run levels, I suggest just using the install recipe followed by the enable recipe and not using the LWRP directly.
 
@@ -42,16 +42,18 @@ Role File Examples
 
 Install redis and setup an instance with default settings on default port, and start the service through a role file
 
+```ruby
 run_list *%w[
   recipe[redisio::install]
   recipe[redisio::enable]
 ]
 
-default_attributes({
-})
+default_attributes({})
+```
 
 Install redis and setup two instances on the same server, on different ports, with one slaved to the other through a role file
 
+```ruby
 run_list *%w[
   recipe[redisio::install]
   recipe[redisio::enable]
@@ -60,14 +62,16 @@ run_list *%w[
 default_attributes({
   'redisio' => {
     'servers' => [
-                  {'port' => '6379'},
-                  { 'port' => '6380', 'slaveof' => { 'address' => '127.0.0.1', 'port' => '6379'}}  
-                 ]  
-  }  
+      {'port' => '6379'},
+      {'port' => '6380', 'slaveof' => { 'address' => '127.0.0.1', 'port' => '6379' }}
+    ]
+  }
 })
+```
 
 Install redis and setup two instances, on the same server, on different ports, with the data directory changed to /mnt/redis
 
+```ruby
 run_list *%w[
   recipe[redisio::install]
   recipe[redisio::enable]
@@ -75,13 +79,15 @@ run_list *%w[
 
 default_attributes({
   'redisio' => {
-    'default_settings' => {'datadir' => '/mnt/redis'}
-    'servers' => [{'port' => '6379'},{'port' => '6380'}]  
-  }  
+    'default_settings' => {'datadir' => '/mnt/redis'},
+    'servers' => [{'port' => '6379'}, {'port' => '6380'}]
+  }
 })
+```
 
 Install redis and setup three instances on the same server, changing the default data directory to /mnt/redis, each instance will use a different backup type, and one instance will use a different data dir
 
+```ruby
 run_list *%w[
   recipe[redisio::install]
   recipe[redisio::enable]
@@ -91,12 +97,13 @@ default_attributes({
   'redisio' => {
     'default_settings' => { 'datadir' => '/mnt/redis/'},
     'servers' => [
-                  {'port' => '6379','backuptype' => 'aof'},
-                  {'port' => '6380','backuptype' => 'both'}
-                  {'port' => '6381','backuptype' => 'rdb', 'datadir' => '/mnt/redis6381' }
-                 ]
+      {'port' => '6379','backuptype' => 'aof'},
+      {'port' => '6380','backuptype' => 'both'}
+      {'port' => '6381','backuptype' => 'rdb', 'datadir' => '/mnt/redis6381'}
+    ]
   }
 })
+```
 
 
 LWRP Examples
@@ -110,12 +117,14 @@ install resource
 
 It is important to note that this call has certain expectations for example, it expects the redis package to be in the format `redis-VERSION.tar.gz'.  The servers resource expects an array of hashes where each hash is required to contain at a key-value pair of 'port' => '<port numbers'.
 
+```ruby
 redisio_install "redis-servers" do
-  version '2.4.10' 
-  download_url 'http://redis.googlecode.com/files/redis-2.4.10.tar.gz' 
-  default_settings node['redisio']['default_settings']  
+  version '2.4.10'
+  download_url 'http://redis.googlecode.com/files/redis-2.4.10.tar.gz'
+  default_settings node['redisio']['default_settings']
   servers node['redisio']['servers']
 end
+```
 
 uninstall resource
 ------------------
@@ -125,17 +134,20 @@ I generally don't recommend using this LWRP or recipe at all, but in the event y
 
 This will only remove the redis binary files if they exist, nothing else.
 
+```ruby
 redisio_uninstall "redis-servers" do
   action :run
 end
+```
 
+This will remove the redis binaries, as well as the init script and configuration files for the specified server. This will not remove any data files
 
-This will remove the redis binaries, as well as the init script and configuration files for the specified server. This will not remove any data files 
-
+```ruby
 redisio_uninstall "redis-servers" do
   servers [{'port' => '6379'}]
   action :run
 end
+```
 
 service resource
 ----------------
@@ -144,22 +156,27 @@ This LWRP provides the ability to stop, start, restart, disable and enable the r
 
 Start and add to default runlevels the instance running on port 6379
 
+```ruby
 redisio_service "6379" do
   action [:start,:enable]
 end
+```
 
 Stop and remove from default runlevels the instance running on port 6379
 
+```ruby
 redisio_service "6379" do
   action [:stop,:disable]
 end
+```
 
 Restart the instance running on port 6380
 
+```ruby
 redisio_service "6380" do
   action [:restart]
 end
-
+```
 
 Attributes
 ==========
@@ -176,26 +193,29 @@ Default settings is a hash of default settings to be applied to to all instance.
 * `redisio['default_settings']` - { 'redis-option' => 'option setting' }
 
 Available options and their defaults
- 'user'            => 'redis' - the user to own the redis datadir
- 'group'           => 'redis' - the group to own the redis datadir
- 'homedir'         => '/var/lib/redis' - the homedirectory of the user 
- 'shell'           => Varies on distribution, check attributes file 
- 'configdir'       => '/etc/redis' - config directory
- 'homedir'         => '/var/lib/redis', - home directory for the user
- 'address'         => nil,
- 'backuptype'      => 'rdb',
- 'datadir'         => '/var/lib/redis',
- 'timeout'         => '0', 
- 'loglevel'        => 'verbose',
- 'save'            => ['900 1','300 10','60 10000'],
- 'slaveof'         => nil,
- 'masterauth'      => nil,
- 'requirepass'     => nil,
- 'maxclients'      => '0',
- 'maxmemory'       => nil,
- 'maxmemorypolicy' => 'volatile-lru',
- 'appendfsync'     => 'everysec',
- 'includes'        => nil
+
+```
+'user'            => 'redis' - the user to own the redis datadir
+'group'           => 'redis' - the group to own the redis datadir
+'homedir'         => '/var/lib/redis' - the homedirectory of the user
+'shell'           => Varies on distribution, check attributes file
+'configdir'       => '/etc/redis' - config directory
+'homedir'         => '/var/lib/redis', - home directory for the user
+'address'         => nil,
+'backuptype'      => 'rdb',
+'datadir'         => '/var/lib/redis',
+'timeout'         => '0',
+'loglevel'        => 'verbose',
+'save'            => ['900 1','300 10','60 10000'],
+'slaveof'         => nil,
+'masterauth'      => nil,
+'requirepass'     => nil,
+'maxclients'      => '0',
+'maxmemory'       => nil,
+'maxmemorypolicy' => 'volatile-lru',
+'appendfsync'     => 'everysec',
+'includes'        => nil
+```
 
 * `redisio['servers']` - An array where each item is a set of key value pairs for redis instance specific settings.  The only required option is 'port'.  These settings will override the options in 'default_settings', default is set to [{'port' => '6379'}]
 
@@ -230,9 +250,11 @@ package file should be in the format <base_name><version_number>.<artifact_type>
 
 package file after extraction should be inside of the directory <base_name><version_number>
 
+```ruby
 install "redis" do
   action [:run,:nothing]
 end
+```
 
 `uninstall`
 ----------
@@ -244,17 +266,19 @@ Actions:
 
 Attribute Parameters
 
-* `servers` - an array of hashes containing the port number of instances to remove along with the binarires.  (it is fine to pass in the same hash you used to install, even if there are additional 
+* `servers` - an array of hashes containing the port number of instances to remove along with the binarires.  (it is fine to pass in the same hash you used to install, even if there are additional
               only the port is used)
 
+```ruby
 uninstall "redis" do
   action [:run,:nothing]
 end
+```
 
 `service`
 ---------
 
-Actions: 
+Actions:
 
 * `start`
 * `stop`
@@ -264,15 +288,17 @@ Actions:
 
 The name of the service must be the port that the redis server you want to perform the action on is identified by
 
+```ruby
 service "redis_port" do
   action [:start,:stop,:restart,:enable,:disable]
 end
+```
 
 License and Author
 ==================
 
 Author:: [Brian Bianco] (<brian.bianco@gmail.com>)
-Author_Website:: http://www.brianbianco.com 
+Author\_Website:: http://www.brianbianco.com
 IRC:: geekbri
 
 Copyright 2012, Brian Bianco
