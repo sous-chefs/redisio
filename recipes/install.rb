@@ -26,4 +26,5 @@ redisio_install "redis-servers" do
   download_url location
   default_settings redis['default_settings']
   servers redis['servers']
+  safe_install redis['safe_install']
 end

@@ -32,6 +32,9 @@ else
   homedir = '/redis'
 end
 
+#Install related attributes
+default['redisio']['safe_install'] = true
+
 #Tarball and download related defaults
 default['redisio']['mirror'] = "https://redis.googlecode.com/files"
 default['redisio']['base_name'] = 'redis-'

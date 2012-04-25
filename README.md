@@ -37,6 +37,8 @@ I have provided a disable recipe as well which will stop redis and remove it fro
 
 It is important to note that changing the configuration options of redis does not make them take effect on the next chef run.  Due to how redis works, you cannot reload a configuration without restarting the redis service.  If you make a configuration change and you want it to take effect, you can either use the service LWRP to issue a restart to the servers you want via a cookbook you write, or you can use knife ssh to restart the redis service on the servers you want to change configuration on.
 
+The cookbook also contains a recipe to allow for the installation of the redis ruby 
+
 Role File Examples
 ------------------
 
@@ -105,6 +107,38 @@ default_attributes({
 })
 ```
 
+Install redis 2.4.11 (higher than the default version of 2.4.10) and turn safe install off, for the event where redis is already installed.  This will use the default settings.  Keep in mind the redis version will
+not actually be updated until you restart the service (either through the LWRP or manually).
+
+```ruby
+run_list *%w[
+  recipe[redisio::install]
+  recipe[redisio::enable]
+]
+
+default_attributes({
+  'redisio' => {
+    'safe_install' => false,
+    'version'      => '2.4.11'
+  }
+})
+```
+
+Install version 2.2.2 of the redis ruby gem, if you don't list the version, it will simply install the latest available.
+
+```ruby
+run_list *%w[
+  recipe[redisio::redis_gem]
+]
+
+default_attributes({
+  'redisio' => {
+    'gem' => {
+      'version' => '2.2.2'
+    }
+  }
+})
+```
 
 LWRP Examples
 -------------
@@ -115,7 +149,7 @@ in the resources/providers section
 install resource
 ----------------
 
-It is important to note that this call has certain expectations for example, it expects the redis package to be in the format `redis-VERSION.tar.gz'.  The servers resource expects an array of hashes where each hash is required to contain at a key-value pair of 'port' => '<port numbers'.
+It is important to note that this call has certain expectations for example, it expects the redis package to be in the format `redis-VERSION.tar.gz'.  The servers resource expects an array of hashes where each hash is required to contain at a key-value pair of 'port' => '<port numbers>'.
 
 ```ruby
 redisio_install "redis-servers" do
@@ -123,6 +157,7 @@ redisio_install "redis-servers" do
   download_url 'http://redis.googlecode.com/files/redis-2.4.10.tar.gz'
   default_settings node['redisio']['default_settings']
   servers node['redisio']['servers']
+  safe_install false
 end
 ```
 
@@ -187,6 +222,7 @@ Configuration options, each option corresponds to the same-named configuration o
 * `redisio['base_name']` - the base name of the redis package to be downloaded (the part before the version), default is 'redis-'
 * `redisio['artifact_type']` - the file extension of the package.  currently only .tar.gz and .tgz are supported, default is 'tar.gz'
 * `redisio['version']` - the version number of redis to install (also appended to the `base_name` for downloading), default is '2.4.10'
+* `redisio['safe_install'] - prevents redis from installing itself if another version of redis is installed, default is true
 
 Default settings is a hash of default settings to be applied to to all instance.  These can be overridden in for each individual server in the servers attribute.
 
@@ -219,6 +255,11 @@ Available options and their defaults
 
 * `redisio['servers']` - An array where each item is a set of key value pairs for redis instance specific settings.  The only required option is 'port'.  These settings will override the options in 'default_settings', default is set to [{'port' => '6379'}]
 
+The redis_gem recipe  will also allow you to install the redis ruby gem, these are attributes related to that, and are in the redis_gem attributes file.
+
+* `redisio['gem']['name']` - the name of the gem to install, defaults to 'redis'  
+* `redisio['gem']['version']` -  the version of the gem to install.  if it is nil, the latest available version will be installed.
+
 Resources/Providers
 ===================
 
@@ -243,6 +284,7 @@ Attribute Parameters
 * `group` - the group to own the redis files
 * `default_settings` - a hash of the default redis server settings
 * `servers` - an array of hashes containing server configurations overrides (port is the only required)
+* `safe_install` - a true or false value which determines if a version of redis will be installed if one already exists, defaults to true
 
 This resource expects the following naming conventions:
 

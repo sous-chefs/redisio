@@ -20,7 +20,7 @@
 action :run do
   @tarball = "#{new_resource.base_name}#{new_resource.version}.#{new_resource.artifact_type}"
 
-  unless version == new_resource.version
+  unless ( version == new_resource.version || (redis_exists? && new_resource.safe_install) )
     Chef::Log.info("Installing Redis #{new_resource.version} from source")
     download
     unpack
@@ -30,10 +30,14 @@ action :run do
   configure
 end
 
+def redis_exists?
+  exists = Chef::ShellOut.new("which redis-server")
+  exists.run_command
+  exists.exitstatus == 0 ? true : false 
+end
+
 def version
-  redis_exists = Chef::ShellOut.new("which redis-server")
-  redis_exists.run_command
-  if redis_exists.exitstatus == 0
+  if redis_exists?
     redis_version = Chef::ShellOut.new("redis-server -v | cut -d ' ' -f 4")
     redis_version.run_command
     return redis_version.stdout.gsub("\n",'')
@@ -43,7 +47,7 @@ end
 
 def download
   Chef::Log.info("Downloading redis tarball from #{new_resource.download_url}")
-  redis_tarball = remote_file "#{new_resource.download_dir}/#{@tarball}" do
+  remote_file "#{new_resource.download_dir}/#{@tarball}" do
     source new_resource.download_url
   end
 end
