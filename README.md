@@ -14,11 +14,11 @@ Platforms
 ---------
 
 * Debian, Ubuntu
-* CentOS, Red Hat, Fedora
+* CentOS, Red Hat, Fedora, Scientific Linux
 
 Tested on:
 
-* Ubuntu 10.10
+* Ubuntu 10.10, 12.04
 * Debian 6.0
 * Fedora 16
 * Scientific Linux 6.2
@@ -231,25 +231,32 @@ Default settings is a hash of default settings to be applied to to all instance.
 Available options and their defaults
 
 ```
-'user'            => 'redis' - the user to own the redis datadir
-'group'           => 'redis' - the group to own the redis datadir
-'homedir'         => '/var/lib/redis' - the homedirectory of the user
-'shell'           => Varies on distribution, check attributes file
-'configdir'       => '/etc/redis' - config directory
-'homedir'         => '/var/lib/redis', - home directory for the user
-'address'         => nil,
-'backuptype'      => 'rdb',
-'datadir'         => '/var/lib/redis',
-'timeout'         => '0',
-'loglevel'        => 'verbose',
-'save'            => ['900 1','300 10','60 10000'],
-'slaveof'         => nil,
-'masterauth'      => nil,
-'requirepass'     => nil,
-'maxclients'      => '0',
-'maxmemory'       => nil,
-'maxmemorypolicy' => 'volatile-lru',
-'appendfsync'     => 'everysec',
+'user'                   => 'redis' - the user to own the redis datadir
+'group'                  => 'redis' - the group to own the redis datadir
+'homedir'                => homedirectory of the user, Varies on distribution, check attributes file 
+'shell'                  => users shell, Varies on distribution, check attributes file
+'configdir'              => '/etc/redis' - config directory
+'address'                => nil,
+'databases'              => '16',
+'backuptype'             => 'rdb',
+'datadir'                => '/var/lib/redis',
+'timeout'                => '0',
+'loglevel'               => 'verbose',
+'save'                   => ['900 1','300 10','60 10000'],
+'slaveof'                => nil,
+'masterauth'             => nil,
+'slaveservestaledata'    => 'yes',
+'replpingslaveperiod'    => '10',
+'repltimeout'            => '60',
+'requirepass'            => nil,
+'maxclients'             => '0',
+'maxmemory'              => nil,
+'maxmemorypolicy'        => 'volatile-lru',
+'maxmemorysamples'       => '3',
+'appendfsync'            => 'everysec',
+'noappendfsynconrewrite' => 'no',
+'aofrewritepercentage'   => '100',
+'aofrewriteminsize'      => '64mb',
 'includes'        => nil
 ```
 

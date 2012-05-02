@@ -107,21 +107,29 @@ def configure
       group current['group']
       mode '0644'
       variables({
-        :port            => current['port'],
-        :address         => current['address'],
-        :backuptype      => current['backuptype'],
-        :datadir         => current['datadir'],
-        :timeout         => current['timeout'],
-        :loglevel        => current['loglevel'],
-        :save            => current['save'],
-        :slaveof         => current['slaveof'],
-        :masterauth      => current['masterauth'],
-        :requirepass     => current['requirepass'],
-        :maxclients      => current['maxclients'],
-        :maxmemory       => current['maxmemory'],
-        :maxmemorypolicy => current['maxmemorypolicy'],
-        :appendfsync     => current['appendfsync'],
-        :includes        => current['includes']
+        :port                   => current['port'],
+        :address                => current['address'],
+        :databases              => current['databases'],
+        :backuptype             => current['backuptype'],
+        :datadir                => current['datadir'],
+        :timeout                => current['timeout'],
+        :loglevel               => current['loglevel'],
+        :save                   => current['save'],
+        :slaveof                => current['slaveof'],
+        :masterauth             => current['masterauth'],
+        :slaveservestaledata    => current['slaveservestaledata'], 
+        :replpingslaveperiod    => current['replpingslaveperiod'],
+        :repltimeout            => current['repltimeout'],
+        :requirepass            => current['requirepass'],
+        :maxclients             => current['maxclients'],
+        :maxmemory              => current['maxmemory'],
+        :maxmemorypolicy        => current['maxmemorypolicy'],
+        :maxmemorysamples       => current['maxmemorysamples'],
+        :appendfsync            => current['appendfsync'],
+        :noappendfsynconrewrite => current['noappendfsynconrewrite'],
+        :aofrewritepercentage   => current['aofrewritepercentage'] ,
+        :aofrewriteminsize      => current['aofrewriteminsize'],
+        :includes               => current['includes']
      })
     end
     #Setup init.d file

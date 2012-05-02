@@ -65,7 +65,7 @@ syslog-ident redis-<%=@port%>
 # Set the number of databases. The default database is DB 0, you can select
 # a different one on a per-connection basis using SELECT <dbid> where
 # dbid is a number between 0 and 'databases'-1
-databases 16
+databases <%=@databases%>
 
 ################################ SNAPSHOTTING  #################################
 #
@@ -141,13 +141,13 @@ dir <%=@datadir%>
 #    an error "SYNC with master in progress" to all the kind of commands
 #    but to INFO and SLAVEOF.
 #
-slave-serve-stale-data yes
+slave-serve-stale-data <%=@slaveservestaledata%>
 
 # Slaves send PINGs to server in a predefined interval. It's possible to change
 # this interval with the repl_ping_slave_period option. The default value is 10
 # seconds.
 #
-# repl-ping-slave-period 10
+repl-ping-slave-period <%=@replpingslaveperiod%>
 
 # The following option sets a timeout for both Bulk transfer I/O timeout and
 # master data or ping response timeout. The default value is 60 seconds.
@@ -156,7 +156,7 @@ slave-serve-stale-data yes
 # specified for repl-ping-slave-period otherwise a timeout will be detected
 # every time there is low traffic between the master and the slave.
 #
-# repl-timeout 60
+repl-timeout <%=@repltimeout%>
 
 ################################## SECURITY ###################################
 
@@ -257,6 +257,7 @@ slave-serve-stale-data yes
 # using the following configuration directive.
 #
 # maxmemory-samples 3
+maxmemory-samples <%=@maxmemorysamples%>
 
 ############################## APPEND ONLY MODE ###############################
 
@@ -327,7 +328,7 @@ appendfilename appendonly-<%=@port%>.aof
 # 
 # If you have latency problems turn this to "yes". Otherwise leave it as
 # "no" that is the safest pick from the point of view of durability.
-no-appendfsync-on-rewrite no
+no-appendfsync-on-rewrite <%=@noappendfsynconrewrite%>
 
 # Automatic rewrite of the append only file.
 # Redis is able to automatically rewrite the log file implicitly calling
@@ -346,8 +347,8 @@ no-appendfsync-on-rewrite no
 # Specify a precentage of zero in order to disable the automatic AOF
 # rewrite feature.
 
-auto-aof-rewrite-percentage 100
-auto-aof-rewrite-min-size 64mb
+auto-aof-rewrite-percentage <%=@aofrewritepercentage%>
+auto-aof-rewrite-min-size <%=@aofrewriteminsize%>
 
 ################################## SLOW LOG ###################################
 
