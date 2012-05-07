@@ -5,15 +5,15 @@ redisio CHANGE LOG
 ---
 
   - Added changelog.md
-  - Added a bunch more configuration options that were left out (default values left as they were before):
-      databases
-      slaveservestaledata
-      replpingslaveperiod
-      repltimeout
-      maxmemorysamples
-      noappendfsynconwrite
-      aofrewritepercentage
-      aofrewriteminsize
+  - Added a bunch more configuration options that were left out (default values left as they were before):  
+      - databases
+      - slaveservestaledata
+      - replpingslaveperiod
+      - repltimeout
+      - maxmemorysamples
+      - noappendfsynconwrite
+      - aofrewritepercentage
+      - aofrewriteminsize
       
       It is worth nothing that since there is a configurable option for conf include files, and the fact that redis uses the most recently read configuration option... even if a new option where to show up, or and old one was not included they could be added using that pattern.
       
