@@ -37,7 +37,7 @@ I have provided a disable recipe as well which will stop redis and remove it fro
 
 It is important to note that changing the configuration options of redis does not make them take effect on the next chef run.  Due to how redis works, you cannot reload a configuration without restarting the redis service.  If you make a configuration change and you want it to take effect, you can either use the service LWRP to issue a restart to the servers you want via a cookbook you write, or you can use knife ssh to restart the redis service on the servers you want to change configuration on.
 
-The cookbook also contains a recipe to allow for the installation of the redis ruby 
+The cookbook also contains a recipe to allow for the installation of the redis ruby gem. 
 
 Role File Examples
 ------------------
@@ -224,7 +224,7 @@ Configuration options, each option corresponds to the same-named configuration o
 * `redisio['version']` - the version number of redis to install (also appended to the `base_name` for downloading), default is '2.4.10'
 * `redisio['safe_install'] - prevents redis from installing itself if another version of redis is installed, default is true
 
-Default settings is a hash of default settings to be applied to to all instance.  These can be overridden in for each individual server in the servers attribute.
+Default settings is a hash of default settings to be applied to to ALL instances.  These can be overridden for each individual server in the servers attribute.
 
 * `redisio['default_settings']` - { 'redis-option' => 'option setting' }
 
@@ -233,9 +233,9 @@ Available options and their defaults
 ```
 'user'                   => 'redis' - the user to own the redis datadir
 'group'                  => 'redis' - the group to own the redis datadir
-'homedir'                => homedirectory of the user, Varies on distribution, check attributes file 
-'shell'                  => users shell, Varies on distribution, check attributes file
-'configdir'              => '/etc/redis' - config directory
+'homedir'                => Home directory of the user. Varies on distribution, check attributes file 
+'shell'                  => Users shell. Varies on distribution, check attributes file
+'configdir'              => '/etc/redis' - configuration directory
 'address'                => nil,
 'databases'              => '16',
 'backuptype'             => 'rdb',
@@ -257,7 +257,7 @@ Available options and their defaults
 'noappendfsynconrewrite' => 'no',
 'aofrewritepercentage'   => '100',
 'aofrewriteminsize'      => '64mb',
-'includes'        => nil
+'includes'               => nil
 ```
 
 * `redisio['servers']` - An array where each item is a set of key value pairs for redis instance specific settings.  The only required option is 'port'.  These settings will override the options in 'default_settings', default is set to [{'port' => '6379'}]
@@ -277,12 +277,12 @@ This cookbook contains 3 LWRP's
 
 Actions:
 
-* `run` - perform the install
+* `run` - perform the install (default)
 * `nothing` - do nothing
 
 Attribute Parameters
 
-* `version` - the version of redis to download
+* `version` - the version of redis to download / install
 * `download_url` - the URL plus filename of the redis package to install
 * `download_dir` - the directory to store the downloaded package
 * `artifact_type` - the file extension of the package
