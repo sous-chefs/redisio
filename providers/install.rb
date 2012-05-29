@@ -183,7 +183,7 @@ def configure
       # reload monit
       service 'monit' do
         provider Chef::Provider::Service::Upstart if current['monit_upstart']
-        supports :reload
+        supports :reload => true
         action :reload
       end
 
