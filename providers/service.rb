@@ -24,6 +24,7 @@ action :start do
       execute "/etc/init.d/redis#{new_resource.server_port} start"
     elsif ::File.exists?("/etc/init/redis-#{new_resource.server_port}.conf")
       execute "start redis-#{new_resource.server_port}"
+      not_if "status redis-#{new_resource.server_port} | grep start/running"
     else
       Chef::Log.warn("Cannot start service, init script does not exist")
     end
@@ -37,6 +38,7 @@ action :stop do
       execute "/etc/init.d/redis#{new_resource.server_port} stop"
     elsif ::File.exists?("/etc/init/redis-#{new_resource.server_port}.conf")
       execute "stop redis-#{new_resource.server_port}"
+      not_if "status redis-#{new_resource.server_port} | grep stop/waiting"
     else
       Chef::Log.warn("Cannot stop service, init script does not exist")
     end
