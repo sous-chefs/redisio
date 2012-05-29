@@ -18,12 +18,12 @@ expect fork
 pre-start script
   mkdir -p /var/run/redis
   <%- if @user && @group %>
-  chown -R <%= @user %>:<%= @group %>/var/run/redis
+  chown -R <%= @user %>:<%= @group %> /var/run/redis
   <%- end %>
 end script
 
 post-stop script
-  rm -rf /var/run/redis
+  rm -rf /var/run/redis/redis_<%= @port %>.pid
 end script
 
 #exec /usr/local/bin/redis-server /etc/redis/<%= @port %>.conf

@@ -1,4 +1,4 @@
-check process redis_<%= @name %> 
+check process redis-<%= @name %> 
   <%- if @upstart %>
   with pidfile /var/run/redis/redis_<%= @port %>.pid
   <%- else %>
