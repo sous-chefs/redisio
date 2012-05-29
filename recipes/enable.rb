@@ -22,7 +22,7 @@ redis = node['redisio']
 
 redis['servers'].each do |current_server|
   current_server['name'] ||= current_server['port']
-  Chef::Log.info("Enabling redis_#{current_server['name']}")
+  Chef::Log.info("Enabling redis-#{current_server['name']}")
   redisio_service "#{current_server['name']}" do
     action [:start,:enable]
   end
