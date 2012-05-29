@@ -62,7 +62,7 @@ action :enable do
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
       execute "update-rc.d redis#{new_resource.server_port} start 91 2 3 4 5 . stop 91 0 1 6 ."
     elsif ::File.exists?("/etc/init/redis_#{new_resource.server_port}.conf")
-      if File.exist? "/etc/init/redis_#{new_resource.server_port}.override"
+      if ::File.exists?("/etc/init/redis_#{new_resource.server_port}.override")
         execute "rm /etc/init/redis_#{new_resource.server_port}.override"
       end
     else
@@ -83,7 +83,7 @@ action :disable do
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
       execute "update-rc.d -f redis#{new_resource.server_port} remove"
     elsif ::File.exists?("/etc/init/redis_#{new_resource.server_port}.conf")
-      unless File.exist? "/etc/init/redis_#{new_resource.server_port}.override"
+      unless ::File.exists?("/etc/init/redis_#{new_resource.server_port}.override")
         execute "echo manual >> /etc/init/redis_#{new_resource.server_port}.override"
       end
     else
