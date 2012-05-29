@@ -3,14 +3,29 @@ description "redis server (<%= @name %>)"
 start on runlevel [23]
 stop on shutdown
 
-<%- if @user && @group %>
-setuid <%= @user %>
-setgid <%= @group %>
-<%- end %>
+# Does not work at the moment, see below.
+# <%- if @user && @group %>
+# setuid <%= @user %>
+# setgid <%= @group %>
+# <%- end %>
 
 expect fork
 
 <%= 'respawn' if @respawn %>
 
-exec /usr/local/bin/redis-server /etc/redis/<%= @port %>.conf
+# Does not work with setuid stanza!
+# See: https://bugs.launchpad.net/ubuntu/+source/upstart/+bug/911207
+pre-start script
+  mkdir -p /var/run/redis
+  <%- if @user && @group %>
+  chown -R <%= @user %>:<%= @group %>/var/run/redis
+  <%- end %>
+end script
 
+post-stop script
+  rm -rf /var/run/redis
+end script
+
+#exec /usr/local/bin/redis-server /etc/redis/<%= @port %>.conf
+
+exec start-stop-daemon --start -c <%= @user %> --exec /usr/local/bin/redis-server /etc/redis/<%= @port %>.conf

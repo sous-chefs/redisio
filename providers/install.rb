@@ -107,6 +107,7 @@ def configure
       group current['group']
       mode '0644'
       variables({
+        :upstart                => current['upstart'],
         :port                   => current['port'],
         :address                => current['address'],
         :databases              => current['databases'],
@@ -137,7 +138,7 @@ def configure
 
     if current['upstart']
       # Setup upstart init file
-      template "/etc/init/redis_#{current['name']}.conf" do
+      template "/etc/init/redis-#{current['name']}.conf" do
         source 'redis-server.conf.erb'
         owner 'root'
         group 'root'
@@ -165,7 +166,7 @@ def configure
 
     if current['monit']
       # Setup monitrc file
-      template "#{current['monit_conf_dir']}/redis_#{current['name']}.monitrc" do
+      template "#{current['monit_conf_dir']}/redis-#{current['name']}.monitrc" do
         source 'redis.monitrc.erb'
         owner 'root'
         group 'root'
