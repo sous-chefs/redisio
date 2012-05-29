@@ -1,0 +1,13 @@
+check process redis_<%= @name %> with pidfile /var/run/redis_<%= @port %>.pid
+  group <%= @monit_group %>
+  <%- if @upstart %>
+  start program = "start redis_<%= @name %>"
+  stop program = "stop redis_<%= @name %>"
+  <%- else %>
+  start program = "/usr/local/bin/redis-server /etc/redis/<%= @port %>.conf"
+    <%= "as uid #{@user} and gid #{@group}" if user && group %>
+  stop program = "/usr/local/bin/redis-cli -p <%= @port %> shutdown"
+    <%= "as uid #{@user} and gid #{@group}" if user && group %>
+  <%- end %>
+  if failed host 127.0.0.1 port <%= @port %> then restart
+  if 5 restarts within 5 cycles then timeout

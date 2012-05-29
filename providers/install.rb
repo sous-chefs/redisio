@@ -33,7 +33,7 @@ end
 def redis_exists?
   exists = Chef::ShellOut.new("which redis-server")
   exists.run_command
-  exists.exitstatus == 0 ? true : false 
+  exists.exitstatus == 0 ? true : false
 end
 
 def version
@@ -117,7 +117,7 @@ def configure
         :save                   => current['save'],
         :slaveof                => current['slaveof'],
         :masterauth             => current['masterauth'],
-        :slaveservestaledata    => current['slaveservestaledata'], 
+        :slaveservestaledata    => current['slaveservestaledata'],
         :replpingslaveperiod    => current['replpingslaveperiod'],
         :repltimeout            => current['repltimeout'],
         :requirepass            => current['requirepass'],
@@ -132,15 +132,61 @@ def configure
         :includes               => current['includes']
      })
     end
-    #Setup init.d file
-    template "/etc/init.d/redis#{current['port']}" do
-      source 'redis.init.erb'
-      owner 'root'
-      group 'root'
-      mode '0755'
-      variables({
-        :port => current['port']
-      })
+
+    current['name'] ||= current['port']
+
+    if current['upstart']
+      # Setup upstart init file
+      template "/etc/init/redis_#{current['name']}.conf" do
+        source 'redis-server.conf.erb'
+        owner 'root'
+        group 'root'
+        mode '0644'
+        variables({
+          :port => current['port'],
+          :name => current['name'],
+          :user => current['user'],
+          :group => current['group'],
+          :respawn => current['upstart_respawn']
+        })
+      end
+    else
+      #Setup init.d file
+      template "/etc/init.d/redis#{current['port']}" do
+        source 'redis.init.erb'
+        owner 'root'
+        group 'root'
+        mode '0755'
+        variables({
+          :port => current['port']
+        })
+      end
+    end
+
+    if current['monit']
+      # Setup monitrc file
+      template "#{current['monit_conf_dir']}/redis_#{current['name']}.monitrc" do
+        source 'redis.monitrc.erb'
+        owner 'root'
+        group 'root'
+        mode '0644'
+        variables({
+          :name => current['name'],
+          :upstart => current['upstart'],
+          :monit_group => current['monit_group'],
+          :port => current['port'],
+          :user => current['user'],
+          :group => current['group']
+        })
+      end
+
+      # reload monit
+      service 'monit' do
+        provider Chef::Provider::Service::Upstart if current['monit_upstart']
+        supports :reload
+        action :reload
+      end
+
     end
 
   end

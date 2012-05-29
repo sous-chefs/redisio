@@ -43,6 +43,12 @@ default['redisio']['version'] = '2.4.14'
 
 #Default settings for all redis instances, these can be overridden on a per server basis in the 'servers' hash
 default['redisio']['default_settings'] = {
+  'upstart'                => false,
+  'upstart_respawn'        => true,
+  'monit'                  => false,
+  'monit_upstart'          => true,
+  'monit_group'            => 'redis',
+  'monit_conf_dir'         => '/etc/monit/conf.d',
   'user'                   => 'redis',
   'group'                  => 'redis',
   'homedir'                => homedir,

@@ -22,6 +22,10 @@ action :start do
   when 'ubuntu','debian','centos','redhat','fedora'
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
       execute "/etc/init.d/redis#{new_resource.server_port} start"
+    elsif ::File.exists?("/etc/init/redis_#{new_resource.server_port}.conf")
+      execute "start redis_#{new_resource.server_port}"
+    elsif ::File.exists?("/etc/init/redis_#{new_resource.name}.conf")
+      execute "start redis_#{new_resource.name}"
     else
       Chef::Log.warn("Cannot start service, init script does not exist")
     end
@@ -33,6 +37,10 @@ action :stop do
   when 'ubuntu','debian','centos','redhat','fedora'
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
       execute "/etc/init.d/redis#{new_resource.server_port} stop"
+    elsif ::File.exists?("/etc/init/redis_#{new_resource.server_port}.conf")
+      execute "stop redis_#{new_resource.server_port}"
+    elsif ::File.exists?("/etc/init/redis_#{new_resource.name}.conf")
+      execute "stop redis_#{new_resource.name}"
     else
       Chef::Log.warn("Cannot stop service, init script does not exist")
     end
@@ -44,6 +52,10 @@ action :restart do
   when 'ubuntu','debian','centos','redhat','fedora'
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
       execute "/etc/init.d/redis#{new_resource.server_port} stop && /etc/init.d/redis#{new_resource.server_port} start"
+    elsif ::File.exists?("/etc/init/redis_#{new_resource.server_port}.conf")
+      execute "restart redis_#{new_resource.server_port}"
+    elsif ::File.exists?("/etc/init/redis_#{new_resource.name}.conf")
+      execute "restart redis_#{new_resource.name}"
     else
       Chef::Log.warn("Cannot restart service, init script does not exist")
     end
@@ -55,6 +67,14 @@ action :enable do
   when 'ubuntu','debian'
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
       execute "update-rc.d redis#{new_resource.server_port} start 91 2 3 4 5 . stop 91 0 1 6 ."
+    elsif ::File.exists?("/etc/init/redis_#{new_resource.server_port}.conf")
+      if File.exist? "/etc/init/redis_#{new_resource.server_port}.override"
+        execute "rm /etc/init/redis_#{new_resource.server_port}.override"
+      end
+    elsif ::File.exists?("/etc/init/redis_#{new_resource.name}.conf")
+      if File.exist? "/etc/init/redis_#{new_resource.name}.override"
+        execute "rm /etc/init/redis_#{new_resource.name}.override"
+      end
     else
       Chef::Log.warn("Cannot enable service, init script does not exist")
     end
@@ -72,6 +92,14 @@ action :disable do
   when 'ubuntu','debian'
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
       execute "update-rc.d -f redis#{new_resource.server_port} remove"
+    elsif ::File.exists?("/etc/init/redis_#{new_resource.server_port}.conf")
+      unless File.exist? "/etc/init/redis_#{new_resource.server_port}.override"
+        execute "echo manual >> /etc/init/redis_#{new_resource.server_port}.override"
+      end
+    elsif ::File.exists?("/etc/init/redis_#{new_resource.name}.conf")
+      unless File.exist? "/etc/init/redis_#{new_resource.name}.override"
+        execute "echo manual >> /etc/init/redis_#{new_resource.name}.override"
+      end
     else
       Chef::Log.warn("Cannot disable service, init script does not exist")
     end
