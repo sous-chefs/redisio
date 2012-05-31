@@ -23,8 +23,9 @@ action :start do
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
       execute "/etc/init.d/redis#{new_resource.server_port} start"
     elsif ::File.exists?("/etc/init/redis-#{new_resource.server_port}.conf")
-      execute "start redis-#{new_resource.server_port}"
-      not_if "status redis-#{new_resource.server_port} | grep start/running"
+      execute "start redis-#{new_resource.server_port}" do
+        not_if "status redis-#{new_resource.server_port} | grep start/running"
+      end
     else
       Chef::Log.warn("Cannot start service, init script does not exist")
     end
@@ -37,8 +38,9 @@ action :stop do
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
       execute "/etc/init.d/redis#{new_resource.server_port} stop"
     elsif ::File.exists?("/etc/init/redis-#{new_resource.server_port}.conf")
-      execute "stop redis-#{new_resource.server_port}"
-      not_if "status redis-#{new_resource.server_port} | grep stop/waiting"
+      execute "stop redis-#{new_resource.server_port}" do
+        not_if "status redis-#{new_resource.server_port} | grep stop/waiting"
+      end
     else
       Chef::Log.warn("Cannot stop service, init script does not exist")
     end
@@ -51,7 +53,14 @@ action :restart do
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
       execute "/etc/init.d/redis#{new_resource.server_port} stop && /etc/init.d/redis#{new_resource.server_port} start"
     elsif ::File.exists?("/etc/init/redis-#{new_resource.server_port}.conf")
-      execute "restart redis-#{new_resource.server_port}"
+      # Restart service is it is already running.
+      execute "restart redis-#{new_resource.server_port}" do
+        only_if "status redis-#{new_resource.server_port} | grep start/running"
+      end
+      # Start Service if it is not running.
+      execute "start redis-#{new_resource.server_port}" do
+        not_if "status redis-#{new_resource.server_port} | grep start/running"
+      end
     else
       Chef::Log.warn("Cannot restart service, init script does not exist")
     end
