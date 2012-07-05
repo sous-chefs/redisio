@@ -134,8 +134,7 @@ run_list *%w[
 
 default_attributes({
   'redisio' => {
-    'upstart' => true,
-    'monit'   => true
+    'default_settings' => {'upstart' => true, 'monit' => true},
   }
 })
 ```
