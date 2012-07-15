@@ -150,4 +150,5 @@ end
 def load_current_resource
   @current_resource = Chef::Resource::RedisioInstall.new(new_resource.name)
   @current_resource.version(version)
+  @current_resource
 end
