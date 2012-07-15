@@ -20,7 +20,7 @@
 action :run do
   @tarball = "#{new_resource.base_name}#{new_resource.version}.#{new_resource.artifact_type}"
 
-  unless ( version == new_resource.version || (redis_exists? && new_resource.safe_install) )
+  unless ( current_resource.version == new_resource.version || (redis_exists? && new_resource.safe_install) )
     Chef::Log.info("Installing Redis #{new_resource.version} from source")
     download
     unpack
@@ -28,21 +28,6 @@ action :run do
     install
   end
   configure
-end
-
-def redis_exists?
-  exists = Chef::ShellOut.new("which redis-server")
-  exists.run_command
-  exists.exitstatus == 0 ? true : false 
-end
-
-def version
-  if redis_exists?
-    redis_version = Chef::ShellOut.new("redis-server -v | cut -d ' ' -f 4")
-    redis_version.run_command
-    return redis_version.stdout.gsub("\n",'')
-  end
-  false
 end
 
 def download
@@ -67,6 +52,7 @@ end
 
 def install
   execute "cd #{new_resource.download_dir}/#{new_resource.base_name}#{new_resource.version} && make install"
+  new_resource.updated_by_last_action(true)
 end
 
 def configure
@@ -87,6 +73,7 @@ def configure
       home current['homedir']
       shell current['shell']
     end
+
     #Create the redis configuration directory
     directory current['configdir'] do
       owner 'root'
@@ -142,7 +129,25 @@ def configure
         :port => current['port']
       })
     end
-
   end
 end
 
+def redis_exists?
+  exists = Chef::ShellOut.new("which redis-server")
+  exists.run_command
+  exists.exitstatus == 0 ? true : false 
+end
+
+def version
+  if redis_exists?
+    redis_version = Chef::ShellOut.new("redis-server -v | cut -d ' ' -f 4")
+    redis_version.run_command
+    return redis_version.stdout.gsub("\n",'')
+  end
+  nil
+end
+
+def load_current_resource
+  @current_resource = Chef::Resource::RedisioInstall.new(new_resource.name)
+  @current_resource.version(version)
+end
