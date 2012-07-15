@@ -37,7 +37,7 @@ I have provided a disable recipe as well which will stop redis and remove it fro
 
 It is important to note that changing the configuration options of redis does not make them take effect on the next chef run.  Due to how redis works, you cannot reload a configuration without restarting the redis service.  If you make a configuration change and you want it to take effect, you can either use the service LWRP to issue a restart to the servers you want via a cookbook you write, or you can use knife ssh to restart the redis service on the servers you want to change configuration on.
 
-The cookbook also contains a recipe to allow for the installation of the redis ruby gem.
+The cookbook also contains a recipe to allow for the installation of the redis ruby gem. 
 
 Role File Examples
 ------------------
@@ -120,21 +120,6 @@ default_attributes({
   'redisio' => {
     'safe_install' => false,
     'version'      => '2.4.11'
-  }
-})
-```
-
-Install with upstart and monit support.
-
-```ruby
-run_list *%w[
-  recipe[redisio::install]
-  recipe[redisio::enable]
-]
-
-default_attributes({
-  'redisio' => {
-    'default_settings' => {'upstart' => true, 'monit' => true},
   }
 })
 ```
@@ -248,7 +233,7 @@ Available options and their defaults
 ```
 'user'                   => 'redis' - the user to own the redis datadir
 'group'                  => 'redis' - the group to own the redis datadir
-'homedir'                => Home directory of the user. Varies on distribution, check attributes file
+'homedir'                => Home directory of the user. Varies on distribution, check attributes file 
 'shell'                  => Users shell. Varies on distribution, check attributes file
 'configdir'              => '/etc/redis' - configuration directory
 'address'                => nil,
@@ -279,7 +264,7 @@ Available options and their defaults
 
 The redis_gem recipe  will also allow you to install the redis ruby gem, these are attributes related to that, and are in the redis_gem attributes file.
 
-* `redisio['gem']['name']` - the name of the gem to install, defaults to 'redis'
+* `redisio['gem']['name']` - the name of the gem to install, defaults to 'redis'  
 * `redisio['gem']['version']` -  the version of the gem to install.  if it is nil, the latest available version will be installed.
 
 Resources/Providers
