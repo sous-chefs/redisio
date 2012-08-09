@@ -66,14 +66,7 @@ def configure
     #Merge the configuration defaults with the provided array of configurations provided
     current = current_defaults_hash.merge(current_instance_hash)
 
-    #Setup a sub-run-context
-    sub_run_context = @run_context.dup
-    sub_run_context.resource_collection = Chef::ResourceCollection.new
-
-    begin
-      #Set the run_context equal to the sub_run_context that has had its resource collection emptied.
-      original_run_context, @run_context = @run_context, sub_run_context
-
+    recipe_eval do
       #Create the owner of the redis data directory
       user current['user'] do
         comment "Redis service account"
@@ -134,24 +127,11 @@ def configure
         group 'root'
         mode '0755'
         variables({
-          :port => current['port']
+          :port => current['port'],
+          :user => current['user']
         })
       end
-    ensure      
-      #now that we are done with the sub run, set the run context back to the original
-      @run_context = original_run_context
-    end # sub-run-context block end
-
-    # Here we check the resource collection of the sub run to see if anything was updated.  If they were, we called updated by last action on our resource
-    begin
-      # Converge the sub run, since it is nested it will be converged when the regular run_context is being converged.
-      Chef::Runner.new(sub_run_context).converge
-    ensure
-      if sub_run_context.resource_collection.any?(&:updated?)
-        new_resource.updated_by_last_action(true)
-      end
     end
-
   end # servers each loop
 end
 

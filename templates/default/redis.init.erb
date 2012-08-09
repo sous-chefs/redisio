@@ -13,7 +13,7 @@
 ### END INIT INFO
 
 REDISPORT=<%= @port %>
-EXEC=/usr/local/bin/redis-server
+EXEC='sudo -u <%= @user %> /usr/local/bin/redis-server'
 CLIEXEC=/usr/local/bin/redis-cli
 
 PIDFILE=/var/run/redis_${REDISPORT}.pid
