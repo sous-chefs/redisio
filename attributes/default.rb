@@ -39,7 +39,8 @@ default['redisio']['safe_install'] = true
 default['redisio']['mirror'] = "https://redis.googlecode.com/files"
 default['redisio']['base_name'] = 'redis-'
 default['redisio']['artifact_type'] = 'tar.gz'
-default['redisio']['version'] = '2.4.10'
+default['redisio']['version'] = '2.4.16'
+default['redisio']['base_piddir'] = '/var/run/redis'
 
 #Default settings for all redis instances, these can be overridden on a per server basis in the 'servers' hash
 default['redisio']['default_settings'] = {

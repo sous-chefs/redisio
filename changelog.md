@@ -1,6 +1,17 @@
 redisio CHANGE LOG
 ===
 
+1.1.0
+---
+  ! Warning breaking change !: The redis pidfile directory by default has changed, if you do not STOP redis before upgrading to the new version
+                               of this cookbook, it will not be able to stop your instance properly via the redis service provider, or the init script.
+                               If this happens to you, you can always log into the server and manually send a SIGTERM to redis
+
+  - Changed the init script to run redis as the specified redis user
+  - Updated the default version of redis to 2.4.16
+  - Setup a new directory structure for redis pid files.  The install provider will now nest its pid directories in base_piddir/<port number>/redis_<port>.pid.
+  - Added a RedisioHelper module in libraries.  The recipe_eval method inside is used to wrap nested resources to allow for the proper resource update propigation.  The install provider uses this.
+  
 1.0.3 - Released 5/2/2012
 ---
 

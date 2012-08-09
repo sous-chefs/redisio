@@ -16,7 +16,7 @@ REDISPORT=<%= @port %>
 EXEC='sudo -u <%= @user %> /usr/local/bin/redis-server'
 CLIEXEC=/usr/local/bin/redis-cli
 
-PIDFILE=/var/run/redis_${REDISPORT}.pid
+PIDFILE=<%= @piddir %>/redis_${REDISPORT}.pid
 CONF="/etc/redis/${REDISPORT}.conf"
 
 case "$1" in

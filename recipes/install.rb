@@ -27,4 +27,6 @@ redisio_install "redis-servers" do
   default_settings redis['default_settings']
   servers redis['servers']
   safe_install redis['safe_install']
+  base_piddir redis['base_piddir']
 end
+

@@ -56,6 +56,8 @@ def install
 end
 
 def configure
+  base_piddir = new_resource.base_piddir
+
   #Setup a configuration file and init script for each configuration provided
   new_resource.servers.each do |current_instance|
 
@@ -67,26 +69,37 @@ def configure
     current = current_defaults_hash.merge(current_instance_hash)
 
     recipe_eval do
+      piddir = "#{base_piddir}/#{current['port']}"
+
       #Create the owner of the redis data directory
       user current['user'] do
-        comment "Redis service account"
+        comment 'Redis service account'
         supports :manage_home => true
         home current['homedir']
         shell current['shell']
       end
-
       #Create the redis configuration directory
       directory current['configdir'] do
         owner 'root'
         group 'root'
-        mode "0755"
+        mode '0755'
+        recursive true
         action :create
       end
       #Create the instance data directory
       directory current['datadir'] do
         owner current['user']
         group current['group']
-        mode "0755"
+        mode '0755'
+        recursive true
+        action :create
+      end
+      #Create the pid file directory
+      directory piddir do
+        owner current['user']
+        group current['group']
+        mode '0755'
+        recursive true
         action :create
       end
       template "#{current['configdir']}/#{current['port']}.conf" do
@@ -95,6 +108,7 @@ def configure
         group current['group']
         mode '0644'
         variables({
+          :piddir                 => piddir,
           :port                   => current['port'],
           :address                => current['address'],
           :databases              => current['databases'],
@@ -128,8 +142,9 @@ def configure
         mode '0755'
         variables({
           :port => current['port'],
-          :user => current['user']
-        })
+          :user => current['user'],
+          :piddir => piddir 
+          })
       end
     end
   end # servers each loop
