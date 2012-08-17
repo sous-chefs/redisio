@@ -50,17 +50,19 @@ loglevel <%=@loglevel%>
 # Specify the log file name. Also 'stdout' can be used to force
 # Redis to log on the standard output. Note that if you use standard
 # output for logging but daemonize, logs will be sent to /dev/null
-logfile stdout
+#
+# logfile stdout
+<%= "logfile #{@logfile}" unless @logfile.nil? %>
 
 # To enable logging to the system logger, just set 'syslog-enabled' to yes,
 # and optionally update the other syslog parameters to suit your needs.
-syslog-enabled yes
+syslog-enabled <%= "#{@syslogenabled}" %>
 
 # Specify the syslog identity.
 syslog-ident redis-<%=@port%>
 
 # Specify the syslog facility.  Must be USER or between LOCAL0-LOCAL7.
-# syslog-facility local0
+syslog-facility <%= "#{@syslogfacility}" %>
 
 # Set the number of databases. The default database is DB 0, you can select
 # a different one on a per-connection basis using SELECT <dbid> where
@@ -374,6 +376,7 @@ slowlog-log-slower-than 10000
 # You can reclaim memory used by the slow log with SLOWLOG RESET.
 slowlog-max-len 1024
 
+<% unless @version[:major].to_i == 2 && @version[:minor].to_i >= 5 %> 
 ################################ VIRTUAL MEMORY ###############################
 
 ### WARNING! Virtual Memory is deprecated in Redis 2.4
@@ -448,15 +451,24 @@ vm-pages 134217728
 # The special value of 0 turn off threaded I/O and enables the blocking
 # Virtual Memory implementation.
 vm-max-threads 4
+<% end %>
 
 ############################### ADVANCED CONFIG ###############################
 
-# Hashes are encoded in a special way (much more memory efficient) when they
-# have at max a given numer of elements, and the biggest element does not
-# exceed a given threshold. You can configure this limits with the following
-# configuration directives.
-hash-max-zipmap-entries 512
-hash-max-zipmap-value 64
+# Hashes are encoded using a memory efficient data structure when they have a
+# small number of entries, and the biggest entry does not exceed a given
+# threshold. These thresholds can be configured using the following directives.
+
+<% #Once the first official 2.6 release is out, it would make sense to remove the extraneous :minor 5 comparison %>
+<% if @version[:major].to_i == 2 && (@version[:minor].to_i == 6 || @version[:minor].to_i == 5)  %> 
+  ######## Redis 2.6 ########
+  hash-max-ziplist-entries 512
+  hash-max-ziplist-value 64
+<% elsif @version[:major].to_i == 2 && @version[:minor].to_i == 4 %>
+  ######## Redis 2.4 ########
+  hash-max-zipmap-entries 512
+  hash-max-zipmap-value 64
+<% end %>
 
 # Similarly to hashes, small lists are also encoded in a special way in order
 # to save a lot of space. The special representation is only used when

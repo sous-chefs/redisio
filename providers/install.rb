@@ -57,6 +57,7 @@ end
 
 def configure
   base_piddir = new_resource.base_piddir
+  version_hash = RedisioHelper.version_to_hash(new_resource.version)
 
   #Setup a configuration file and init script for each configuration provided
   new_resource.servers.each do |current_instance|
@@ -102,12 +103,45 @@ def configure
         recursive true
         action :create
       end
+      #Create the log directory if syslog is not being used
+      directory ::File.dirname("#{current['logfile']}") do
+        owner current['user']
+        group current['group']
+        mode '0755'
+        recursive true
+        action :create
+        only_if { current['syslogenabled'] != 'yes' && current['logfile'] && current['logfile'] != 'stdout' }
+      end
+      #Create the log file is syslog is not being used
+      file current['logfile'] do 
+        owner current['user']
+        group current['group']
+        mode '0644'
+        backup false
+        action :touch
+        only_if { current['logfile'] && current['logfile'] != 'stdout' }
+      end
+      #Set proper permissions on the AOF or RDB files
+      file "#{current['datadir']}/appendonly-#{current['port']}.aof" do
+        owner current['user']
+        group current['group']
+        mode '0644'
+        only_if { current['backuptype'] == 'aof' || current['backuptype'] == 'both' }
+      end
+      file "#{current['datadir']}/dump-#{current['port']}.rdb"  do
+        owner current['user']
+        group current['group']
+        mode '0644'
+        only_if { current['backuptype'] == 'rdb' || current['backuptype'] == 'both' }
+      end
+      #Lay down the configuration files for the current instance
       template "#{current['configdir']}/#{current['port']}.conf" do
         source 'redis.conf.erb'
         owner current['user']
         group current['group']
         mode '0644'
         variables({
+          :version                => version_hash,
           :piddir                 => piddir,
           :port                   => current['port'],
           :address                => current['address'],
@@ -116,6 +150,9 @@ def configure
           :datadir                => current['datadir'],
           :timeout                => current['timeout'],
           :loglevel               => current['loglevel'],
+          :logfile                => current['logfile'],
+          :syslogenabled          => current['syslogenabled'],
+          :syslogfacility         => current['syslogfacility'],
           :save                   => current['save'],
           :slaveof                => current['slaveof'],
           :masterauth             => current['masterauth'],

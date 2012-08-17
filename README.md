@@ -227,7 +227,7 @@ Configuration options, each option corresponds to the same-named configuration o
 * `redisio['base_piddir'] - This is the directory that redis pidfile directories and pidfiles will be placed in.  Since redis can run as non root, it needs to have proper
                            permissions to the directory to create its pid.  Since each instance can run as a different user, these directories will all be nested inside this base one.
 
-Default settings is a hash of default settings to be applied to to ALL instances.  These can be overridden for each individual server in the servers attribute.
+Default settings is a hash of default settings to be applied to to ALL instances.  These can be overridden for each individual server in the servers attribute.  If you are going to set logfile to a specific file, make sure to set syslog-enabled to no.
 
 * `redisio['default_settings']` - { 'redis-option' => 'option setting' }
 
@@ -245,6 +245,9 @@ Available options and their defaults
 'datadir'                => '/var/lib/redis',
 'timeout'                => '0',
 'loglevel'               => 'verbose',
+'logfile'                => nil,
+'syslogenabled'         => 'yes',,
+'syslogfacility         => 'local0',
 'save'                   => ['900 1','300 10','60 10000'],
 'slaveof'                => nil,
 'masterauth'             => nil,
@@ -252,7 +255,7 @@ Available options and their defaults
 'replpingslaveperiod'    => '10',
 'repltimeout'            => '60',
 'requirepass'            => nil,
-'maxclients'             => '0',
+'maxclients'             => '10000',
 'maxmemory'              => nil,
 'maxmemorypolicy'        => 'volatile-lru',
 'maxmemorysamples'       => '3',
@@ -351,6 +354,7 @@ License and Author
 
 Author:: [Brian Bianco] (<brian.bianco@gmail.com>)
 Author\_Website:: http://www.brianbianco.com
+Twitter:: @brianwbianco
 IRC:: geekbri
 
 Copyright 2012, Brian Bianco
