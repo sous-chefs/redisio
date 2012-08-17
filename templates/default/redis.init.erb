@@ -17,7 +17,7 @@ REDISPORT=<%= @port %>
 <% when 'ubuntu','debian' %>
 EXEC="sudo -u <%= @user %> /usr/local/bin/redis-server <%= @configdir %>/${REDISPORT}.conf"
 <% when 'centos','redhat','fedora','scientific','amazon','suse','fedora' %>
-EXEC="su - <%= @user %> -c \"/usr/local/bin/redis-server <%= @configdir %>/${REDISPORT}.conf\""
+EXEC="runuser <%= @user %> -c \"/usr/local/bin/redis-server <%= @configdir %>/${REDISPORT}.conf\""
 <% end %>
 CLIEXEC=/usr/local/bin/redis-cli
 
@@ -30,7 +30,7 @@ case "$1" in
                 echo "$PIDFILE exists, process is already running or crashed"
         else
                 echo "Starting Redis server..."
-                $EXEC
+                eval $EXEC
         fi
         ;;
     stop)
