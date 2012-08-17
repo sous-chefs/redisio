@@ -17,7 +17,7 @@ EXEC='sudo -u <%= @user %> /usr/local/bin/redis-server'
 CLIEXEC=/usr/local/bin/redis-cli
 
 PIDFILE=<%= @piddir %>/redis_${REDISPORT}.pid
-CONF="/etc/redis/${REDISPORT}.conf"
+CONF="<%= @configdir %>/${REDISPORT}.conf"
 
 case "$1" in
     start)
@@ -36,7 +36,7 @@ case "$1" in
         else
                 PID=$(cat $PIDFILE)
                 echo "Stopping ..."
-                $CLIEXEC -p $REDISPORT shutdown
+                $CLIEXEC -p $REDISPORT<%= @requirepass ? "-a '#{@requirepass}'" : "" %> shutdown
                 while [ -x /proc/${PID} ]
                 do
                     echo "Waiting for Redis to shutdown ..."

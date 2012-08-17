@@ -90,7 +90,7 @@ def configure
       directory current['datadir'] do
         owner current['user']
         group current['group']
-        mode '0755'
+        mode '0775'
         recursive true
         action :create
       end
@@ -143,7 +143,9 @@ def configure
         variables({
           :port => current['port'],
           :user => current['user'],
-          :piddir => piddir 
+          :configdir => current['configdir'],
+          :piddir => piddir,
+          :requirepass => current['requirepass']
           })
       end
     end
