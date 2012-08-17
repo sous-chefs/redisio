@@ -71,6 +71,8 @@ def configure
 
     recipe_eval do
       piddir = "#{base_piddir}/#{current['port']}"
+      aof_file = "#{current['datadir']}/appendonly-#{current['port']}.aof"
+      rdb_file = "#{current['datadir']}/dump-#{current['port']}.rdb"  
 
       #Create the owner of the redis data directory
       user current['user'] do
@@ -122,17 +124,19 @@ def configure
         only_if { current['logfile'] && current['logfile'] != 'stdout' }
       end
       #Set proper permissions on the AOF or RDB files
-      file "#{current['datadir']}/appendonly-#{current['port']}.aof" do
+      file aof_file do 
         owner current['user']
         group current['group']
         mode '0644'
         only_if { current['backuptype'] == 'aof' || current['backuptype'] == 'both' }
+        only_if { ::File.exists?(aof_file) }
       end
-      file "#{current['datadir']}/dump-#{current['port']}.rdb"  do
+      file rdb_file  do
         owner current['user']
         group current['group']
         mode '0644'
         only_if { current['backuptype'] == 'rdb' || current['backuptype'] == 'both' }
+        only_if { ::File.exists?(rdb_file) }
       end
       #Lay down the configuration files for the current instance
       template "#{current['configdir']}/#{current['port']}.conf" do
