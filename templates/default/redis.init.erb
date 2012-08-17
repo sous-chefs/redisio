@@ -13,7 +13,12 @@
 ### END INIT INFO
 
 REDISPORT=<%= @port %>
-EXEC='sudo -u <%= @user %> /usr/local/bin/redis-server'
+<% case @platform %>
+<% when 'ubuntu','debian' %>
+  EXEC='sudo -u <%= @user %> /usr/local/bin/redis-server'
+<% when 'centos','redhat','fedora','scientific','amazon','suse','fedora' %>
+  EXEC='su - <%= @user %> -c "/usr/local/bin/redis-server"'
+<% end %>
 CLIEXEC=/usr/local/bin/redis-cli
 
 PIDFILE=<%= @piddir %>/redis_${REDISPORT}.pid

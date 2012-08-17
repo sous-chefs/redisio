@@ -186,7 +186,8 @@ def configure
           :user => current['user'],
           :configdir => current['configdir'],
           :piddir => piddir,
-          :requirepass => current['requirepass']
+          :requirepass => current['requirepass'],
+          :platform => node['platform']
           })
       end
     end

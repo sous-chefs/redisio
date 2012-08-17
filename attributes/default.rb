@@ -22,10 +22,10 @@ when 'ubuntu','debian'
   shell = '/bin/false'
   homedir = '/var/lib/redis'
 when 'centos','redhat','fedora','scientific','amazon','suse'
-  shell = '/sbin/nologin'
+  shell = '/bin/false'
   homedir = '/var/lib/redis' #this is necessary because selinux by default prevents the homedir from being managed in /var/lib/
 when 'fedora'
-  shell = '/sbin/nologin'
+  shell = '/bin/false'
   homedir = '/home/redis'
 else
   shell = '/bin/sh'
