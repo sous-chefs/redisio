@@ -14,9 +14,9 @@
 
 REDISPORT=<%= @port %>
 <% case @platform %>
-<% when 'ubuntu','debian' %>
+<% when 'ubuntu','debian','fedora' %>
 EXEC="sudo -u <%= @user %> /usr/local/bin/redis-server <%= @configdir %>/${REDISPORT}.conf"
-<% when 'centos','redhat','fedora','scientific','amazon','suse','fedora' %>
+<% else %> 
 EXEC="runuser <%= @user %> -c \"/usr/local/bin/redis-server <%= @configdir %>/${REDISPORT}.conf\""
 <% end %>
 CLIEXEC=/usr/local/bin/redis-cli
