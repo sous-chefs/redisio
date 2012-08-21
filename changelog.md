@@ -1,7 +1,7 @@
 redisio CHANGE LOG
 ===
 
-1.1.0
+1.1.0 - Released 8/21/2012
 ---
   ! Warning breaking change !: The redis pidfile directory by default has changed, if you do not STOP redis before upgrading to the new version
                                of this cookbook, it will not be able to stop your instance properly via the redis service provider, or the init script.
