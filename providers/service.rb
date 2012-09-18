@@ -19,7 +19,7 @@
 
 action :start do
   case node.platform
-  when 'ubuntu','debian','centos','redhat','fedora'
+  when 'ubuntu','debian','centos','redhat','fedora', 'amazon'
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
       execute "/etc/init.d/redis#{new_resource.server_port} start"
     else
@@ -30,7 +30,7 @@ end
 
 action :stop do
   case node.platform
-  when 'ubuntu','debian','centos','redhat','fedora'
+  when 'ubuntu','debian','centos','redhat','fedora', 'amazon'
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
       execute "/etc/init.d/redis#{new_resource.server_port} stop"
     else
@@ -41,7 +41,7 @@ end
 
 action :restart do
   case node.platform
-  when 'ubuntu','debian','centos','redhat','fedora'
+  when 'ubuntu','debian','centos','redhat','fedora', 'amazon'
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
       execute "/etc/init.d/redis#{new_resource.server_port} stop && /etc/init.d/redis#{new_resource.server_port} start"
     else
