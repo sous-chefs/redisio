@@ -18,6 +18,6 @@
 #
 master = search(:node, "chef_environment:#{node.chef_environment} AND recipes:redisio\\:\\:master")
 
-node['redisio']['servers'][0] = {'port' => node.redisio.servers.first['port'], 'slaveof' => {'address' => master.first['fqdn']}}
+node['redisio']['servers'][0] = {'port' => node.redisio.servers.first['port'], 'slaveof' => {'address' => master.first['fqdn'], 'port' => node.redisio['servers'].first['port']}}
 
 include_recipe "redisio::install"
