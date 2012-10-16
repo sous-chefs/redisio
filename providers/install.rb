@@ -141,6 +141,7 @@ def configure
       #Lay down the configuration files for the current instance
       template "#{current['configdir']}/#{current['port']}.conf" do
         source 'redis.conf.erb'
+        cookbook 'redisio'
         owner current['user']
         group current['group']
         mode '0644'
@@ -178,6 +179,7 @@ def configure
       #Setup init.d file
       template "/etc/init.d/redis#{current['port']}" do
         source 'redis.init.erb'
+        cookbook 'redisio'
         owner 'root'
         group 'root'
         mode '0755'
