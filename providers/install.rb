@@ -204,9 +204,11 @@ end
 
 def version
   if redis_exists?
-    redis_version = Chef::ShellOut.new("redis-server -v | cut -d ' ' -f 4")
+    redis_version = Chef::ShellOut.new("redis-server -v")
     redis_version.run_command
-    return redis_version.stdout.gsub("\n",'')
+    version = redis_version.stdout[/version (\d*.\d*.\d*)/,1] || redis_version.stdout[/v=(\d*.\d*.\d*)/,1]
+    Chef::Log.info("The Redis server version is: #{version}")
+    return version.gsub("\n",'')
   end
   nil
 end
