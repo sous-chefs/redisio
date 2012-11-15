@@ -18,6 +18,7 @@
 #
 
 action :start do
+  Chef::Log.warn("The redisio_service resource is deprecated!  Please use the redis<port> resource instead!")
   case node.platform
   when 'ubuntu','debian','centos','redhat','fedora', 'amazon'
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
@@ -29,6 +30,7 @@ action :start do
 end
 
 action :stop do
+  Chef::Log.warn("The redisio_service resource is deprecated!  Please use the redis<port> resource instead!")
   case node.platform
   when 'ubuntu','debian','centos','redhat','fedora', 'amazon'
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
@@ -40,6 +42,7 @@ action :stop do
 end
 
 action :restart do
+  Chef::Log.warn("The redisio_service resource is deprecated!  Please use the redis<port> resource instead!")
   case node.platform
   when 'ubuntu','debian','centos','redhat','fedora', 'amazon'
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
@@ -51,6 +54,7 @@ action :restart do
 end
 
 action :enable do
+  Chef::Log.warn("The redisio_service resource is deprecated!  Please use the redis<port> resource instead!")
   case node.platform
   when 'ubuntu','debian'
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
@@ -68,6 +72,7 @@ action :enable do
 end
 
 action :disable do
+  Chef::Log.warn("The redisio_service resource is deprecated!  Please use the redis<port> resource instead!")
   case node.platform
   when 'ubuntu','debian'
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")

@@ -30,3 +30,13 @@ redisio_install "redis-servers" do
   base_piddir redis['base_piddir']
 end
 
+redis['servers'].each do |current_server|
+  service "redis#{current_server['port']}" do
+    start_command "/etc/init.d/redis#{current_server['port']} start"
+    stop_command "/etc/init.d/redis#{current_server['port']} stop"
+    status_command "pgrep -lf 'redis.*#{current_server['port']}'"
+    restart_command "/etc/init.d/redis#{current_server['port']} start && /etc/init.d/redis#{current_server['port']} start"
+    supports :start => true, :stop => true, :restart => true, :status => false
+  end
+end
+

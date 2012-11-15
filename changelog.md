@@ -1,9 +1,12 @@
 redisio CHANGE LOG
 ===
+
 1.2.0
 ---
   - Fixes bug related to where the template source resides when using the LWRP outside of the redisio cookbook
   - Fixes bug where the version method was not properly parsing version strings in redis 2.6.x, as the version string from redis-server -v changed
+  - Now uses chefs service resource for each redis instance instead of using a custom redisio_service resource.  This cleans up many issues, including a lack of updated_by_last_action
+  - The use of the redisio_service resource is deprecated.  Use the redis<port_number> instead. 
 
 1.1.0 - Released 8/21/2012
 ---

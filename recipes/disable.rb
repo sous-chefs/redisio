@@ -21,8 +21,10 @@
 redis = node['redisio']
 
 redis['servers'].each do |current_server|
-  redisio_service "#{current_server['port']}" do
-    action [:stop,:disable]
-  end
+  port = current_server["port"]
+  resource = resources("service[redis#{port}]")
+  resource.action Array(resource.action)
+  resource.action << :stop
+  resource.action << :disable
 end
 
