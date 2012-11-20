@@ -40,7 +40,7 @@ case "$1" in
         else
                 PID=$(cat $PIDFILE)
                 echo "Stopping ..."
-                $CLIEXEC -p $REDISPORT<%= @requirepass ? " -a '#{@requirepass}'" : "" %> shutdown
+                $CLIEXEC <%= @address ? "-h #{@address}" : ""%> -p $REDISPORT<%= @requirepass ? " -a '#{@requirepass}'" : "" %> shutdown
                 while [ -x /proc/${PID} ]
                 do
                     echo "Waiting for Redis to shutdown ..."
