@@ -185,6 +185,7 @@ def configure
         mode '0755'
         variables({
           :port => current['port'],
+          :address => current['address'],
           :user => current['user'],
           :configdir => current['configdir'],
           :piddir => piddir,
