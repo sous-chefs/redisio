@@ -8,6 +8,8 @@ redisio CHANGE LOG
   - Now uses chefs service resource for each redis instance instead of using a custom redisio_service resource.  This cleans up many issues, including a lack of updated_by_last_action
   - The use of the redisio_service resource is deprecated.  Use the redis<port_number> instead. 
   - The default version of redis has been bumped to the current stable, which is 2.6.4
+  - Adds metadata.json to the gitignore file so that the cookbook can be submoduled.
+  - Adds the ability to handle non standard bind address in the init scripts stop command
 
 1.1.0 - Released 8/21/2012
 ---
