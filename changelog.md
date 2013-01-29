@@ -10,6 +10,8 @@ redisio CHANGE LOG
   - The default version of redis has been bumped to the current stable, which is 2.6.4
   - Adds metadata.json to the gitignore file so that the cookbook can be submoduled.
   - Adds the ability to handle non standard bind address in the init scripts stop command
+  - Adds attributes to allow redis to listen on a socket 
+  - Adds an attribute to allow redis service accounts to be created as system users, defaults this to true
 
 1.1.0 - Released 8/21/2012
 ---
