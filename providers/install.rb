@@ -80,6 +80,7 @@ def configure
         supports :manage_home => true
         home current['homedir']
         shell current['shell']
+        system current['systemuser']
       end
       #Create the redis configuration directory
       directory current['configdir'] do
