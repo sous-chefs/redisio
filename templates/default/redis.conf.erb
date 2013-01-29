@@ -36,6 +36,9 @@ port <%=@port%>
 #
 # unixsocket /tmp/redis.sock
 # unixsocketperm 755
+<%= "unixsocket #{@unixsocket}" unless @unixsocket.nil? %>
+<%= "unixsocketperm #{@unixsocketperm}" unless @unixsocketperm.nil? %>
+
 # Close the connection after a client is idle for N seconds (0 to disable)
 <%= "timeout #{@timeout}" %>
 
