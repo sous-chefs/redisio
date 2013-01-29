@@ -48,6 +48,7 @@ default['redisio']['default_settings'] = {
   'group'                  => 'redis',
   'homedir'                => homedir,
   'shell'                  => shell,
+  'systemuser'             => true,
   'configdir'              => '/etc/redis',
   'address'                => nil,
   'databases'              => '16',
