@@ -60,6 +60,9 @@ default['redisio']['default_settings'] = {
   'syslogfacility'         => 'local0',
   'save'                   => ['900 1','300 10','60 10000'],
   'slaveof'                => nil,
+  # Defaults to initd for backward-compatibility, to use Upstart specify 'upstart'
+  'job_control'            => 'initd',
+  'run_on_startup'         => true,
   'masterauth'             => nil,
   'slaveservestaledata'    => 'yes',
   'replpingslaveperiod'    => '10',
@@ -78,5 +81,4 @@ default['redisio']['default_settings'] = {
 
 #Individual server overrides, port is required and must be unique per instance, by default we setup a single redis instance on the default redis port of 6379
 default['redisio']['servers'] = [{'port' => '6379'}]
-
 

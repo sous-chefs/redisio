@@ -1,0 +1,18 @@
+description "Start the redis instance on port <%= @port %>"
+author "Installed by chef redisio cookbook"
+
+<% if @run_on_startup %>
+start on runlevel [2345]
+<% end %>
+stop on runlevel [06]
+
+setuid <%= @user %>
+setgid <%= @group %>
+
+pre-start exec /usr/local/bin/redis-server <%= @configdir %>/<%= @port %>.conf
+post-stop exec /usr/local/bin/redis-cli -p <%= @port %> shutdown
+
+# If the job exits, restart it. Give up with more than 10 restarts in 30 seconds.
+respawn
+respawn limit 10 30
+

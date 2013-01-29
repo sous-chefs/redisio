@@ -25,6 +25,6 @@ redis['servers'].each do |current_server|
   resource = resources("service[redis#{port}]")
   resource.action Array(resource.action)
   resource.action << :stop
-  resource.action << :disable
+  resource.action << :disable if current_server['job_control'] == 'initd'
 end
 

@@ -192,6 +192,23 @@ def configure
           :requirepass => current['requirepass'],
           :platform => node['platform']
           })
+        only_if { current['job_control'] == 'initd' }
+      end
+      template "/etc/init/redis#{current['port']}.conf" do
+        source 'redis.upstart.conf.erb'
+        cookbook 'redisio'
+        owner 'root'
+        group 'root'
+        mode '0644'
+        variables({
+          :port => current['port'],
+          :address => current['address'],
+          :user => current['user'],
+          :configdir => current['configdir'],
+          :platform => node['platform'],
+          :run_on_startup => node['run_on_startup']
+        })
+        only_if { current['job_control'] == 'upstart' }
       end
     end
   end # servers each loop

@@ -25,6 +25,7 @@ redis['servers'].each do |current_server|
   resource = resources("service[redis#{port}]")
   resource.action Array(resource.action)
   resource.action << :start
-  resource.action << :enable
+  # upstart jobs aren't "enabled", that depends on their template settings
+  resource.action << :enable if current_server['job_control'] == 'initd'
 end
 

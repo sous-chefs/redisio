@@ -26,6 +26,7 @@ action :run do
       new_resource.servers.each do |server|
         execute "rm -rf /etc/redis/#{server['port']}.conf" if ::File.exists?("/etc/redis/#{server['port']}.conf")
         execute "rm -rf /etc/init.d/redis#{server['port']}" if ::File.exists?("/etc/init.d/redis#{server['port']}")
+        execute "rm -rf /etc/init/redis#{server['port']}.conf" if ::File.exists?("/etc/init/redis#{server['port']}.conf")
       end
     end
 end
