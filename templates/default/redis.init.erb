@@ -30,6 +30,7 @@ case "$1" in
                 echo "$PIDFILE exists, process is already running or crashed"
         else
                 echo "Starting Redis server..."
+                <%= "ulimit -n #{@maxclients.to_i + 64}" %>
                 eval $EXEC
         fi
         ;;
