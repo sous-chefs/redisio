@@ -190,7 +190,8 @@ def configure
           :configdir => current['configdir'],
           :piddir => piddir,
           :requirepass => current['requirepass'],
-          :platform => node['platform']
+          :platform => node['platform'],
+          :maxclients => current['maxclients'],
           })
       end
     end
