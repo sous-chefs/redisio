@@ -58,6 +58,7 @@ default['redisio']['default_settings'] = {
   'logfile'                => nil,
   'syslogenabled'          => 'yes',
   'syslogfacility'         => 'local0',
+  'shutdown_save'          => false,
   'save'                   => ['900 1','300 10','60 10000'],
   'slaveof'                => nil,
   # Defaults to initd for backward-compatibility, to use Upstart specify 'upstart'
