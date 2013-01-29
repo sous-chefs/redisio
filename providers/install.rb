@@ -173,7 +173,9 @@ def configure
           :noappendfsynconrewrite => current['noappendfsynconrewrite'],
           :aofrewritepercentage   => current['aofrewritepercentage'] ,
           :aofrewriteminsize      => current['aofrewriteminsize'],
-          :includes               => current['includes']
+          :includes               => current['includes'],
+          :unixsocket             => current['unixsocket'],
+          :unixsocketperm         => current['unixsocketperm']
         })
       end
       #Setup init.d file
