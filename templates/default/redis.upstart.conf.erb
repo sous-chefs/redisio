@@ -10,7 +10,7 @@ setuid <%= @user %>
 setgid <%= @group %>
 
 pre-start exec /usr/local/bin/redis-server <%= @configdir %>/<%= @port %>.conf
-post-stop exec /usr/local/bin/redis-cli -p <%= @port %> shutdown
+<% if @shutdown_save or (@save and !@save.empty?) %>pre-stop exec /usr/local/bin/redis-cli -p <%= @port %> save<% end %>
 
 # If the job exits, restart it. Give up with more than 10 restarts in 30 seconds.
 respawn
