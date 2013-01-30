@@ -40,6 +40,7 @@ redis['servers'].each do |current_server|
       restart_command "/etc/init.d/redis#{current_server['port']} start && /etc/init.d/redis#{current_server['port']} start"
       supports :start => true, :stop => true, :restart => true, :status => false
     elsif current_server['job_control'] == 'upstart'
+	  provider Chef::Provider::Service::Upstart
       start_command "start redis#{current_server['port']}"
       stop_command "stop redis#{current_server['port']}"
       status_command "pgrep -lf 'redis.*#{current_server['port']}' | grep -v 'sh'"
