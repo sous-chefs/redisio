@@ -9,8 +9,17 @@ limit nofile 200000 200000
 setuid <%= @user %>
 setgid <%= @group %>
 
-pre-start exec /usr/local/bin/redis-server <%= @configdir %>/<%= @port %>.conf
-<% if @shutdown_save or (@save and !@save.empty?) %>pre-stop exec /usr/local/bin/redis-cli -p <%= @port %> save<% end %>
+pre-start script
+ echo "pre-start script called"
+ /usr/local/bin/redis-server <%= @configdir %>/<%= @port %>.conf
+end script
+
+<% if @shutdown_save or (@save and !@save.empty?) %>
+pre-stop script
+ echo "pre-stop script called"
+ /usr/local/bin/redis-cli -p <%= @port %> save
+end script
+<% end %>
 
 # If the job exits, restart it. Give up with more than 10 restarts in 30 seconds.
 respawn
