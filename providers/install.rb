@@ -158,7 +158,6 @@ def configure
           :logfile                => current['logfile'],
           :syslogenabled          => current['syslogenabled'],
           :syslogfacility         => current['syslogfacility'],
-          :shutdown_save          => current['shutdown_save'],
           :save                   => current['save'],
           :slaveof                => current['slaveof'],
           :masterauth             => current['masterauth'],
@@ -198,13 +197,16 @@ def configure
       template "/etc/init/redis#{current['port']}.conf" do
         source 'redis.upstart.conf.erb'
         cookbook 'redisio'
-        owner 'root'
-        group 'root'
+        owner current['user']
+        group current['group']
         mode '0644'
         variables({
           :port => current['port'],
           :address => current['address'],
           :user => current['user'],
+          :group => current['group'],
+          :shutdown_save => current['shutdown_save'],
+          :save => current['save'],
           :configdir => current['configdir'],
           :platform => node['platform'],
           :run_on_startup => node['run_on_startup']
