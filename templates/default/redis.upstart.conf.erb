@@ -5,7 +5,7 @@ author "Installed by chef redisio cookbook"
 start on runlevel [2345]
 <% end %>
 stop on runlevel [06]
-
+limit nofile 200000 200000
 setuid <%= @user %>
 setgid <%= @group %>
 
