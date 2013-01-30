@@ -54,7 +54,5 @@ redis['servers'].each do |current_server|
       supports :start => false, :stop => false, :restart => false, :status => false
   	end
   end
-  	
-  end
 end
 
