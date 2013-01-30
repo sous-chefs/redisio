@@ -33,6 +33,7 @@ end
 # Create a service resource for each redis instance, named for the port it runs on.
 redis['servers'].each do |current_server|
   if current_server['job_control'] == 'initd'
+	Chef::Log.info("job_control is initd")
   	service "redis#{current_server['port']}" do
       start_command "/etc/init.d/redis#{current_server['port']} start"
       stop_command "/etc/init.d/redis#{current_server['port']} stop"
@@ -41,6 +42,7 @@ redis['servers'].each do |current_server|
       supports :start => true, :stop => true, :restart => true, :status => false
   	end
   elsif current_server['job_control'] == 'upstart'
+	Chef::Log.info("job_control is upstart")
   	service "redis#{current_server['port']}" do
 	  provider Chef::Provider::Service::Upstart
       start_command "start redis#{current_server['port']}"
@@ -50,6 +52,8 @@ redis['servers'].each do |current_server|
       supports :start => true, :stop => true, :restart => true, :status => false
   	end
   else
+	Chef::Log.info("job_control is something else")
+	Chef::Log.info("current_server = #{current_server}")
   	service "redis#{current_server['port']}" do
       supports :start => false, :stop => false, :restart => false, :status => false
   	end
