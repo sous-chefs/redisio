@@ -24,6 +24,11 @@ CLIEXEC=/usr/local/bin/redis-cli
 
 PIDFILE=<%= @piddir %>/redis_${REDISNAME}.pid
 
+if [ ! -d <%= @piddir %> ]; then
+    mkdir -p <%= @piddir %>
+    chown <%= @user %>  <%= @piddir %>
+fi
+
 case "$1" in
     start)
         if [ -f $PIDFILE ]
