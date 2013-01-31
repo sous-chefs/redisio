@@ -36,8 +36,6 @@ redisio_install "redis-servers" do
   base_piddir redis['base_piddir']
 end
 
-puts redis['servers'].inspect
-
 # Create a service resource for each redis instance
 redis_instances.each do |current_server|
   server_name = current_server['name'] || current_server['port']
