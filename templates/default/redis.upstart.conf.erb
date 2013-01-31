@@ -23,4 +23,5 @@ end script
 respawn
 respawn limit 10 30
 
-exec /usr/local/bin/redis-server <%= @configdir %>/<%= @port %>.conf
+pre-start exec /usr/local/bin/redis-server <%= @configdir %>/<%= @port %>.conf
+post-stop exec /usr/local/bin/redis-cli -p <%= @port %> shutdown
