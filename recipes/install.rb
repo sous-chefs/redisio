@@ -21,6 +21,8 @@ include_recipe 'redisio::default'
 redis = node['redisio']
 location = "#{redis['mirror']}/#{redis['base_name']}#{redis['version']}.#{redis['artifact_type']}"
 
+Chef::Log.info("redis['servers'] = #{redis['servers']}")
+
 redisio_install "redis-servers" do
   version redis['version']
   download_url location
