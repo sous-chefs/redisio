@@ -9,7 +9,7 @@ version          '1.2.0'
   supports os
 end
 
-recipe "redisio", "This recipe is used to install the prequisites for building and installing redis, as well as provides the LWRPs"
+recipe "redisio::default", "This recipe is used to install the prequisites for building and installing redis, as well as provides the LWRPs"
 recipe "redisio::install", "This recipe is used to install redis and create the configuration files and init scripts"
 recipe "redisio::uninstall", "This recipe is used to uninstall the redis binaries as well as optionally the configuration files and init scripts"
 recipe "redisio::enable", "This recipe is used to start the redis instances and enable them in the default run levels"

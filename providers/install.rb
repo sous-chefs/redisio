@@ -70,9 +70,11 @@ def configure
     current = current_defaults_hash.merge(current_instance_hash)
 
     recipe_eval do
-      piddir = "#{base_piddir}/#{current['port']}"
-      aof_file = "#{current['datadir']}/appendonly-#{current['port']}.aof"
-      rdb_file = "#{current['datadir']}/dump-#{current['port']}.rdb"  
+      server_name = current['name'] || current['port']
+      piddir = "#{base_piddir}/#{server_name}"
+      aof_file = "#{current['datadir']}/appendonly-#{server_name}.aof"
+      rdb_file = "#{current['datadir']}/dump-#{server_name}.rdb"  
+
 
       #Create the owner of the redis data directory
       user current['user'] do
@@ -140,7 +142,7 @@ def configure
         only_if { ::File.exists?(rdb_file) }
       end
       #Lay down the configuration files for the current instance
-      template "#{current['configdir']}/#{current['port']}.conf" do
+      template "#{current['configdir']}/#{server_name}.conf" do
         source 'redis.conf.erb'
         cookbook 'redisio'
         owner current['user']
@@ -154,6 +156,8 @@ def configure
           :databases              => current['databases'],
           :backuptype             => current['backuptype'],
           :datadir                => current['datadir'],
+          :unixsocket             => current['unixsocket'],
+          :unixsocketperm         => current['unixsocketperm'],
           :timeout                => current['timeout'],
           :loglevel               => current['loglevel'],
           :logfile                => current['logfile'],
@@ -174,13 +178,11 @@ def configure
           :noappendfsynconrewrite => current['noappendfsynconrewrite'],
           :aofrewritepercentage   => current['aofrewritepercentage'] ,
           :aofrewriteminsize      => current['aofrewriteminsize'],
-          :includes               => current['includes'],
-          :unixsocket             => current['unixsocket'],
-          :unixsocketperm         => current['unixsocketperm']
+          :includes               => current['includes']
         })
       end
       #Setup init.d file
-      template "/etc/init.d/redis#{current['port']}" do
+      template "/etc/init.d/redis#{server_name}" do
         source 'redis.init.erb'
         cookbook 'redisio'
         owner 'root'

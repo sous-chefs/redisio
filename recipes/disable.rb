@@ -21,7 +21,7 @@
 redis = node['redisio']
 
 redis['servers'].each do |current_server|
-  port = current_server["port"]
+  server_name = current_server["name"] || current_server["port"]
   resource = resources("service[redis#{port}]")
   resource.action Array(resource.action)
   resource.action << :stop

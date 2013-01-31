@@ -22,12 +22,12 @@ Tested on:
 * Debian 6.0
 * Fedora 16
 * Scientific Linux 6.2
-* Centos 6.2
+* Centos 6.2, 6.3
 
 Usage
 =====
 
-The redisio cookbook has 3 LWRP's and 4 recipes.  For most use cases it isn't necessary to use the "install" LWRP and you should use the install recipe unless
+The redisio cookbook has 2 LWRP's and 6 recipes.  For most use cases it isn't necessary to use the "install" LWRP and you should use the install recipe unless
 you have a good understanding of the required fields for the install LWRP.  The service LWRP can be more useful if you have situations where you want to start,
 stop, or restart the redis service based on certain conditions.
 
@@ -38,6 +38,16 @@ I have provided a disable recipe as well which will stop redis and remove it fro
 It is important to note that changing the configuration options of redis does not make them take effect on the next chef run.  Due to how redis works, you cannot reload a configuration without restarting the redis service.  If you make a configuration change and you want it to take effect, you can either use the service LWRP to issue a restart to the servers you want via a cookbook you write, or you can use knife ssh to restart the redis service on the servers you want to change configuration on.
 
 The cookbook also contains a recipe to allow for the installation of the redis ruby gem. 
+
+Recipes
+-------
+
+* default - This is used to install the pre-requisites for building redis, and to make the LWRPs available
+* disable - This recipe can be used to disable the redis service and remove it from runlevels
+* enable - This recipe can be used to enable the redis services and add it to runlevels
+* install - This recipe is used to install AND configure redis.  The name is a little misleading, sorry :)
+* redis_gem - This recipe can be used to install the redis ruby gem
+* uninstall - This recipe can be used to remove the configuration files and redis binaries
 
 Role File Examples
 ------------------
@@ -51,6 +61,23 @@ run_list *%w[
 ]
 
 default_attributes({})
+```
+
+Install redis, give the instance a name, and use a unix socket
+
+```ruby
+run_list *%w[
+  recipe[redisio::install]
+  recipe[redisio::enable]
+]
+
+default_attributes({
+  'redisio' => {
+    'servers' => [
+      {'name' => 'master', 'port' => '6379', 'unixsocket' => '/tmp/redis.sock', 'unixsocketperm' => '755'},
+    ]
+  }
+})
 ```
 
 Install redis and setup two instances on the same server, on different ports, with one slaved to the other through a role file
@@ -107,7 +134,7 @@ default_attributes({
 })
 ```
 
-Install redis 2.4.11 (lower than the default version of 2.4.16) and turn safe install off, for the event where redis is already installed.  This will use the default settings.  Keep in mind the redis version will
+Install redis 2.4.11 (lower than the default version) and turn safe install off, for the event where redis is already installed.  This will use the default settings.  Keep in mind the redis version will
 not actually be updated until you restart the service (either through the LWRP or manually).
 
 ```ruby
@@ -153,8 +180,8 @@ It is important to note that this call has certain expectations for example, it 
 
 ```ruby
 redisio_install "redis-servers" do
-  version '2.4.10'
-  download_url 'http://redis.googlecode.com/files/redis-2.4.10.tar.gz'
+  version '2.6.9'
+  download_url 'http://redis.googlecode.com/files/redis-2.6.9.tar.gz'
   default_settings node['redisio']['default_settings']
   servers node['redisio']['servers']
   safe_install false
@@ -188,31 +215,22 @@ end
 service resource
 ----------------
 
-This LWRP provides the ability to stop, start, restart, disable and enable the redis service.
+The install recipe sets up a service resource for each redis instance.  In the past there was a custom service LWRP called "redisio_service".  This is deprecated and should no longer be used.
+I have left the resource available so as to not break it for anybody who happens to be calling it themselves from other cookbooks. 
 
-Start and add to default runlevels the instance running on port 6379
+The service resources created will use the 'name' attribute if it is specified, and will default to the port as it's name if no name is given.
 
-```ruby
-redisio_service "6379" do
-  action [:start,:enable]
+Using the service resources:
+
+service "redis6379" do
+  action :start
 end
-```
 
-Stop and remove from default runlevels the instance running on port 6379
+Or if you have named your server "Master"
 
-```ruby
-redisio_service "6379" do
-  action [:stop,:disable]
+service "redisMaster" do
+  action :start
 end
-```
-
-Restart the instance running on port 6380
-
-```ruby
-redisio_service "6380" do
-  action [:restart]
-end
-```
 
 Attributes
 ==========
@@ -238,15 +256,19 @@ Available options and their defaults
 'group'                  => 'redis' - the group to own the redis datadir
 'homedir'                => Home directory of the user. Varies on distribution, check attributes file 
 'shell'                  => Users shell. Varies on distribution, check attributes file
+'systemuser'             => true - Sets up the instances user as a system user
 'configdir'              => '/etc/redis' - configuration directory
+'name'                   => nil, Allows you to name the server with something other than port.  Useful if you want to use unix sockets
 'address'                => nil,
 'databases'              => '16',
 'backuptype'             => 'rdb',
 'datadir'                => '/var/lib/redis',
+'unixoscket'             => nil - The location of the unix socket to use,
+'unixsocketperm'         => nil - The permissions of the unix socket,
 'timeout'                => '0',
 'loglevel'               => 'verbose',
 'logfile'                => nil,
-'syslogenabled'         => 'yes',,
+'syslogenabled'         => 'yes',
 'syslogfacility         => 'local0',
 'save'                   => ['900 1','300 10','60 10000'],
 'slaveof'                => nil,
@@ -276,7 +298,7 @@ The redis_gem recipe  will also allow you to install the redis ruby gem, these a
 Resources/Providers
 ===================
 
-This cookbook contains 3 LWRP's
+This cookbook contains 2 LWRP's, and service resources for each instance of redis.
 
 `install`
 --------
@@ -341,10 +363,10 @@ Actions:
 * `enable`
 * `disable`
 
-The name of the service must be the port that the redis server you want to perform the action on is identified by
+Simply provide redis<server_name> where server name is the port if you haven't given it a name.
 
 ```ruby
-service "redis_port" do
+service "redis<server_name>" do
   action [:start,:stop,:restart,:enable,:disable]
 end
 ```

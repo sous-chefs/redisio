@@ -32,11 +32,12 @@ end
 
 # Create a service resource for each redis instance, named for the port it runs on.
 redis['servers'].each do |current_server|
-  service "redis#{current_server['port']}" do
-    start_command "/etc/init.d/redis#{current_server['port']} start"
-    stop_command "/etc/init.d/redis#{current_server['port']} stop"
-    status_command "pgrep -lf 'redis.*#{current_server['port']}' | grep -v 'sh'"
-    restart_command "/etc/init.d/redis#{current_server['port']} stop && /etc/init.d/redis#{current_server['port']} start"
+  server_name = current_server['name'] || current_server['port']
+  service "redis#{server_name}" do
+    start_command "/etc/init.d/redis#{server_name} start"
+    stop_command "/etc/init.d/redis#{server_name} stop"
+    status_command "pgrep -lf 'redis.*#{server_name}' | grep -v 'sh'"
+    restart_command "/etc/init.d/redis#{server_name} stop && /etc/init.d/redis#{server_name} start"
     supports :start => true, :stop => true, :restart => true, :status => false
   end
 end

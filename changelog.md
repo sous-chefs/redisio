@@ -5,13 +5,15 @@ redisio CHANGE LOG
 ---
   - Fixes bug related to where the template source resides when using the LWRP outside of the redisio cookbook
   - Fixes bug where the version method was not properly parsing version strings in redis 2.6.x, as the version string from redis-server -v changed
+  - Fixes bug in default attributes for fedora default redis data directory
   - Now uses chefs service resource for each redis instance instead of using a custom redisio_service resource.  This cleans up many issues, including a lack of updated_by_last_action
   - The use of the redisio_service resource is deprecated.  Use the redis<port_number> instead. 
-  - The default version of redis has been bumped to the current stable, which is 2.6.4
+  - The default version of redis has been bumped to the current stable, which is 2.6.9
   - Adds metadata.json to the gitignore file so that the cookbook can be submoduled.
   - Adds the ability to handle non standard bind address in the init scripts stop command
   - Adds attributes to allow redis to listen on a socket 
   - Adds an attribute to allow redis service accounts to be created as system users, defaults this to true
+  - Adds a per server "name" attribute that allows a server to use that instead of the port for its configuration files, service resource, and init script.
 
 1.1.0 - Released 8/21/2012
 ---
