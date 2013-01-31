@@ -151,6 +151,7 @@ def configure
         variables({
           :version                => version_hash,
           :piddir                 => piddir,
+          :name                   => server_name,
           :port                   => current['port'],
           :address                => current['address'],
           :databases              => current['databases'],
@@ -189,6 +190,7 @@ def configure
         group 'root'
         mode '0755'
         variables({
+          :name => server_name,
           :port => current['port'],
           :address => current['address'],
           :user => current['user'],

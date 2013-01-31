@@ -21,17 +21,25 @@ include_recipe 'redisio::default'
 redis = node['redisio']
 location = "#{redis['mirror']}/#{redis['base_name']}#{redis['version']}.#{redis['artifact_type']}"
 
+redis_instances = if redis['servers'].nil?
+                    [{'port' => '6379'}]
+                  else
+                    redis['servers']
+                  end
+
 redisio_install "redis-servers" do
   version redis['version']
   download_url location
   default_settings redis['default_settings']
-  servers redis['servers']
+  servers redis_instances
   safe_install redis['safe_install']
   base_piddir redis['base_piddir']
 end
 
+puts redis['servers'].inspect
+
 # Create a service resource for each redis instance
-redis['servers'].each do |current_server|
+redis_instances.each do |current_server|
   server_name = current_server['name'] || current_server['port']
   service "redis#{server_name}" do
     start_command "/etc/init.d/redis#{server_name} start"
@@ -41,4 +49,6 @@ redis['servers'].each do |current_server|
     supports :start => true, :stop => true, :restart => true, :status => false
   end
 end
+
+node.set['redisio']['servers'] = redis_instances 
 

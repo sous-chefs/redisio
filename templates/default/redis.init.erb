@@ -12,16 +12,17 @@
 # Description: redis<%= @port %> init script
 ### END INIT INFO
 
+REDISNAME=<%= @name %>
 REDISPORT=<%= @port %>
 <% case @platform %>
 <% when 'ubuntu','debian','fedora' %>
-EXEC="sudo -u <%= @user %> /usr/local/bin/redis-server <%= @configdir %>/${REDISPORT}.conf"
+EXEC="sudo -u <%= @user %> /usr/local/bin/redis-server <%= @configdir %>/${REDISNAME}.conf"
 <% else %> 
-EXEC="runuser <%= @user %> -c \"/usr/local/bin/redis-server <%= @configdir %>/${REDISPORT}.conf\""
+EXEC="runuser <%= @user %> -c \"/usr/local/bin/redis-server <%= @configdir %>/${REDISNAME}.conf\""
 <% end %>
 CLIEXEC=/usr/local/bin/redis-cli
 
-PIDFILE=<%= @piddir %>/redis_${REDISPORT}.pid
+PIDFILE=<%= @piddir %>/redis_${REDISNAME}.pid
 
 case "$1" in
     start)

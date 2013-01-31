@@ -1,4 +1,3 @@
-#
 # Cookbook Name:: redisio
 # Attribute::default
 #
@@ -80,7 +79,7 @@ default['redisio']['default_settings'] = {
   'includes'               => nil
 }
 
-#Individual server overrides, port is required and must be unique per instance, by default we setup a single redis instance on the default redis port of 6379
-default['redisio']['servers'] = [{'port' => '6379'}]
+# The default for this is set inside of the "install" recipe. This is due to the way deep merge handles arrays
+default['redisio']['servers'] = nil
 
 

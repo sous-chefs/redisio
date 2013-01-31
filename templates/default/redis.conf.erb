@@ -18,7 +18,7 @@ daemonize yes
 
 # When running daemonized, Redis writes a pid file in /var/run/redis.pid by
 # default. You can specify a custom pid file location here.
-pidfile <%= @piddir %>/redis_<%=@port%>.pid
+pidfile <%= @piddir %>/redis_<%=@name%>.pid
 
 # Accept connections on the specified port, default is 6379.
 # If port 0 is specified Redis will not listen on a TCP socket.
@@ -62,7 +62,7 @@ loglevel <%=@loglevel%>
 syslog-enabled <%= "#{@syslogenabled}" %>
 
 # Specify the syslog identity.
-syslog-ident redis-<%=@port%>
+syslog-ident redis-<%=@name%>
 
 # Specify the syslog facility.  Must be USER or between LOCAL0-LOCAL7.
 syslog-facility <%= "#{@syslogfacility}" %>
@@ -104,7 +104,7 @@ databases <%=@databases%>
 rdbcompression yes
 
 # The filename where to dump the DB
-dbfilename dump-<%=@port%>.rdb
+dbfilename dump-<%=@name%>.rdb
 <%end%>
 
 # The working directory.
@@ -288,7 +288,7 @@ appendonly yes
 appendonly no
 <%end%>
 # The name of the append only file (default: "appendonly.aof")
-appendfilename appendonly-<%=@port%>.aof
+appendfilename appendonly-<%=@name%>.aof
 
 # The fsync() call tells the Operating System to actually write data on disk
 # instead to wait for more data in the output buffer. Some OS will really flush 
