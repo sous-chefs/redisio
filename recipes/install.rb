@@ -30,7 +30,7 @@ redisio_install "redis-servers" do
   base_piddir redis['base_piddir']
 end
 
-# Create a service resource for each redis instance, named for the port it runs on.
+# Create a service resource for each redis instance
 redis['servers'].each do |current_server|
   server_name = current_server['name'] || current_server['port']
   service "redis#{server_name}" do
