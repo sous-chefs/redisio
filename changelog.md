@@ -14,6 +14,7 @@ redisio CHANGE LOG
   - Adds attributes to allow redis to listen on a socket 
   - Adds an attribute to allow redis service accounts to be created as system users, defaults this to true
   - Adds a per server "name" attribute that allows a server to use that instead of the port for its configuration files, service resource, and init script.
+  - Shifts the responsbility for handling the case of default redis instances into the install recipe due to the behavior of arrays and deep merge
 
 1.1.0 - Released 8/21/2012
 ---
