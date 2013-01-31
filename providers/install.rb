@@ -73,6 +73,7 @@ def configure
     node_memory_kb = node["memory"]["total"]
     Chef::Log.info("node_memory_kb = #{node_memory_kb}")
     Chef::Log.info("new_resource.servers.length = #{new_resource.servers.length}")
+    Chef::Log.info("new_resource.servers = #{new_resource.servers}")
     node_memory_kb.slice! "kB"
     node_memory_kb = node_memory_kb.to_i
 
