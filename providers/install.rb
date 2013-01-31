@@ -77,7 +77,7 @@ def configure
     maxmemory = current['maxmemory']
     if current['maxmemory'] and current['maxmemory'].include?("%")
       # Just assume this is sensible like "95%" or "95 %"
-      percent_factor = current['maxmemory'].to_i / 100
+      percent_factor = current['maxmemory'].to_f / 100.0
       # Also assume that Ohai reports in kB (I think it cats /proc)
       maxmemory = (node_memory_kb * 1024 * percent_factor / new_resource.servers.length).to_i
     end
