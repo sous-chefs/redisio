@@ -65,8 +65,10 @@ def configure
     #Retrieve the default settings hash and the current server setups settings hash.
     current_instance_hash = current_instance.to_hash
     current_defaults_hash = new_resource.default_settings.to_hash
-    Chef::Log.info("current_instance_hash = #{current_instance_hash['save']}")
-    Chef::Log.info("current_defaults_hash = #{current_defaults_hash['save']}")
+    Chef::Log.info("current_instance_hash['save'] = #{current_instance_hash['save']}")
+    Chef::Log.info("current_defaults_hash['save'] = #{current_defaults_hash['save']}")
+    Chef::Log.info("current_instance_hash['job_control'] = #{current_instance_hash['job_control']}")
+    Chef::Log.info("current_defaults_hash['job_control'] = #{current_defaults_hash['job_control']}")
 
     #Merge the configuration defaults with the provided array of configurations provided
     current = current_defaults_hash.merge(current_instance_hash)
