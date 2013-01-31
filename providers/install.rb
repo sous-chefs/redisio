@@ -66,6 +66,9 @@ def configure
     current_instance_hash = current_instance.to_hash
     current_defaults_hash = new_resource.default_settings.to_hash
 
+    #Merge the configuration defaults with the provided array of configurations provided
+    current = current_defaults_hash.merge(current_instance_hash)
+
     #Merge in the default maxmemory
     node_memory_kb = node["memory"]["total"]
     node_memory_kb.slice! "kB"
@@ -79,8 +82,6 @@ def configure
       maxmemory = (node_memory_kb * 1024 * percent_factor / new_resource.servers.length).to_i
     end
 
-    #Merge the configuration defaults with the provided array of configurations provided
-    current = current_defaults_hash.merge(current_instance_hash)
 
     recipe_eval do
       piddir = "#{base_piddir}/#{current['port']}"
