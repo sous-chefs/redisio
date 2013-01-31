@@ -21,6 +21,8 @@ include_recipe 'redisio::default'
 redis = node['redisio']
 location = "#{redis['mirror']}/#{redis['base_name']}#{redis['version']}.#{redis['artifact_type']}"
 
+Chef::Log.info("redis['servers'] = #{redis['servers']}")
+
 redisio_install "redis-servers" do
   version redis['version']
   download_url location
@@ -38,7 +40,7 @@ redis['servers'].each do |current_server|
       start_command "/etc/init.d/redis#{current_server['port']} start"
       stop_command "/etc/init.d/redis#{current_server['port']} stop"
       status_command "pgrep -lf 'redis.*#{current_server['port']}' | grep -v 'sh'"
-      restart_command "/etc/init.d/redis#{current_server['port']} start && /etc/init.d/redis#{current_server['port']} start"
+      restart_command "/etc/init.d/redis#{current_server['port']} stop && /etc/init.d/redis#{current_server['port']} start"
       supports :start => true, :stop => true, :restart => true, :status => false
   	end
   elsif current_server['job_control'] == 'upstart'

@@ -65,13 +65,31 @@ def configure
     #Retrieve the default settings hash and the current server setups settings hash.
     current_instance_hash = current_instance.to_hash
     current_defaults_hash = new_resource.default_settings.to_hash
-    Chef::Log.info("current_instance_hash['save'] = #{current_instance_hash['save']}")
-    Chef::Log.info("current_defaults_hash['save'] = #{current_defaults_hash['save']}")
-    Chef::Log.info("current_instance_hash['job_control'] = #{current_instance_hash['job_control']}")
-    Chef::Log.info("current_defaults_hash['job_control'] = #{current_defaults_hash['job_control']}")
+    Chef::Log.info("current_instance_hash = #{current_instance_hash}")
+    Chef::Log.info("current_defaults_hash = #{current_defaults_hash}")
 
     #Merge the configuration defaults with the provided array of configurations provided
     current = current_defaults_hash.merge(current_instance_hash)
+
+    #Merge in the default maxmemory
+    node_memory_kb = node["memory"]["total"]
+    Chef::Log.info("node_memory_kb = #{node_memory_kb}")
+    Chef::Log.info("new_resource.servers.length = #{new_resource.servers.length}")
+    Chef::Log.info("new_resource.servers = #{new_resource.servers}")
+    Chef::Log.info("current['save'] = #{current['save']}")
+    node_memory_kb.slice! "kB"
+    node_memory_kb = node_memory_kb.to_i
+
+    maxmemory = current['maxmemory']
+    if current['maxmemory'] and current['maxmemory'].include?("%")
+      # Just assume this is sensible like "95%" or "95 %"
+      percent_factor = current['maxmemory'].to_f / 100.0
+      # Also assume that Ohai reports in kB (I think it cats /proc)
+      maxmemory = (node_memory_kb * 1024 * percent_factor / new_resource.servers.length).to_i
+    end
+
+    Chef::Log.info("current['shutdown_save'] = #{current['shutdown_save']}")
+    Chef::Log.info("current['job_control'] = #{current['job_control']}")
 
     recipe_eval do
       piddir = "#{base_piddir}/#{current['port']}"
@@ -170,7 +188,7 @@ def configure
           :repltimeout            => current['repltimeout'],
           :requirepass            => current['requirepass'],
           :maxclients             => current['maxclients'],
-          :maxmemory              => current['maxmemory'],
+          :maxmemory              => maxmemory,
           :maxmemorypolicy        => current['maxmemorypolicy'],
           :maxmemorysamples       => current['maxmemorysamples'],
           :appendfsync            => current['appendfsync'],
@@ -209,6 +227,7 @@ def configure
           :address => current['address'],
           :user => current['user'],
           :group => current['group'],
+          :maxclients => current['maxclients'],
           :shutdown_save => current['shutdown_save'],
           :save => current['save'],
           :configdir => current['configdir'],
