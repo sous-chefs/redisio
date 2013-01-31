@@ -71,6 +71,7 @@ def configure
 
     #Merge in the default maxmemory
     node_memory_kb = node["memory"]["total"]
+    Chef.Log::info("node_memory_kb = #{node_memory_kb}")
     node_memory_kb.slice! "kB"
     node_memory_kb = node_memory_kb.to_i
 
