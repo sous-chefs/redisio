@@ -65,10 +65,19 @@ def configure
     #Retrieve the default settings hash and the current server setups settings hash.
     current_instance_hash = current_instance.to_hash
     current_defaults_hash = new_resource.default_settings.to_hash
-    Chef::Log.info("current_instance_hash['save'] = #{current_instance_hash['save']}")
-    Chef::Log.info("current_defaults_hash['save'] = #{current_defaults_hash['save']}")
-    Chef::Log.info("current_instance_hash['job_control'] = #{current_instance_hash['job_control']}")
-    Chef::Log.info("current_defaults_hash['job_control'] = #{current_defaults_hash['job_control']}")
+
+    #Merge in the default maxmemory
+    node_memory_kb = node["memory"]["total"]
+    node_memory_kb.slice! "kB"
+    node_memory_kb = node_memory_kb.to_i
+
+    maxmemory = current['maxmemory']
+    if current['maxmemory'].include?("%")
+      # Just assume this is sensible like "95%" or "95 %"
+      percent_factor = current['maxmemory'].to_i / 100
+      # Also assume that Ohai reports in kB (I think it cats /proc)
+      maxmemory = (node_memory_kb * 1024 * percent_factor / new_resource.servers.length).to_i
+    end
 
     #Merge the configuration defaults with the provided array of configurations provided
     current = current_defaults_hash.merge(current_instance_hash)
