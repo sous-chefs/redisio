@@ -75,7 +75,7 @@ def configure
     node_memory_kb = node_memory_kb.to_i
 
     maxmemory = current['maxmemory']
-    if current['maxmemory'].include?("%")
+    if current['maxmemory'] and current['maxmemory'].include?("%")
       # Just assume this is sensible like "95%" or "95 %"
       percent_factor = current['maxmemory'].to_i / 100
       # Also assume that Ohai reports in kB (I think it cats /proc)
@@ -180,7 +180,7 @@ def configure
           :repltimeout            => current['repltimeout'],
           :requirepass            => current['requirepass'],
           :maxclients             => current['maxclients'],
-          :maxmemory              => current['maxmemory'],
+          :maxmemory              => maxmemory,
           :maxmemorypolicy        => current['maxmemorypolicy'],
           :maxmemorysamples       => current['maxmemorysamples'],
           :appendfsync            => current['appendfsync'],
