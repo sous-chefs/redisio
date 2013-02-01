@@ -14,5 +14,7 @@ respawn
 respawn limit 10 30
 
 pre-start exec /usr/local/bin/redis-server <%= @configdir %>/<%= @port %>.conf && echo "starting redis-server"
-pre-stop exec /usr/local/bin/redis-cli -p <%= @port %> save
-post-stop exec /usr/local/bin/redis-cli -p <%= @port %> shutdown
+post-stop script
+ /usr/local/bin/redis-cli -p <%= @port %> save
+ /usr/local/bin/redis-cli -p <%= @port %> shutdown
+end script
