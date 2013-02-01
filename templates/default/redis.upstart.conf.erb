@@ -10,7 +10,7 @@ setuid <%= @user %>
 setgid <%= @group %>
 
 
-pre-stop exec /usr/local/bin/redis-cli -p <%= port %> save
+pre-stop exec /usr/local/bin/redis-cli -p <%= @port %> save
 
 
 
