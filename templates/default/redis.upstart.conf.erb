@@ -9,14 +9,10 @@ limit nofile 200000 200000
 setuid <%= @user %>
 setgid <%= @group %>
 
-
-pre-stop exec /usr/local/bin/redis-cli -p <%= @port %> save
-
-
-
 # If the job exits, restart it. Give up with more than 10 restarts in 30 seconds.
 respawn
 respawn limit 10 30
 
 pre-start exec /usr/local/bin/redis-server <%= @configdir %>/<%= @port %>.conf && echo "starting redis-server"
+pre-stop exec /usr/local/bin/redis-cli -p <%= @port %> save
 post-stop exec /usr/local/bin/redis-cli -p <%= @port %> shutdown
