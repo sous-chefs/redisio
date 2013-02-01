@@ -12,9 +12,9 @@ setgid <%= @group %>
 
 <% if @shutdown_save or (@save and !@save.empty?) %>
 pre-stop script
- echo "pre-stop script called" >> /tmp/upstart.log
+ echo "pre-stop script called"
  /usr/local/bin/redis-cli -p <%= @port %> save
- echo "finished saving" >> /tmp/upstart.log
+ echo "finished saving"
 end script
 <% end %>
 
@@ -24,5 +24,5 @@ end script
 respawn
 respawn limit 10 30
 
-pre-start exec /usr/local/bin/redis-server <%= @configdir %>/<%= @port %>.conf && echo "starting redis-server" >> /tmp/upstart.log
+pre-start exec /usr/local/bin/redis-server <%= @configdir %>/<%= @port %>.conf && echo "starting redis-server"
 post-stop exec /usr/local/bin/redis-cli -p <%= @port %> shutdown
