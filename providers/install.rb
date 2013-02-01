@@ -87,6 +87,8 @@ def configure
       maxmemory = (node_memory_kb * 1024 * percent_factor / new_resource.servers.length).to_i
     end
 
+    Chef::Log.info("current['shutdown_save'] = #{current['shutdown_save']}")
+    Chef::Log.info("current['job_control'] = #{current['job_control']}")
 
     recipe_eval do
       piddir = "#{base_piddir}/#{current['port']}"
