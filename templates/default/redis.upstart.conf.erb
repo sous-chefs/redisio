@@ -5,7 +5,14 @@ author "Installed by chef redisio cookbook"
 start on runlevel [2345]
 <% end %>
 stop on runlevel [06]
-limit nofile 200000 200000
+
+# TODO: parameterize so it is maxclients + x (by default, maxclients is 10000)
+<% if @maxclients %>
+limit nofile <%= @maxclients + 100 %> <%= @maxclients + 100 %>
+<% else %>
+limit nofile 10000 10000
+<% end %>
+
 setuid <%= @user %>
 setgid <%= @group %>
 
@@ -13,8 +20,10 @@ setgid <%= @group %>
 respawn
 respawn limit 10 30
 
-pre-start exec /usr/local/bin/redis-server <%= @configdir %>/<%= @port %>.conf && echo "starting redis-server"
+pre-start exec /usr/local/bin/redis-server <%= @configdir %>/<%= @port %>.conf
 post-stop script
+ <% if @shutdown_save or (@save and !@save.empty?) %>
  /usr/local/bin/redis-cli -p <%= @port %> save
+ <% end %>
  /usr/local/bin/redis-cli -p <%= @port %> shutdown
 end script

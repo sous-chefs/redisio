@@ -227,6 +227,7 @@ def configure
           :address => current['address'],
           :user => current['user'],
           :group => current['group'],
+          :maxclients => current['maxclients'],
           :shutdown_save => current['shutdown_save'],
           :save => current['save'],
           :configdir => current['configdir'],
