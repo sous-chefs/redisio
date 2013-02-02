@@ -22,7 +22,7 @@ respawn limit 10 30
 
 pre-start exec /usr/local/bin/redis-server <%= @configdir %>/<%= @port %>.conf
 post-stop script
- <% if @shutdown_save or (@save and !@save.empty?) %>
+ <% if @shutdown_save %>
  /usr/local/bin/redis-cli -p <%= @port %> save
  <% end %>
  /usr/local/bin/redis-cli -p <%= @port %> shutdown
