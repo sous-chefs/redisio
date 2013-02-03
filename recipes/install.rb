@@ -23,17 +23,23 @@ location = "#{redis['mirror']}/#{redis['base_name']}#{redis['version']}.#{redis[
 
 Chef::Log.info("redis['servers'] = #{redis['servers']}")
 
+servers_array = redis['servers']
+if servers_array.nil?
+  servers_array = [{'port' => '6379'}]
+end
+
+
 redisio_install "redis-servers" do
   version redis['version']
   download_url location
   default_settings redis['default_settings']
-  servers redis['servers']
+  servers servers_array
   safe_install redis['safe_install']
   base_piddir redis['base_piddir']
 end
 
 # Create a service resource for each redis instance, named for the port it runs on.
-redis['servers'].each do |current_server|
+servers_array.each do |current_server|
   if current_server['job_control'] == 'initd'
 	Chef::Log.info("job_control is initd")
   	service "redis#{current_server['port']}" do

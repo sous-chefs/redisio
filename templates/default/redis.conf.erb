@@ -90,8 +90,14 @@ databases <%=@databases%>
 #save 60 10000
 
 <% if (@backuptype == 'rdb' || @backuptype == 'both') %>
-  <% @save.each do |save_option| %>
-    <%= "save #{save_option}" %>
+  <% if @save.nil? %>
+    save 900 1
+    save 300 10
+    save 60 10000
+  <% else %>
+    <% @save.each do |save_option| %>
+      <%= "save #{save_option}" %>
+    <% end %>
   <% end %>
 
 # Compress string objects using LZF when dump .rdb databases?
