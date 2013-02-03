@@ -59,7 +59,9 @@ default['redisio']['default_settings'] = {
   'syslogenabled'          => 'yes',
   'syslogfacility'         => 'local0',
   'shutdown_save'          => false,
-  'save'                   => ['900 1','300 10','60 10000'],
+  # I want to set this in default attributes but merge subtraction fails, so I am going to set this to nil.  If it is nil after attribute merging,
+  # we will default to ['900 1','300 10','60 10000']
+  'save'                   => nil,
   'slaveof'                => nil,
   # Defaults to initd for backward-compatibility, to use Upstart specify 'upstart'
   'job_control'            => 'initd',
@@ -81,5 +83,7 @@ default['redisio']['default_settings'] = {
 }
 
 #Individual server overrides, port is required and must be unique per instance, by default we setup a single redis instance on the default redis port of 6379
-default['redisio']['servers'] = [{'port' => '6379'}]
+#Replacing default array with nil.  Otherwise, we have to set the servers attribute in override_attributes, and we've noticed that once we do that, we cannot
+#edit the node file manually to link up slaves.  If this is nil after merging, we will default to [{'port' => '6379'}].
+default['redisio']['servers'] = nil
 
