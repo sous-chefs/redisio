@@ -1,7 +1,7 @@
 redisio CHANGE LOG
 ===
 
-1.2.0
+1.2.0 - Released 2/6/2013
 ---
   - Fixes bug related to where the template source resides when using the LWRP outside of the redisio cookbook
   - Fixes bug where the version method was not properly parsing version strings in redis 2.6.x, as the version string from redis-server -v changed
