@@ -58,7 +58,7 @@ Recipes
 Role File Examples
 ------------------
 
-### Install redis and setup an instance with default settings on default port, and start the service through a role file
+#### Install redis and setup an instance with default settings on default port, and start the service through a role file #
 
 ```ruby
 run_list *%w[
@@ -69,7 +69,7 @@ run_list *%w[
 default_attributes({})
 ```
 
-### Install redis, give the instance a name, and use a unix socket
+#### Install redis, give the instance a name, and use a unix socket #
 
 ```ruby
 run_list *%w[
@@ -86,7 +86,7 @@ default_attributes({
 })
 ```
 
-### Install redis and setup two instances on the same server, on different ports, with one slaved to the other through a role file
+#### Install redis and setup two instances on the same server, on different ports, with one slaved to the other through a role file #
 
 ```ruby
 run_list *%w[
@@ -104,7 +104,7 @@ default_attributes({
 })
 ```
 
-### Install redis and setup two instances, on the same server, on different ports, with the data directory changed to /mnt/redis
+#### Install redis and setup two instances, on the same server, on different ports, with the default data directory changed to /mnt/redis, and the second instance named#
 
 ```ruby
 run_list *%w[
@@ -115,12 +115,12 @@ run_list *%w[
 default_attributes({
   'redisio' => {
     'default_settings' => {'datadir' => '/mnt/redis'},
-    'servers' => [{'port' => '6379'}, {'port' => '6380'}]
+    'servers' => [{'port' => '6379'}, {'port' => '6380', 'name' => "MyInstance"}]
   }
 })
 ```
 
-### Install redis and setup three instances on the same server, changing the default data directory to /mnt/redis, each instance will use a different backup type, and one instance will use a different data dir
+#### Install redis and setup three instances on the same server, changing the default data directory to /mnt/redis, each instance will use a different backup type, and one instance will use a different data dir #
 
 ```ruby
 run_list *%w[
@@ -140,7 +140,7 @@ default_attributes({
 })
 ```
 
-### Install redis 2.4.11 (lower than the default version) and turn safe install off, for the event where redis is already installed.  This will use the default settings.  Keep in mind the redis version will not actually be updated until you restart the service (either through the LWRP or manually).
+#### Install redis 2.4.11 (lower than the default version) and turn safe install off, for the event where redis is already installed.  This will use the default settings.  Keep in mind the redis version will not actually be updated until you restart the service (either through the LWRP or manually). #
 
 ```ruby
 run_list *%w[
@@ -156,7 +156,7 @@ default_attributes({
 })
 ```
 
-### Install version 2.2.2 of the redis ruby gem, if you don't list the version, it will simply install the latest available.
+#### Install version 2.2.2 of the redis ruby gem, if you don't list the version, it will simply install the latest available. #
 
 ```ruby
 run_list *%w[
