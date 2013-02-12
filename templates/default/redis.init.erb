@@ -22,6 +22,15 @@ EXEC="runuser <%= @user %> -c \"/usr/local/bin/redis-server <%= @configdir %>/${
 <% end %>
 CLIEXEC=/usr/local/bin/redis-cli
 
+<% connection_string = String.new %>
+<% if @unixsocket.nil? %> 
+  <% connection_string << " -p #{@port}" %>
+  <% connection_string << " -h #{@address}" if @address %>
+<% else %>
+  <% connection_string << " -s #{@unixsocket}" %>
+<% end %>
+<% connection_string  << " -a '#{@requirepass}'" unless @requirepass.nil? %>  
+
 PIDFILE=<%= @piddir %>/redis_${REDISNAME}.pid
 
 if [ ! -d <%= @piddir %> ]; then
@@ -46,7 +55,10 @@ case "$1" in
         else
                 PID=$(cat $PIDFILE)
                 echo "Stopping ..."
-                $CLIEXEC <%= @address ? "-h #{@address}" : ""%> -p $REDISPORT<%= @requirepass ? " -a '#{@requirepass}'" : "" %> shutdown
+
+                <%= "$CLIEXEC #{connection_string} save" if @shutdown_save %>                 
+                $CLIEXEC <%= connection_string %> shutdown
+
                 while [ -x /proc/${PID} ]
                 do
                     echo "Waiting for Redis to shutdown ..."

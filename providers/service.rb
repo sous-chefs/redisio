@@ -24,7 +24,7 @@ action :start do
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
       execute "/etc/init.d/redis#{new_resource.server_port} start"
     else
-      Chef::Log.warn("Cannot start service, init script does not exist")
+      Chef::Log.warn("Cannot start service, init script not found")
     end
   end
 end
@@ -36,7 +36,7 @@ action :stop do
     if ::File.exists?("/etc/init.d/redis#{new_resource.server_port}")
       execute "/etc/init.d/redis#{new_resource.server_port} stop"
     else
-      Chef::Log.warn("Cannot stop service, init script does not exist")
+      Chef::Log.warn("Cannot stop service, init script not found")
     end
   end
 end

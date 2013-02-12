@@ -61,8 +61,10 @@ default['redisio']['default_settings'] = {
   'logfile'                => nil,
   'syslogenabled'          => 'yes',
   'syslogfacility'         => 'local0',
-  'save'                   => ['900 1','300 10','60 10000'],
+  'shutdown_save'          => false,
+  'save'                   => nil, # Defaults to ['900 1','300 10','60 10000'] inside of template.  Needed due to lack of hash subtraction
   'slaveof'                => nil,
+  'job_control'            => 'initd', 
   'masterauth'             => nil,
   'slaveservestaledata'    => 'yes',
   'replpingslaveperiod'    => '10',
@@ -81,5 +83,4 @@ default['redisio']['default_settings'] = {
 
 # The default for this is set inside of the "install" recipe. This is due to the way deep merge handles arrays
 default['redisio']['servers'] = nil
-
 

@@ -21,11 +21,10 @@ include_recipe 'redisio::default'
 redis = node['redisio']
 location = "#{redis['mirror']}/#{redis['base_name']}#{redis['version']}.#{redis['artifact_type']}"
 
-redis_instances = if redis['servers'].nil?
-                    [{'port' => '6379'}]
-                  else
-                    redis['servers']
-                  end
+redis_instances = redis['servers']
+if redis_instances.nil?
+  redis_instances = [{'port' => '6379'}]
+end
 
 redisio_install "redis-servers" do
   version redis['version']
@@ -36,16 +35,35 @@ redisio_install "redis-servers" do
   base_piddir redis['base_piddir']
 end
 
-# Create a service resource for each redis instance
+# Create a service resource for each redis instance, named for the port it runs on.
 redis_instances.each do |current_server|
   server_name = current_server['name'] || current_server['port']
-  service "redis#{server_name}" do
-    start_command "/etc/init.d/redis#{server_name} start"
-    stop_command "/etc/init.d/redis#{server_name} stop"
-    status_command "pgrep -lf 'redis.*#{server_name}' | grep -v 'sh'"
-    restart_command "/etc/init.d/redis#{server_name} stop && /etc/init.d/redis#{server_name} start"
-    supports :start => true, :stop => true, :restart => true, :status => false
+  job_control = current_server['job_control'] || redis['default_settings']['job_control'] 
+
+  Chef::Log.info(current_server.inspect)
+  Chef::Log.info("job_control for redis#{server_name} is #{current_server['job_control']}")
+
+  if job_control == 'initd'
+  	service "redis#{server_name}" do
+      start_command "/etc/init.d/redis#{server_name} start"
+      stop_command "/etc/init.d/redis#{server_name} stop"
+      status_command "pgrep -lf 'redis.*#{server_name}' | grep -v 'sh'"
+      restart_command "/etc/init.d/redis#{server_name} stop && /etc/init.d/redis#{server_name} start"
+      supports :start => true, :stop => true, :restart => true, :status => false
+  	end
+  elsif job_control == 'upstart'
+  	service "redis#{server_name}" do
+	  provider Chef::Provider::Service::Upstart
+      start_command "start redis#{server_name}"
+      stop_command "stop redis#{server_name}"
+      status_command "pgrep -lf 'redis.*#{server_name}' | grep -v 'sh'"
+      restart_command "restart redis#{server_name}"
+      supports :start => true, :stop => true, :restart => true, :status => false
+  	end
+  else
+    Chef::Log.error("Unknown job control type, no service resource created!")
   end
+
 end
 
 node.set['redisio']['servers'] = redis_instances 

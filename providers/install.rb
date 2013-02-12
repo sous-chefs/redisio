@@ -69,12 +69,31 @@ def configure
     #Merge the configuration defaults with the provided array of configurations provided
     current = current_defaults_hash.merge(current_instance_hash)
 
+    #Merge in the default maxmemory
+    node_memory_kb = node["memory"]["total"]
+    Chef::Log.info("node_memory_kb = #{node_memory_kb}")
+    Chef::Log.info("new_resource.servers.length = #{new_resource.servers.length}")
+    Chef::Log.info("new_resource.servers = #{new_resource.servers}")
+    Chef::Log.info("current['save'] = #{current['save']}")
+    node_memory_kb.slice! "kB"
+    node_memory_kb = node_memory_kb.to_i
+
+    maxmemory = current['maxmemory']
+    if current['maxmemory'] and current['maxmemory'].include?("%")
+      # Just assume this is sensible like "95%" or "95 %"
+      percent_factor = current['maxmemory'].to_f / 100.0
+      # Also assume that Ohai reports in kB (I think it cats /proc)
+      maxmemory = (node_memory_kb * 1024 * percent_factor / new_resource.servers.length).to_i
+    end
+
+    Chef::Log.info("current['shutdown_save'] = #{current['shutdown_save']}")
+    Chef::Log.info("current['job_control'] = #{current['job_control']}")
+
     recipe_eval do
       server_name = current['name'] || current['port']
       piddir = "#{base_piddir}/#{server_name}"
       aof_file = "#{current['datadir']}/appendonly-#{server_name}.aof"
       rdb_file = "#{current['datadir']}/dump-#{server_name}.rdb"  
-
 
       #Create the owner of the redis data directory
       user current['user'] do
@@ -172,7 +191,7 @@ def configure
           :repltimeout            => current['repltimeout'],
           :requirepass            => current['requirepass'],
           :maxclients             => current['maxclients'],
-          :maxmemory              => current['maxmemory'],
+          :maxmemory              => maxmemory,
           :maxmemorypolicy        => current['maxmemorypolicy'],
           :maxmemorysamples       => current['maxmemorysamples'],
           :appendfsync            => current['appendfsync'],
@@ -197,8 +216,33 @@ def configure
           :configdir => current['configdir'],
           :piddir => piddir,
           :requirepass => current['requirepass'],
-          :platform => node['platform']
+          :shutdown_save => current['shutdown_save'],
+          :platform => node['platform'],
+          :unixsocket => current['unixsocket']
           })
+        only_if { current['job_control'] == 'initd' }
+      end
+      template "/etc/init/redis#{server_name}.conf" do
+        source 'redis.upstart.conf.erb'
+        cookbook 'redisio'
+        owner current['user']
+        group current['group']
+        mode '0644'
+        variables({
+          :name => server_name,
+          :port => current['port'],
+          :address => current['address'],
+          :user => current['user'],
+          :group => current['group'],
+          :maxclients => current['maxclients'],
+          :requirepass => current['requirepass'],
+          :shutdown_save => current['shutdown_save'],
+          :save => current['save'],
+          :configdir => current['configdir'],
+          :platform => node['platform'],
+          :unixsocket => current['unixsocket']
+        })
+        only_if { current['job_control'] == 'upstart' }
       end
     end
   end # servers each loop

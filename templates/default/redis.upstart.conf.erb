@@ -1,0 +1,34 @@
+description "Start the redis instance on port <%= @port %>"
+author "Installed by chef redisio cookbook"
+
+start on runlevel [2345]
+stop on runlevel [06]
+
+# TODO: parameterize so it is maxclients + x (by default, maxclients is 10000)
+<% if @maxclients %>
+limit nofile <%= @maxclients + 100 %> <%= @maxclients + 100 %>
+<% else %>
+limit nofile 10000 10000
+<% end %>
+
+setuid <%= @user %>
+setgid <%= @group %>
+
+# If the job exits, restart it. Give up with more than 10 restarts in 30 seconds.
+respawn
+respawn limit 10 30
+
+pre-start exec /usr/local/bin/redis-server <%= @configdir %>/<%= @name %>.conf
+post-stop script
+  <% connection_string  = "/usr/local/bin/redis-cli" %>
+  <% if @unixsocket.nil? %> 
+    <% connection_string << " -p #{@port}" %>
+    <% connection_string << " -h #{@address}" if @address %>
+  <% else %>
+    <% connection_string << " -s #{@unixsocket}" %>
+  <% end %>
+  <% connection_string  << " -a '#{@requirepass}'" unless @requirepass.nil? %>  
+
+  <%= "#{connection_string} save" if @shutdown_save %> 
+  <%= "#{connection_string} shutdown" %>
+end script

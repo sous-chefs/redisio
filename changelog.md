@@ -1,6 +1,15 @@
 redisio CHANGE LOG
 ===
 
+1.3.0 - Released 2/_/2013 
+---
+  - Adds upstart support 
+  - Fixes bug in uninstall resource that would have prevented it from uninstalling named servers.  
+  - Reworks the init script to take into account the IP redis is listening on, and if it is listening on a socket.
+  - Adds an attribute called "shutdown_save" which will explicitly call save on redis shutdown 
+  - Updates the README.md with a shorter and hopefully equally as useful usage section
+  - maxmemory attribute now allows the use of percentages
+
 1.2.0 - Released 2/6/2013
 ---
   - Fixes bug related to where the template source resides when using the LWRP outside of the redisio cookbook
