@@ -9,6 +9,7 @@ redisio CHANGE LOG
   - Adds an attribute called "shutdown_save" which will explicitly call save on redis shutdown 
   - Updates the README.md with a shorter and hopefully equally as useful usage section
   - maxmemory attribute now allows the use of percentages
+  - Bumps default version of redis to install to the current stable, 2.6.10
 
 1.2.0 - Released 2/6/2013
 ---
