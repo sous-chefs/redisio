@@ -2,7 +2,7 @@
 # Cookbook Name:: redisio
 # Recipe:: install
 #
-# Copyright 2012, Brian Bianco <brian.bianco@gmail.com>
+# Copyright 2013, Brian Bianco <brian.bianco@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,9 +39,6 @@ end
 redis_instances.each do |current_server|
   server_name = current_server['name'] || current_server['port']
   job_control = current_server['job_control'] || redis['default_settings']['job_control'] 
-
-  Chef::Log.info(current_server.inspect)
-  Chef::Log.info("job_control for redis#{server_name} is #{current_server['job_control']}")
 
   if job_control == 'initd'
   	service "redis#{server_name}" do

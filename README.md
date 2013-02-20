@@ -385,7 +385,7 @@ Author\_Website:: http://www.brianbianco.com
 Twitter:: @brianwbianco
 IRC:: geekbri
 
-Copyright 2012, Brian Bianco
+Copyright 2013, Brian Bianco
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

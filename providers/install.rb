@@ -2,7 +2,7 @@
 # Cookbook Name:: redisio
 # Provider::install
 #
-# Copyright 2012, Brian Bianco <brian.bianco@gmail.com>
+# Copyright 2013, Brian Bianco <brian.bianco@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -71,23 +71,16 @@ def configure
 
     #Merge in the default maxmemory
     node_memory_kb = node["memory"]["total"]
-    Chef::Log.info("node_memory_kb = #{node_memory_kb}")
-    Chef::Log.info("new_resource.servers.length = #{new_resource.servers.length}")
-    Chef::Log.info("new_resource.servers = #{new_resource.servers}")
-    Chef::Log.info("current['save'] = #{current['save']}")
     node_memory_kb.slice! "kB"
     node_memory_kb = node_memory_kb.to_i
 
     maxmemory = current['maxmemory']
-    if current['maxmemory'] and current['maxmemory'].include?("%")
+    if current['maxmemory'] && current['maxmemory'].include?("%")
       # Just assume this is sensible like "95%" or "95 %"
       percent_factor = current['maxmemory'].to_f / 100.0
-      # Also assume that Ohai reports in kB (I think it cats /proc)
+      # Ohai reports memory in KB as it looks in /proc/meminfo
       maxmemory = (node_memory_kb * 1024 * percent_factor / new_resource.servers.length).to_i
     end
-
-    Chef::Log.info("current['shutdown_save'] = #{current['shutdown_save']}")
-    Chef::Log.info("current['job_control'] = #{current['job_control']}")
 
     recipe_eval do
       server_name = current['name'] || current['port']

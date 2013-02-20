@@ -1,14 +1,14 @@
 redisio CHANGE LOG
 ===
 
-1.3.0 - Released 2/_/2013 
+1.3.0 - Released 2/20/2013 
 ---
-  - Adds upstart support 
+  - Adds upstart support.  This was a much requested feature. 
   - Fixes bug in uninstall resource that would have prevented it from uninstalling named servers.  
   - Reworks the init script to take into account the IP redis is listening on, and if it is listening on a socket.
   - Adds an attribute called "shutdown_save" which will explicitly call save on redis shutdown 
   - Updates the README.md with a shorter and hopefully equally as useful usage section
-  - maxmemory attribute now allows the use of percentages
+  - maxmemory attribute now allows the use of percentages.  You must include a % sign after the value.
   - Bumps default version of redis to install to the current stable, 2.6.10
 
 1.2.0 - Released 2/6/2013
