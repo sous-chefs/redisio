@@ -232,6 +232,7 @@ def configure
           :shutdown_save => current['shutdown_save'],
           :save => current['save'],
           :configdir => current['configdir'],
+          :piddir => piddir,
           :platform => node['platform'],
           :unixsocket => current['unixsocket']
         })

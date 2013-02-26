@@ -1,6 +1,10 @@
 redisio CHANGE LOG
 ===
 
+1.3.1 - Release 2/26/2013
+---
+  - Fixes bug in upstart script to create pid directory if it does not exist
+
 1.3.0 - Released 2/20/2013 
 ---
   - Adds upstart support.  This was a much requested feature. 

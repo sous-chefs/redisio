@@ -306,6 +306,25 @@ Resources/Providers
 
 This cookbook contains 2 LWRP's, and service resources for each instance of redis.
 
+`service`
+---------
+
+Actions:
+
+* `start`
+* `stop`
+* `restart`
+* `enable`
+* `disable`
+
+Simply provide redis<server_name> where server name is the port if you haven't given it a name.
+
+```ruby
+service "redis<server_name>" do
+  action [:start,:stop,:restart,:enable,:disable]
+end
+```
+
 `install`
 --------
 
@@ -358,32 +377,13 @@ uninstall "redis" do
 end
 ```
 
-`service`
----------
-
-Actions:
-
-* `start`
-* `stop`
-* `restart`
-* `enable`
-* `disable`
-
-Simply provide redis<server_name> where server name is the port if you haven't given it a name.
-
-```ruby
-service "redis<server_name>" do
-  action [:start,:stop,:restart,:enable,:disable]
-end
-```
-
 License and Author
 ==================
 
 Author:: [Brian Bianco] (<brian.bianco@gmail.com>)
 Author\_Website:: http://www.brianbianco.com
 Twitter:: @brianwbianco
-IRC:: geekbri
+IRC:: geekbri on freenode
 
 Copyright 2013, Brian Bianco
 

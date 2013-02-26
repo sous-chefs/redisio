@@ -18,7 +18,14 @@ setgid <%= @group %>
 respawn
 respawn limit 10 30
 
-pre-start exec /usr/local/bin/redis-server <%= @configdir %>/<%= @name %>.conf
+pre-start script 
+  if [ ! -d <%= @piddir %> ]; then
+    mkdir -p <%= @piddir %>
+    chown <%= @user %>  <%= @piddir %>
+  fi
+  exec /usr/local/bin/redis-server <%= @configdir %>/<%= @name %>.conf
+end script
+
 post-stop script
   <% connection_string  = "/usr/local/bin/redis-cli" %>
   <% if @unixsocket.nil? %> 
