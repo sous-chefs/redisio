@@ -1,7 +1,11 @@
 redisio CHANGE LOG
 ===
 
-1.3.1 - Release 2/26/2013
+1.3.2 - Released 2/26/2013
+---
+  - Changes calls to Chef::ShellOut to Mixlib::ShellOut
+
+1.3.1 - Released 2/26/2013
 ---
   - Fixes bug in upstart script to create pid directory if it does not exist
 
