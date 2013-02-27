@@ -1,6 +1,10 @@
 redisio CHANGE LOG
 ===
 
+1.4.1 - Released 2/27/2013
+---
+  - Removes left over debugging statement
+
 1.4.0 - Released 2/27/2013
 ---
   - ACTUALLY fixes the use of upstart and redis.  Redis no longer daemonizes itself when using job_control type upstart and allows upstart to handle this

@@ -156,7 +156,6 @@ def configure
         only_if { ::File.exists?(rdb_file) }
       end
       #Setup the redis users descriptor limits
-      puts current['ulimit']
       if current['ulimit']
         user_ulimit current['user'] do
           filehandle_limit descriptors
