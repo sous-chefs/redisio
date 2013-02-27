@@ -1,6 +1,14 @@
 redisio CHANGE LOG
 ===
 
+1.4.0 - Released 2/27/2013
+---
+  - ACTUALLY fixes the use of upstart and redis.  Redis no longer daemonizes itself when using job_control type upstart and allows upstart to handle this
+  - Adds dependency on the ulimit cookbook and allows you to set the ulimits for the redis instance users.
+  - Adds associated node attribute for the ulimit.  It defaults to the special value 0, which causes the cookbook to use maxclients + 32.  32 is the number of file descriptors redis needs itself
+  - You can disable the use of the ulimits by setting the node attribute for it to "false" or "nil"
+  - Comments out the start on by default in the upstart script.  This will get uncommented by the upstart provider when the :enable action is called on it
+
 1.3.2 - Released 2/26/2013
 ---
   - Changes calls to Chef::ShellOut to Mixlib::ShellOut

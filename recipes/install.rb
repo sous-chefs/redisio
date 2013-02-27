@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 include_recipe 'redisio::default'
+include_recipe 'ulimit::default'
 
 redis = node['redisio']
 location = "#{redis['mirror']}/#{redis['base_name']}#{redis['version']}.#{redis['artifact_type']}"

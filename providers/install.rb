@@ -82,6 +82,8 @@ def configure
       maxmemory = (node_memory_kb * 1024 * percent_factor / new_resource.servers.length).to_i
     end
 
+    descriptors = current['ulimit'] == 0 ? current['maxclients'] + 32 : current['maxclients']
+
     recipe_eval do
       server_name = current['name'] || current['port']
       piddir = "#{base_piddir}/#{server_name}"
@@ -153,6 +155,13 @@ def configure
         only_if { current['backuptype'] == 'rdb' || current['backuptype'] == 'both' }
         only_if { ::File.exists?(rdb_file) }
       end
+      #Setup the redis users descriptor limits
+      puts current['ulimit']
+      if current['ulimit']
+        user_ulimit current['user'] do
+          filehandle_limit descriptors
+        end
+      end
       #Lay down the configuration files for the current instance
       template "#{current['configdir']}/#{server_name}.conf" do
         source 'redis.conf.erb'
@@ -164,6 +173,7 @@ def configure
           :version                => version_hash,
           :piddir                 => piddir,
           :name                   => server_name,
+          :job_control            => current['job_control'],
           :port                   => current['port'],
           :address                => current['address'],
           :databases              => current['databases'],
@@ -203,6 +213,7 @@ def configure
         mode '0755'
         variables({
           :name => server_name,
+          :job_control => current['job_control'],
           :port => current['port'],
           :address => current['address'],
           :user => current['user'],
@@ -223,6 +234,7 @@ def configure
         mode '0644'
         variables({
           :name => server_name,
+          :job_control => current['job_control'],
           :port => current['port'],
           :address => current['address'],
           :user => current['user'],

@@ -9,6 +9,7 @@ Requirements
 ============
 
 This cookbook builds redis from source, so it should work on any architecture for the supported distributions.  Init scripts are installed into /etc/init.d/
+It depends on the ulimit cookbook: https://github.com/bmhatfield/chef-ulimit
 
 Platforms
 ---------
@@ -262,6 +263,7 @@ Available options and their defaults
 'homedir'                => Home directory of the user. Varies on distribution, check attributes file 
 'shell'                  => Users shell. Varies on distribution, check attributes file
 'systemuser'             => true - Sets up the instances user as a system user
+'ulimit'                 => 0 - 0 is a special value causing the ulimit to be maxconnections +32.  Set to nil or false to disable setting ulimits
 'configdir'              => '/etc/redis' - configuration directory
 'name'                   => nil, Allows you to name the server with something other than port.  Useful if you want to use unix sockets
 'address'                => nil,
