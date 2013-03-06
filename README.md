@@ -250,7 +250,7 @@ Configuration options, each option corresponds to the same-named configuration o
 * `redisio['mirror']` - mirror server with path to download redis package, default is https://redis.googlecode.com/files
 * `redisio['base_name']` - the base name of the redis package to be downloaded (the part before the version), default is 'redis-'
 * `redisio['artifact_type']` - the file extension of the package.  currently only .tar.gz and .tgz are supported, default is 'tar.gz'
-* `redisio['version']` - the version number of redis to install (also appended to the `base_name` for downloading), default is '2.4.10'
+* `redisio['version']` - the version number of redis to install (also appended to the `base_name` for downloading), default is '2.6.10'
 * `redisio['safe_install'] - prevents redis from installing itself if another version of redis is installed, default is true
 * `redisio['base_piddir'] - This is the directory that redis pidfile directories and pidfiles will be placed in.  Since redis can run as non root, it needs to have proper
                            permissions to the directory to create its pid.  Since each instance can run as a different user, these directories will all be nested inside this base one.
