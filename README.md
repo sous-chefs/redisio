@@ -228,15 +228,19 @@ The service resources created will use the 'name' attribute if it is specified, 
 
 Using the service resources:
 
+```ruby
 service "redis6379" do
   action :start
 end
+```
 
 Or if you have named your server "Master"
 
+```ruby
 service "redisMaster" do
   action :start
 end
+```
 
 Attributes
 ==========
