@@ -38,9 +38,10 @@ def download
 end
 
 def unpack
+  install_dir = "#{new_resource.base_name}#{new_resource.version}"
   case new_resource.artifact_type
     when "tar.gz",".tgz"
-      execute "cd #{new_resource.download_dir} && tar zxf #{@tarball}"
+      execute %(cd #{new_resource.download_dir} ; mkdir -p '#{install_dir}' ; tar zxf '#{@tarball}' --strip-components=1 -C '#{install_dir}')
     else
       raise Chef::Exceptions::UnsupportedAction, "Current package type #{new_resource.artifact_type} is unsupported"
   end
@@ -88,7 +89,7 @@ def configure
       server_name = current['name'] || current['port']
       piddir = "#{base_piddir}/#{server_name}"
       aof_file = "#{current['datadir']}/appendonly-#{server_name}.aof"
-      rdb_file = "#{current['datadir']}/dump-#{server_name}.rdb"  
+      rdb_file = "#{current['datadir']}/dump-#{server_name}.rdb"
 
       #Create the owner of the redis data directory
       user current['user'] do
@@ -132,7 +133,7 @@ def configure
         only_if { current['syslogenabled'] != 'yes' && current['logfile'] && current['logfile'] != 'stdout' }
       end
       #Create the log file is syslog is not being used
-      file current['logfile'] do 
+      file current['logfile'] do
         owner current['user']
         group current['group']
         mode '0644'
@@ -141,7 +142,7 @@ def configure
         only_if { current['logfile'] && current['logfile'] != 'stdout' }
       end
       #Set proper permissions on the AOF or RDB files
-      file aof_file do 
+      file aof_file do
         owner current['user']
         group current['group']
         mode '0644'
@@ -188,7 +189,7 @@ def configure
           :save                   => current['save'],
           :slaveof                => current['slaveof'],
           :masterauth             => current['masterauth'],
-          :slaveservestaledata    => current['slaveservestaledata'], 
+          :slaveservestaledata    => current['slaveservestaledata'],
           :replpingslaveperiod    => current['replpingslaveperiod'],
           :repltimeout            => current['repltimeout'],
           :requirepass            => current['requirepass'],
@@ -256,7 +257,7 @@ end
 def redis_exists?
   exists = Mixlib::ShellOut.new("which redis-server")
   exists.run_command
-  exists.exitstatus == 0 ? true : false 
+  exists.exitstatus == 0 ? true : false
 end
 
 def version
