@@ -1,6 +1,10 @@
 redisio CHANGE LOG
 ===
 
+1.4.2 - 
+---
+  - Strips leading directory from downloaded tarball, and extracts into a newly created directory.  This allows more versatility for where the package can be installed from (Github / BitBucket)
+
 1.4.1 - Released 2/27/2013
 ---
   - Removes left over debugging statement
