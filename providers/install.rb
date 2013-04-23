@@ -222,7 +222,8 @@ def configure
           :requirepass => current['requirepass'],
           :shutdown_save => current['shutdown_save'],
           :platform => node['platform'],
-          :unixsocket => current['unixsocket']
+          :unixsocket => current['unixsocket'],
+          :ulimit => descriptors
           })
         only_if { current['job_control'] == 'initd' }
       end
