@@ -201,6 +201,9 @@ def configure
           :noappendfsynconrewrite => current['noappendfsynconrewrite'],
           :aofrewritepercentage   => current['aofrewritepercentage'] ,
           :aofrewriteminsize      => current['aofrewriteminsize'],
+          :clusterenabled         => current['cluster-enabled'],
+          :clusterconfigfile      => current['cluster-config-file'],
+          :clusternodetimeout     => current['cluster-node-timeout'],
           :includes               => current['includes']
         })
       end

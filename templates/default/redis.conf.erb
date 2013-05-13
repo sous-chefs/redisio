@@ -521,6 +521,12 @@ zset-max-ziplist-value 64
 # want to free memory asap when possible.
 activerehashing yes
 
+<%if @clusterenabled == 'yes' %>
+cluster-enabled yes
+cluster-config-file <%= @clusterconfigfile || "nodes-#{@name}.conf" %>
+cluster-node-timeout <%= @clusternodetimeout %>
+<%end%>
+
 ################################## INCLUDES ###################################
 
 # Include one or more other config files here.  This is useful if you
