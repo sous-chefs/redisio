@@ -1,9 +1,10 @@
 redisio CHANGE LOG
 ===
 
-1.4.2 - 
+1.5.0 - 
 ---
-  - Strips leading directory from downloaded tarball, and extracts into a newly created directory.  This allows more versatility for where the package can be installed from (Github / BitBucket)
+  - Strips leading directory from downloaded tarball, and extracts into a newly created directory.  This allows more versatility for where the package can be installed from (Github / BitBucket) [thanks to dim]
+  - Adds options for Redis Cluster [Thanks to jrallison]
 
 1.4.1 - Released 2/27/2013
 ---
