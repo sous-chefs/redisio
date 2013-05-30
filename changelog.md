@@ -1,8 +1,9 @@
 redisio CHANGE LOG
 ===
 
-1.5.0 - 
+1.5.0 - Released 3/30/2013 
 ---
+  - Forces maxmemory to a string inside of install provider so it will not explode if you pass in an int. [Thanks to sprack]
   - Strips leading directory from downloaded tarball, and extracts into a newly created directory.  This allows more versatility for where the package can be installed from (Github / BitBucket) [Thanks to dim]
   - Adds options for Redis Cluster [Thanks to jrallison]
   - Adds a call to ulimit into the init script, it was not honoring the limits set by the ulimit cookbook for some users.  [Thanks to mike-yesware]

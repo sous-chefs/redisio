@@ -297,6 +297,9 @@ Available options and their defaults
 'noappendfsynconrewrite' => 'no',
 'aofrewritepercentage'   => '100',
 'aofrewriteminsize'      => '64mb',
+'cluster-enabled'        => 'no',
+'cluster-config-file'    => nil, # Defaults to redis instance name inside of template if cluster is enabled.
+'cluster-node-timeout'   => 5,
 'includes'               => nil
 ```
 

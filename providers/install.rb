@@ -75,8 +75,8 @@ def configure
     node_memory_kb.slice! "kB"
     node_memory_kb = node_memory_kb.to_i
 
-    maxmemory = current['maxmemory']
-    if current['maxmemory'] && current['maxmemory'].include?("%")
+    maxmemory = "#{current['maxmemory']}"
+    if !maxmemory.empty? && maxmemory.include?("%")
       # Just assume this is sensible like "95%" or "95 %"
       percent_factor = current['maxmemory'].to_f / 100.0
       # Ohai reports memory in KB as it looks in /proc/meminfo
