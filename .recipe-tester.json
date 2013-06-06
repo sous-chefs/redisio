@@ -3,7 +3,7 @@
     "chef_version": "11.4.4",
     "ami": "ami-e7582d8e",
     "run_list": [
-        "recipe[redisio::install]",
+        "recipe[redisio::install]"
     ],
     "data_bags": {
     }
