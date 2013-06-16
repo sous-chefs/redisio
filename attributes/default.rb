@@ -41,6 +41,9 @@ default['redisio']['artifact_type'] = 'tar.gz'
 default['redisio']['version'] = '2.6.13'
 default['redisio']['base_piddir'] = '/var/run/redis'
 
+#Custom installation directory
+default['redisio']['install_dir'] = nil
+
 #Default settings for all redis instances, these can be overridden on a per server basis in the 'servers' hash
 default['redisio']['default_settings'] = {
   'user'                   => 'redis',
