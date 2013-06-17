@@ -80,7 +80,7 @@ def configure
       # Just assume this is sensible like "95%" or "95 %"
       percent_factor = current['maxmemory'].to_f / 100.0
       # Ohai reports memory in KB as it looks in /proc/meminfo
-      maxmemory = (node_memory_kb * 1024 * percent_factor / new_resource.servers.length).to_i
+      maxmemory = (node_memory_kb * 1024 * percent_factor / new_resource.servers.length).to_s
     end
 
     descriptors = current['ulimit'] == 0 ? current['maxclients'] + 32 : current['maxclients']
