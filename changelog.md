@@ -1,6 +1,11 @@
 redisio CHANGE LOG
 ===
 
+1.6.0 - 
+---
+  - Fixes a bug when using a percentage for max memory. [Thanks to organicveggie]
+  - Allows installation of redis into custom directory.  [Thanks to organicveggie]
+
 1.5.0 - Released 3/30/2013 
 ---
   - Forces maxmemory to a string inside of install provider so it will not explode if you pass in an int. [Thanks to sprack]
