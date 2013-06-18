@@ -20,7 +20,7 @@ EXEC="sudo -u <%= @user %> /usr/local/bin/redis-server <%= @configdir %>/${REDIS
 <% else %> 
 EXEC="runuser <%= @user %> -c \"/usr/local/bin/redis-server <%= @configdir %>/${REDISNAME}.conf\""
 <% end %>
-CLIEXEC=/usr/local/bin/redis-cli
+CLIEXEC=<%= File.join(@cli_path, 'redis-cli') %>
 
 <% connection_string = String.new %>
 <% if @unixsocket.nil? %> 

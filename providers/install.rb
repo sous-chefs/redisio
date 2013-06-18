@@ -52,7 +52,9 @@ def build
 end
 
 def install
-  execute "cd #{new_resource.download_dir}/#{new_resource.base_name}#{new_resource.version} && make install"
+  install_prefix = ""
+  install_prefix = "PREFIX=#{new_resource.install_dir}" if new_resource.install_dir
+  execute "cd #{new_resource.download_dir}/#{new_resource.base_name}#{new_resource.version} && make #{install_prefix} install"
   new_resource.updated_by_last_action(true)
 end
 
@@ -208,6 +210,8 @@ def configure
         })
       end
       #Setup init.d file
+      cli_path = "/usr/local/bin"
+      cli_path = ::File.join(node['redisio']['install_dir'], 'bin') if node['redisio']['install_dir']
       template "/etc/init.d/redis#{server_name}" do
         source 'redis.init.erb'
         cookbook 'redisio'
@@ -216,6 +220,7 @@ def configure
         mode '0755'
         variables({
           :name => server_name,
+          :cli_path => cli_path,
           :job_control => current['job_control'],
           :port => current['port'],
           :address => current['address'],

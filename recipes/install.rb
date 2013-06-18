@@ -34,6 +34,7 @@ redisio_install "redis-servers" do
   servers redis_instances
   safe_install redis['safe_install']
   base_piddir redis['base_piddir']
+  install_dir redis['install_dir']
 end
 
 # Create a service resource for each redis instance, named for the port it runs on.
