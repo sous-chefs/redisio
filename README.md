@@ -1,3 +1,5 @@
+[![Build Status](https://recipe-tester.com/repo/spulec/redisio/badge.png)](https://recipe-tester.com/repo/spulec/redisio/)
+
 Description
 ===========
 
