@@ -16,11 +16,11 @@ REDISNAME=<%= @name %>
 REDISPORT=<%= @port %>
 <% case @platform %>
 <% when 'ubuntu','debian','fedora' %>
-EXEC="sudo -u <%= @user %> /usr/local/bin/redis-server <%= @configdir %>/${REDISNAME}.conf"
+EXEC="sudo -u <%= @user %> <%= File.join(@bin_path, 'redis-server') %> <%= @configdir %>/${REDISNAME}.conf"
 <% else %> 
-EXEC="runuser <%= @user %> -c \"/usr/local/bin/redis-server <%= @configdir %>/${REDISNAME}.conf\""
+EXEC="runuser <%= @user %> -c \"<%= File.join(@bin_path, 'redis-server') %> <%= @configdir %>/${REDISNAME}.conf\""
 <% end %>
-CLIEXEC=<%= File.join(@cli_path, 'redis-cli') %>
+CLIEXEC=<%= File.join(@bin_path, 'redis-cli') %>
 
 <% connection_string = String.new %>
 <% if @unixsocket.nil? %> 
