@@ -38,7 +38,7 @@ default['redisio']['safe_install'] = true
 default['redisio']['mirror'] = "https://redis.googlecode.com/files"
 default['redisio']['base_name'] = 'redis-'
 default['redisio']['artifact_type'] = 'tar.gz'
-default['redisio']['version'] = '2.6.13'
+default['redisio']['version'] = '2.6.14'
 default['redisio']['base_piddir'] = '/var/run/redis'
 
 #Custom installation directory

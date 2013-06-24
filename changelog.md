@@ -5,6 +5,7 @@ redisio CHANGE LOG
 ---
   - Fixes a bug when using a percentage for max memory. [Thanks to organicveggie]
   - Allows installation of redis into custom directory.  [Thanks to organicveggie, rcleere]
+  - Bumps the default installed version of redis to the new stable, 2.6.14
 
 1.5.0 - Released 3/30/2013 
 ---
