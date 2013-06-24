@@ -210,8 +210,8 @@ def configure
         })
       end
       #Setup init.d file
-      cli_path = "/usr/local/bin"
-      cli_path = ::File.join(node['redisio']['install_dir'], 'bin') if node['redisio']['install_dir']
+      bin_path = "/usr/local/bin"
+      bin_path = ::File.join(node['redisio']['install_dir'], 'bin') if node['redisio']['install_dir']
       template "/etc/init.d/redis#{server_name}" do
         source 'redis.init.erb'
         cookbook 'redisio'
@@ -220,7 +220,7 @@ def configure
         mode '0755'
         variables({
           :name => server_name,
-          :cli_path => cli_path,
+          :bin_path => bin_path,
           :job_control => current['job_control'],
           :port => current['port'],
           :address => current['address'],
@@ -264,14 +264,18 @@ def configure
 end
 
 def redis_exists?
-  exists = Mixlib::ShellOut.new("which redis-server")
-  exists.run_command
-  exists.exitstatus == 0 ? true : false
+  bin_path = "/usr/local/bin"
+  bin_path = ::File.join(node['redisio']['install_dir'], 'bin') if node['redisio']['install_dir']
+  redis_server = ::File.join(bin_path, 'redis-server')
+  ::File.exists?(redis_server)
 end
 
 def version
   if redis_exists?
-    redis_version = Mixlib::ShellOut.new("redis-server -v")
+    bin_path = "/usr/local/bin"
+    bin_path = ::File.join(node['redisio']['install_dir'], 'bin') if node['redisio']['install_dir']
+    redis_server = ::File.join(bin_path, 'redis-server')
+    redis_version = Mixlib::ShellOut.new("#{redis_server} -v")
     redis_version.run_command
     version = redis_version.stdout[/version (\d*.\d*.\d*)/,1] || redis_version.stdout[/v=(\d*.\d*.\d*)/,1]
     Chef::Log.info("The Redis server version is: #{version}")
