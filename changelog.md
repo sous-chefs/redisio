@@ -4,7 +4,7 @@ redisio CHANGE LOG
 1.6.0 - 
 ---
   - Fixes a bug when using a percentage for max memory. [Thanks to organicveggie]
-  - Allows installation of redis into custom directory.  [Thanks to organicveggie]
+  - Allows installation of redis into custom directory.  [Thanks to organicveggie, rcleere]
 
 1.5.0 - Released 3/30/2013 
 ---
