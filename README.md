@@ -1,4 +1,4 @@
-[![Build Status](https://recipe-tester.com/repo/spulec/redisio/badge.png)](https://recipe-tester.com/repo/spulec/redisio/)
+[![Build Status](https://recipe-tester.com/repo/brianbianco/redisio/badge.png)](https://recipe-tester.com/repo/brianbianco/redisio/)
 
 
 Description
