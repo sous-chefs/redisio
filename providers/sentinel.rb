@@ -105,7 +105,7 @@ def configure
       #Setup init.d file
       bin_path = "/usr/local/bin"
       bin_path = ::File.join(node['redisio']['install_dir'], 'bin') if node['redisio']['install_dir']
-      template "/etc/init.d/redissentinel_#{sentinel_name}" do
+      template "/etc/init.d/redis_#{sentinel_name}" do
         source 'sentinel.init.erb'
         cookbook 'redisio'
         owner 'root'
@@ -127,6 +127,6 @@ def configure
 end
 
 def load_current_resource
-  @current_resource = Chef::Resource::RedisioSentinel_configure.new(new_resource.name)
+  @current_resource = Chef::Resource::RedisioSentinel.new(new_resource.name)
   @current_resource
 end
