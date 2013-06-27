@@ -24,11 +24,11 @@ redis = node['redisio']
 
 sentinel_instances = redis['sentinels']
 if sentinel_instances.nil?
-  sentinel_instances = [{'port' => '26379', 'name' => 'mycluster'}]
+  sentinel_instances = [{'port' => '26379', 'name' => 'mycluster', 'master_ip' => '127.0.0.1', 'master_port' => 6379}]
 end
 
 redisio_sentinel "redis-sentinels" do
-  default_settings redis['sentinel_defaults']
+  sentinel_defaults redis['sentinel_defaults']
   sentinels sentinel_instances
   base_piddir redis['base_piddir']
 end

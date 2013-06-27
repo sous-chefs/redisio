@@ -17,6 +17,10 @@
 #
 
 default['redisio']['sentinel_defaults'] = {
+  'user'                    => 'redis',
+  'configdir'               => '/etc/redis',
+  'job_control'             => 'initd',
+  'sentinel_port'           => 26379,
   'monitor'                 => nil,
   'down-after-milliseconds' => 30000,
   'can-failover'            => 'yes',
