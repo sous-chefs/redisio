@@ -1,8 +1,8 @@
 #
 # Cookbook Name:: redisio
-# Resource::install
+# Resource::sentinel
 #
-# Copyright 2013, Brian Bianco <brian.bianco@gmail.com>
+# Copyright 2013, Rackspace Hosting <ryan.cleere@rackspace.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,15 +21,11 @@ actions :run
 #Uncomment this and remove the block in initialize when ready to drop support for chef <= 0.10.8
 #default_action :run
 
-#Installation attributes
-attribute :version, :kind_of => String
-attribute :download_url, :kind_of => String
-attribute :download_dir, :kind_of => String, :default => Chef::Config[:file_cache_path]
-attribute :artifact_type, :kind_of => String, :default => 'tar.gz'
-attribute :base_name, :kind_of => String, :default => 'redis-'
-attribute :safe_install, :kind_of => [ TrueClass, FalseClass ], :default => true
+#Configuration attributes
+attribute :base_piddir, :kind_of => String, :default => '/var/run/redis'
 
-attribute :install_dir, :kind_of => String, :default => nil
+attribute :sentinel_defaults, :kind_of => Hash
+attribute :sentinels, :kind_of => Array
 
 def initialize(name, run_context=nil)
   super

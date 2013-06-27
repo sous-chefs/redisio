@@ -1,8 +1,7 @@
-#
 # Cookbook Name:: redisio
-# Recipe:: install
+# Attribute::default
 #
-# Copyright 2013, Brian Bianco <brian.bianco@gmail.com>
+# Copyright 2013, Rackspace Hosting <ryan.cleere@rackspace.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,15 +15,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-include_recipe 'redisio::default'
-include_recipe 'ulimit::default'
 
-redis = node['redisio']
-location = "#{redis['mirror']}/#{redis['base_name']}#{redis['version']}.#{redis['artifact_type']}"
+default['redisio']['sentinel_defaults'] = {
+  'monitor'                 => nil,
+  'down-after-milliseconds' => 30000,
+  'can-failover'            => 'yes',
+  'parallel-syncs'          => 1,
+  'failover-timeout'        => 900000
+}
 
-redisio_install "redis-installation" do
-  version redis['version']
-  download_url location
-  safe_install redis['safe_install']
-  install_dir redis['install_dir']
-end
+default['redisio']['sentinels'] = nil
+
