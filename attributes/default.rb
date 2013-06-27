@@ -31,20 +31,21 @@ else
   homedir = '/redis'
 end
 
-#Install related attributes
+# Install related attributes
 default['redisio']['safe_install'] = true
+default['redisio']['bypass_setup'] = false
 
-#Tarball and download related defaults
+# Tarball and download related defaults
 default['redisio']['mirror'] = "https://redis.googlecode.com/files"
 default['redisio']['base_name'] = 'redis-'
 default['redisio']['artifact_type'] = 'tar.gz'
 default['redisio']['version'] = '2.6.14'
 default['redisio']['base_piddir'] = '/var/run/redis'
 
-#Custom installation directory
+# Custom installation directory
 default['redisio']['install_dir'] = nil
 
-#Default settings for all redis instances, these can be overridden on a per server basis in the 'servers' hash
+# Default settings for all redis instances, these can be overridden on a per server basis in the 'servers' hash
 default['redisio']['default_settings'] = {
   'user'                   => 'redis',
   'group'                  => 'redis',

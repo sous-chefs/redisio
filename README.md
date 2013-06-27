@@ -28,21 +28,19 @@ Tested on:
 Usage
 =====
 
-The redisio cookbook contains an LWRP for installing and uninstalling redis. It also contains 7 recipes for installation and usage of redis.
+The redisio cookbook contains LWRP for installing, configuring and managing redis.
 
 The install recipe will only build, compile and install redis. The configure recipe will configure redis and setup service resources.  These resources will be named for the port of the redis server, unless a "name" attribute was specified.  Example names would be: service["redis6379"] or service["redismaster"] if the name attribute was "master".
 
-The most common use case for the redisio cookbook is to use the install recipe, then the configure recipe, followed by the enable recipe.  
+The most common use case for the redisio cookbook is to use the default recipe, followed by the enable recipe.  
 
-Another common use case is to use the install and configure recipe, and then call the service resources created by it from another cookbook.  
+Another common use case is to use the default, and then call the service resources created by it from another cookbook.  
 
 It is important to note that changing the configuration options of redis does not make them take effect on the next chef run.  Due to how redis works, you cannot reload a configuration without restarting the redis service.  Redis does not offer a reload option, in order to have new options be used redis must be stopped and started. 
 
 You should make sure to set the ulimit for the user you want to run redis as to be higher than the max connections you allow.
 
 The disable recipe just stops redis and removes it from run levels.
-
-The uninstall recipe, and LWRP are used to remove the configuration files and redis binaries.  This is not commonly used and may be removed in future releases.
 
 The cookbook also contains a recipe to allow for the installation of the redis ruby gem. 
 
@@ -64,8 +62,7 @@ Role File Examples
 
 ```ruby
 run_list *%w[
-  recipe[redisio::install]
-  recipe[redisio::configure]
+  recipe[redisio]
   recipe[redisio::enable]
 ]
 
@@ -76,8 +73,7 @@ default_attributes({})
 
 ```ruby
 run_list *%w[
-  recipe[redisio::install]
-  recipe[redisio::configure]
+  recipe[redisio]
   recipe[redisio::enable]
 ]
 
@@ -94,8 +90,7 @@ default_attributes({
 
 ```ruby
 run_list *%w[
-  recipe[redisio::install]
-  recipe[redisio::configure]
+  recipe[redisio]
   recipe[redisio::enable]
 ]
 
@@ -113,8 +108,7 @@ default_attributes({
 
 ```ruby
 run_list *%w[
-  recipe[redisio::install]
-  recipe[redisio::configure]
+  recipe[redisio]
   recipe[redisio::enable]
 ]
 
@@ -130,8 +124,7 @@ default_attributes({
 
 ```ruby
 run_list *%w[
-  recipe[redisio::install]
-  recipe[redisio::configure]
+  recipe[redisio]
   recipe[redisio::enable]
 ]
 
@@ -151,8 +144,7 @@ default_attributes({
 
 ```ruby
 run_list *%w[
-  recipe[redisio::install]
-  recipe[redisio::configure]
+  recipe[redisio]
   recipe[redisio::enable]
 ]
 
@@ -183,13 +175,13 @@ default_attributes({
 LWRP Examples
 -------------
 
-Instead of using my provided recipes, you can simply include the redisio default in your role and use the LWRP's yourself.  I will show a few examples of ways to use the LWRPS, detailed breakdown of options are below
+Instead of using my provided recipes, you can simply depend on the redisio cookbook in your metadata and use the LWRP's yourself.  I will show a few examples of ways to use the LWRPS, detailed breakdown of options are below
 in the resources/providers section
 
 install resource
 ----------------
 
-It is important to note that this call has certain expectations for example, it expects the redis package to be in the format `redis-VERSION.tar.gz'.  The servers resource expects an array of hashes where each hash is required to contain at a key-value pair of 'port' => '<port numbers>'.
+It is important to note that this call has certain expectations for example, it expects the redis package to be in the format `redis-VERSION.tar.gz'.
 
 ```ruby
 redisio_install "redis-installation" do
@@ -203,7 +195,7 @@ end
 configure resource
 ------------------
 
-It is important to note that this call has certain expectations for example, it expects the redis package to be in the format `redis-VERSION.tar.gz'.  The servers resource expects an array of hashes where each hash is required to contain at a key-value pair of 'port' => '<port numbers>'.
+The servers resource expects an array of hashes where each hash is required to contain at a key-value pair of 'port' => '<port numbers>'.
 
 ```ruby
 redisio_configure "redis-servers" do
@@ -214,34 +206,10 @@ redisio_configure "redis-servers" do
 end
 ```
 
-uninstall resource
-------------------
-
-I generally don't recommend using this LWRP or recipe at all, but in the event you really want to remove files, these are available.
-
-
-This will only remove the redis binary files if they exist, nothing else.
-
-```ruby
-redisio_uninstall "redis-servers" do
-  action :run
-end
-```
-
-This will remove the redis binaries, as well as the init script and configuration files for the specified server. This will not remove any data files
-
-```ruby
-redisio_uninstall "redis-servers" do
-  servers [{'port' => '6379'}]
-  action :run
-end
-```
-
 service resource
 ----------------
 
-The install recipe sets up a service resource for each redis instance.  In the past there was a custom service LWRP called "redisio_service".  This is deprecated and should no longer be used.
-I have left the resource available so as to not break it for anybody who happens to be calling it themselves from other cookbooks. 
+The install recipe sets up a service resource for each redis instance.
 
 The service resources created will use the 'name' attribute if it is specified, and will default to the port as it's name if no name is given.
 
@@ -332,8 +300,6 @@ The redis_gem recipe  will also allow you to install the redis ruby gem, these a
 Resources/Providers
 ===================
 
-This cookbook contains 2 LWRP's, and service resources for each instance of redis.
-
 `service`
 ---------
 
@@ -401,25 +367,6 @@ Attribute Parameters
 
 ```ruby
 configure "redis" do
-  action [:run,:nothing]
-end
-```
-
-`uninstall`
-----------
-
-Actions:
-
-* `run` - perform the uninstall
-* `nothing` - do nothing (default)
-
-Attribute Parameters
-
-* `servers` - an array of hashes containing the port number of instances to remove along with the binarires.  (it is fine to pass in the same hash you used to install, even if there are additional
-              only the port is used)
-
-```ruby
-uninstall "redis" do
   action [:run,:nothing]
 end
 ```

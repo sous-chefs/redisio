@@ -32,3 +32,7 @@ when 'redhat','centos','fedora','scientific','suse','amazon'
   end
 end
 
+unless node['redisio']['bypass_setup']
+  include_recipe "redisio::install"
+  include_recipe "redisio::configure"
+end

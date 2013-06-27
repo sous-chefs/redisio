@@ -1,7 +1,16 @@
 redisio CHANGE LOG
 ===
 
-1.6.0 - 
+2.0.0 -
+---
+  ! THIS RELEASE HAS MANY BREAKING CHANGES !
+
+  - Removes the uninstall recipe and resource.
+  - Splits up the install resource into separate install and configure resources [Thanks to rcleere]
+  - By default now calls install and configure in the default recipe unless you set the redisio bypass_setup attribute to true
+  - Adds support for redis sentinel [Thanks to rcleere]
+
+1.6.0 - Release 6/27/2013 
 ---
   - Fixes a bug when using a percentage for max memory. [Thanks to organicveggie]
   - Allows installation of redis into custom directory.  [Thanks to organicveggie, rcleere]
