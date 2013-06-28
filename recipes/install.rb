@@ -24,7 +24,7 @@ location = "#{redis['mirror']}/#{redis['base_name']}#{redis['version']}.#{redis[
 
 redis_instances = redis['servers']
 if redis_instances.nil?
-  redis_instances = [{'port' => '6379'}]
+  redis_instances = [{'port' => redis['default_settings']['port']}]
 end
 
 redisio_install "redis-servers" do
@@ -62,7 +62,6 @@ redis_instances.each do |current_server|
   else
     Chef::Log.error("Unknown job control type, no service resource created!")
   end
-
 end
 
 node.set['redisio']['servers'] = redis_instances 
