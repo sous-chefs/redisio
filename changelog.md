@@ -7,7 +7,8 @@ redisio CHANGE LOG
 
   - Removes the uninstall recipe and resource.
   - Splits up the install resource into separate install and configure resources [Thanks to rcleere]
-  - By default now calls install and configure in the default recipe unless you set the redisio bypass_setup attribute to true
+  - By default now calls _install_prereqs, install, and configure in the default recipe.
+  - Adds the ability to skip the default recipe calling install and configure by setting redisio bypass_setup attribute to true
   - Adds support for redis sentinel [Thanks to rcleere]
 
 1.6.0 - Release 6/27/2013 

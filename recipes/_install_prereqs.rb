@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: redisio
-# Recipe:: default
+# Recipe:: _install_prereqs
 #
 # Copyright 2013, Brian Bianco <brian.bianco@gmail.com>
 #
@@ -17,9 +17,18 @@
 # limitations under the License.
 #
 
-include_recipe "redisio::_install_prereqs"
-
-unless node['redisio']['bypass_setup']
-  include_recipe "redisio::install"
-  include_recipe "redisio::configure"
+case node.platform
+when 'debian','ubuntu'
+  %w[tar build-essential].each do |pkg|
+    package pkg do
+      action :install
+    end
+  end
+when 'redhat','centos','fedora','scientific','suse','amazon'
+  %w[tar make automake gcc].each do |pkg|
+    package pkg do
+      action :install
+      end
+  end
 end
+

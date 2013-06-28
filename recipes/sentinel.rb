@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: redisio
-# Recipe:: configure
+# Recipe:: sentinel
 #
 # Copyright 2013, Brian Bianco <brian.bianco@gmail.com>
 # Copyright 2013, Rackspace Hosting <ryan.cleere@rackspace.com>
@@ -17,7 +17,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-include_recipe 'redisio::default'
+include_recipe 'redisio::_install_prereqs'
+include_recipe 'redisio::install'
 include_recipe 'ulimit::default'
 
 redis = node['redisio']
