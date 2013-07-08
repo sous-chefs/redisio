@@ -40,11 +40,11 @@ sentinel_instances.each do |current_sentinel|
   job_control = current_sentinel['job_control'] || redis['default_settings']['job_control'] 
 
   if job_control == 'initd'
-  	service "redis#{sentinel_name}" do
-      start_command "/etc/init.d/redissentinel_#{sentinel_name} start"
-      stop_command "/etc/init.d/redissentinel_#{sentinel_name} stop"
+  	service "redis_sentinel_#{sentinel_name}" do
+      start_command "/etc/init.d/redis_sentinel_#{sentinel_name} start"
+      stop_command "/etc/init.d/redis_sentinel_#{sentinel_name} stop"
       status_command "pgrep -lf 'redis.*#{sentinel_name}' | grep -v 'sh'"
-      restart_command "/etc/init.d/redissentinel_#{sentinel_name} stop && /etc/init.d/redissentinel_#{sentinel_name} start"
+      restart_command "/etc/init.d/redis_sentinel_#{sentinel_name} stop && /etc/init.d/redis_sentinel_#{sentinel_name} start"
       supports :start => true, :stop => true, :restart => true, :status => false
   	end
   else
