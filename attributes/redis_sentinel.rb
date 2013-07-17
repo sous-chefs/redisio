@@ -28,5 +28,5 @@ default['redisio']['sentinel_defaults'] = {
   'failover-timeout'        => 900000
 }
 
-default['redisio']['sentinels'] = nil
+default['redisio']['sentinels'] = []
 
