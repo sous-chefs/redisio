@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: redisio
-# Recipe:: enable
+# Recipe:: sentinel_enable
 #
 # Copyright 2013, Brian Bianco <brian.bianco@gmail.com>
 #
@@ -20,9 +20,9 @@
 
 redis = node['redisio']
 
-redis['servers'].each do |current_server|
-  server_name = current_server["name"] || current_server["port"]
-  resource = resources("service[redis#{server_name}]")
+redis['sentinels'].each do |current_sentinel|
+  sentinel_name = current_sentinel['name']
+  resource = resources("service[redis_sentinel_#{sentinel_name}]")
   resource.action Array(resource.action)
   resource.action << :start
   resource.action << :enable
