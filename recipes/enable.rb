@@ -27,11 +27,3 @@ redis['servers'].each do |current_server|
   resource.action << :start
   resource.action << :enable
 end
-
-redis['sentinels'].each do |current_sentinel|
-  sentinel_name = current_sentinel['name']
-  resource = resources("service[redis_sentinel_#{sentinel_name}]")
-  resource.action Array(resource.action)
-  resource.action << :start
-  resource.action << :enable
-end

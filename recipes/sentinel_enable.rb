@@ -1,7 +1,9 @@
-# Cookbook Name:: redisio
-# Attribute::default
 #
-# Copyright 2013, Rackspace Hosting <ryan.cleere@rackspace.com>
+# Cookbook Name:: redisio
+# Recipe:: sentinel_enable
+#
+# Copyright 2013, Brian Bianco <brian.bianco@gmail.com>
+#
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,17 +18,12 @@
 # limitations under the License.
 #
 
-default['redisio']['sentinel_defaults'] = {
-  'user'                    => 'redis',
-  'configdir'               => '/etc/redis',
-  'job_control'             => 'initd',
-  'sentinel_port'           => 26379,
-  'monitor'                 => nil,
-  'down-after-milliseconds' => 30000,
-  'can-failover'            => 'yes',
-  'parallel-syncs'          => 1,
-  'failover-timeout'        => 900000
-}
+redis = node['redisio']
 
-default['redisio']['sentinels'] = []
-
+redis['sentinels'].each do |current_sentinel|
+  sentinel_name = current_sentinel['name']
+  resource = resources("service[redis_sentinel_#{sentinel_name}]")
+  resource.action Array(resource.action)
+  resource.action << :start
+  resource.action << :enable
+end
