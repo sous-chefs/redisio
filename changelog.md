@@ -1,7 +1,11 @@
 redisio CHANGE LOG
 ===
 
-1.6.0 - 
+1.7.0 -
+---
+  - Adds support for address attribute as an array or string.  This is to support the feature that will be introduced in redis 2.8
+
+1.6.0 - Release 6/27/2013
 ---
   - Fixes a bug when using a percentage for max memory. [Thanks to organicveggie]
   - Allows installation of redis into custom directory.  [Thanks to organicveggie, rcleere]
