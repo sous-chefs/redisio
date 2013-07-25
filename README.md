@@ -258,7 +258,7 @@ Available options and their defaults
 'ulimit'                 => 0 - 0 is a special value causing the ulimit to be maxconnections +32.  Set to nil or false to disable setting ulimits
 'configdir'              => '/etc/redis' - configuration directory
 'name'                   => nil, Allows you to name the server with something other than port.  Useful if you want to use unix sockets
-'address'                => nil,
+'address'                => nil, Can accept a single string or an array. When using an array, the FIRST value will be used by the init script for connecting to redis
 'databases'              => '16',
 'backuptype'             => 'rdb',
 'datadir'                => '/var/lib/redis',

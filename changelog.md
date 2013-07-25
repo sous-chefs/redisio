@@ -9,7 +9,8 @@ redisio CHANGE LOG
   - Splits up the install resource into separate install and configure resources [Thanks to rcleere]
   - By default now calls _install_prereqs, install, and configure in the default recipe.
   - Adds the ability to skip the default recipe calling install and configure by setting redisio bypass_setup attribute to true
-  - Adds support for redis sentinel [Thanks to rcleere]
+  - Adds support for redis sentinel [Thanks to rcleere, Ryan Walker]
+  - Adds support for passing the address attribute as an array.  This is to support the redis 2.8 series which allows binding to multiple addresses
 
 1.6.0 - Release 6/27/2013 
 ---
