@@ -37,7 +37,7 @@ end
 # Create a service resource for each sentinel instance, named for the port it runs on.
 sentinel_instances.each do |current_sentinel|
   sentinel_name = current_sentinel['name']
-  job_control = current_sentinel['job_control'] || redis['default_settings']['job_control'] 
+  job_control = redis['job_control'] 
 
   if job_control == 'initd'
   	service "redis_sentinel_#{sentinel_name}" do

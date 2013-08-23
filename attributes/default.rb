@@ -45,6 +45,9 @@ default['redisio']['base_piddir'] = '/var/run/redis'
 # Custom installation directory
 default['redisio']['install_dir'] = nil
 
+# Default startup script type
+default['redisio']['job_control'] = 'initd'
+
 # Default settings for all redis instances, these can be overridden on a per server basis in the 'servers' hash
 default['redisio']['default_settings'] = {
   'user'                   => 'redis',
@@ -69,7 +72,6 @@ default['redisio']['default_settings'] = {
   'shutdown_save'          => false,
   'save'                   => nil, # Defaults to ['900 1','300 10','60 10000'] inside of template.  Needed due to lack of hash subtraction
   'slaveof'                => nil,
-  'job_control'            => 'initd', 
   'masterauth'             => nil,
   'slaveservestaledata'    => 'yes',
   'replpingslaveperiod'    => '10',
