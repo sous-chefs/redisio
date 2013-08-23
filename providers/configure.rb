@@ -207,6 +207,7 @@ def configure
         mode '0644'
         variables({
           :name => server_name,
+          :bin_path => bin_path,
           :job_control => current['job_control'],
           :port => current['port'],
           :address => current['address'],
