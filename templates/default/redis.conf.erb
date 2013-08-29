@@ -46,7 +46,7 @@ port <%=@port%>
 # Close the connection after a client is idle for N seconds (0 to disable)
 <%= "timeout #{@timeout}" %>
 
-<%= tcp-keepalive #{@tcpkeepalive or 0} %>
+<%= "tcp-keepalive #{@tcpkeepalive or 0}" unless @tcpkeepalive.nil? %>
 
 # Set server verbosity to 'debug'
 # it can be one of:
