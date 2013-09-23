@@ -18,3 +18,4 @@ recipe "redisio::disable", "this recipe is used to stop the redis instances and 
 recipe "redisio::redis_gem", "this recipe will install the redis ruby gem into the system ruby"
 
 depends "ulimit", ">= 0.1.2"
+depends "build-essential"
