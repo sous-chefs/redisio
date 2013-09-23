@@ -47,6 +47,15 @@ sentinel_instances.each do |current_sentinel|
       restart_command "/etc/init.d/redis_sentinel_#{sentinel_name} stop && /etc/init.d/redis_sentinel_#{sentinel_name} start"
       supports :start => true, :stop => true, :restart => true, :status => false
   	end
+  elsif job_control == 'upstart'
+    service "redis_sentinel_#{sentinel_name}" do
+      provider Chef::Provider::Service::Upstart
+      start_command "start redis_sentinel_#{sentinel_name}"
+      stop_command "stop redis_sentinel_#{sentinel_name}"
+      status_command "pgrep -lf 'redis.*#{sentinel_name}' | grep -v 'sh'"
+      restart_command "restart redis_sentinel_#{sentinel_name}"
+      supports :start => true, :stop => true, :restart => true, :status => false
+    end
   else
     Chef::Log.error("Unknown job control type, no service resource created!")
   end
