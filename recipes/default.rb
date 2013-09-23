@@ -18,6 +18,7 @@
 #
 
 include_recipe "redisio::_install_prereqs"
+include_recipe "build-essential::default"
 
 unless node['redisio']['bypass_setup']
   include_recipe "redisio::install"
