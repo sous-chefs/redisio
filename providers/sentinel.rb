@@ -93,13 +93,14 @@ def configure
           :name                   => sentinel_name,
           :job_control            => current['job_control'],
           :sentinel_port          => current['sentinel_port'],
-          :masterip               => current['master_ip'],
-          :masterport             => current['master_port'],
-          :authpass               => current['auth-pass'],
-          :downaftermil           => current['down-after-milliseconds'],
-          :canfailover            => current['can-failover'],
-          :parallelsyncs          => current['parallel-syncs'],
-          :failovertimeout        => current['failover-timeout']
+          :monitor                => current['monitor']
+          # :masterip               => current['master_ip'],
+          # :masterport             => current['master_port'],
+          # :authpass               => current['auth-pass'],
+          # :downaftermil           => current['down-after-milliseconds'],
+          # :canfailover            => current['can-failover'],
+          # :parallelsyncs          => current['parallel-syncs'],
+          # :failovertimeout        => current['failover-timeout']
         })
       end
       #Setup init.d file
@@ -121,24 +122,6 @@ def configure
           :platform => node['platform'],
           })
         only_if { current['job_control'] == 'initd' }
-      end
-      template "/etc/init/redis_#{sentinel_name}.conf" do
-        source 'sentinel.upstart.conf.erb'
-        cookbook 'redisio'
-        owner current['user']
-        group current['group']
-        mode '0644'
-        variables({
-          :name => sentinel_name,
-          :bin_path => bin_path,
-          :job_control => current['job_control'],
-          :user => current['user'],
-          :group => current['group'],
-          :configdir => current['configdir'],
-          :piddir => piddir,
-          :platform => node['platform'],
-          })
-        only_if { current['job_control'] == 'upstart' }
       end
     end
   end # servers each loop
