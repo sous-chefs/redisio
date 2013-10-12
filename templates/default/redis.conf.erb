@@ -106,7 +106,7 @@ databases <%=@databases%>
     save 300 10
     save 60 10000
   <% else %>
-    <% @save.each do |save_option| %>
+    <% @save.each_line do |save_option| %>
       <%= "save #{save_option}" %>
     <% end %>
   <% end %>
