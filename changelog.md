@@ -12,6 +12,10 @@ redisio CHANGE LOG
   - Adds support for redis sentinel [Thanks to rcleere, Ryan Walker]
   - Adds support for passing the address attribute as an array.  This is to support the redis 2.8 series which allows binding to multiple addresses
   - Now depends on the build-essential cookbook.
+  - Fixes issue #76 - Default settings save as empty string breaks install
+  - Adds a Vagrant file!
+  - Switches mirror server from googlefiles to redis.io.  If you are using version of redis before 2.6.16 you will need to override the mirror server attribute
+    to use the old site with archived versions.
 
 1.6.0 - Release 6/27/2013
 ---
