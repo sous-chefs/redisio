@@ -11,14 +11,15 @@ redisio CHANGE LOG
   - Adds the ability to skip the default recipe calling install and configure by setting redisio bypass_setup attribute to true
   - Adds support for redis sentinel [Thanks to rcleere, Ryan Walker]
   - Adds support for passing the address attribute as an array.  This is to support the redis 2.8 series which allows binding to multiple addresses
+  - Now depends on the build-essential cookbook.
 
-1.6.0 - Release 6/27/2013 
+1.6.0 - Release 6/27/2013
 ---
   - Fixes a bug when using a percentage for max memory. [Thanks to organicveggie]
   - Allows installation of redis into custom directory.  [Thanks to organicveggie, rcleere]
   - Bumps the default installed version of redis to the new stable, 2.6.14
 
-1.5.0 - Released 3/30/2013 
+1.5.0 - Released 3/30/2013
 ---
   - Forces maxmemory to a string inside of install provider so it will not explode if you pass in an int. [Thanks to sprack]
   - Strips leading directory from downloaded tarball, and extracts into a newly created directory.  This allows more versatility for where the package can be installed from (Github / BitBucket) [Thanks to dim]
