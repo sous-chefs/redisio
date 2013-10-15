@@ -1,3 +1,6 @@
+[![Build Status](https://recipe-tester.com/repo/brianbianco/redisio/badge.png)](https://recipe-tester.com/repo/brianbianco/redisio/)
+
+
 Description
 ===========
 

@@ -1,0 +1,23 @@
+{
+    "type": "chef-solo",
+    "chef_version": "11.4.4",
+    "ami": "ami-e7582d8e",
+    "run_list": [
+        "recipe[redisio::install]",
+        "recipe[redisio::enable]"
+    ],
+    "node_attributes": {
+        "redisio": {
+            "default_settings": {
+                "datadir": "/mnt/redis"
+            },
+            "servers": [{
+                "port": "6379"
+            }, {
+                "port": "6380",
+                "name": "MyInstance"
+            }]
+        }
+    }
+}
+
