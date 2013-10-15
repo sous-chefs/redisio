@@ -36,7 +36,7 @@ default['redisio']['safe_install'] = true
 default['redisio']['bypass_setup'] = false
 
 # Tarball and download related defaults
-default['redisio']['mirror'] = "https://redis.googlecode.com/files"
+default['redisio']['mirror'] = "http://download.redis.io/releases/"
 default['redisio']['base_name'] = 'redis-'
 default['redisio']['artifact_type'] = 'tar.gz'
 default['redisio']['version'] = '2.6.16'
