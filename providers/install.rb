@@ -243,6 +243,7 @@ def configure
         mode '0644'
         variables({
           :name => server_name,
+          :bin_path => bin_path,
           :job_control => current['job_control'],
           :port => current['port'],
           :address => current['address'],
@@ -278,7 +279,6 @@ def version
     redis_version = Mixlib::ShellOut.new("#{redis_server} -v")
     redis_version.run_command
     version = redis_version.stdout[/version (\d*.\d*.\d*)/,1] || redis_version.stdout[/v=(\d*.\d*.\d*)/,1]
-    Chef::Log.info("The Redis server version is: #{version}")
     return version.gsub("\n",'')
   end
   nil
