@@ -173,6 +173,43 @@ default_attributes({
 })
 ```
 
+#### Install redis, and setup one instance + one redis-sentinel
+
+For more information see: http://redis.io/topics/sentinel
+
+```ruby 
+run_list *%w[
+  recipe[redisio::install]
+  recipe[redisio::enable]
+]
+
+default_attributes({
+  'redisio' => {
+    'servers' => [
+      {'name' => "my_redis_server", 'port' => "6379"},
+      {'name' => "my_redis_sentinel", 'port' => "26379",
+        #you can set more than one redis to watch by adding another sentinel config to array
+        "sentinels" => [
+          {
+            'master_name' => "master_name",
+            'port' => "6379",
+            'ip' => "127.0.0.1",
+
+            #(optional) parameters - shown values are default
+            'level_of_agreement' => 1,          
+            'down_after_milliseconds' => 60000,
+            'failover_timeout' => 900000,
+            'can_failover' => 'yes',
+            'parallel_syncs' => 1
+          }
+        ]
+      }
+    ]
+  }
+})
+
+```
+
 LWRP Examples
 -------------
 

@@ -164,14 +164,40 @@ def configure
           filehandle_limit descriptors
         end
       end
+
+      
+            #Sentinel server
+      if current['sentinels']
+        server_config = "#{current['configdir']}/#{server_name}.conf"
+        server_config_source = 'redis-sentinel.conf.erb'
+
+        initd_config = "/etc/init.d/redis#{server_name}"
+        initd_config_source = 'redis-sentinel.init.erb'
+
+        upstart_config = "/etc/init/redis#{server_name}.conf"
+        upstart_config_source = 'redis-sentinel.upstart.conf.erb'
+
+      #Normal server
+      else
+        server_config = "#{current['configdir']}/#{server_name}.conf"
+        server_config_source = 'redis.conf.erb'
+        
+        initd_config = "/etc/init.d/redis#{server_name}"
+        initd_config_source = 'redis.init.erb'
+
+        upstart_config = "/etc/init/redis#{server_name}.conf"
+        upstart_config_source = 'redis.upstart.conf.erb'
+      end
+
       #Lay down the configuration files for the current instance
-      template "#{current['configdir']}/#{server_name}.conf" do
-        source 'redis.conf.erb'
+      template server_config do
+        source server_config_source
         cookbook 'redisio'
         owner current['user']
         group current['group']
         mode '0644'
         variables({
+          :sentinels              => current['sentinels'],
           :version                => version_hash,
           :piddir                 => piddir,
           :name                   => server_name,
@@ -212,8 +238,8 @@ def configure
       #Setup init.d file
       bin_path = "/usr/local/bin"
       bin_path = ::File.join(node['redisio']['install_dir'], 'bin') if node['redisio']['install_dir']
-      template "/etc/init.d/redis#{server_name}" do
-        source 'redis.init.erb'
+      template initd_config do
+        source initd_config_source
         cookbook 'redisio'
         owner 'root'
         group 'root'
@@ -235,8 +261,8 @@ def configure
           })
         only_if { current['job_control'] == 'initd' }
       end
-      template "/etc/init/redis#{server_name}.conf" do
-        source 'redis.upstart.conf.erb'
+      template upstart_config do
+        source upstart_config_source
         cookbook 'redisio'
         owner current['user']
         group current['group']
