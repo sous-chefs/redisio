@@ -4,3 +4,4 @@
 metadata.json
 cookbooks/
 tmp/
+.vagrant/
