@@ -164,6 +164,14 @@ def configure
           filehandle_limit descriptors
         end
       end
+      #find IP of the master server if provided
+      slave_info = nil
+      if not current['slaveof'].nil?
+        slave_info = {
+          'port' => current['slaveof']['port'],
+          'address' => current['slaveof']['master_nodename'] ? search(:node, 'name:' + current['slaveof']['master_nodename'])[0]['ipaddress'] : current['slaveof']['address']
+        }
+      end
       #Lay down the configuration files for the current instance
       template "#{current['configdir']}/#{server_name}.conf" do
         source 'redis.conf.erb'
@@ -189,7 +197,7 @@ def configure
           :syslogenabled          => current['syslogenabled'],
           :syslogfacility         => current['syslogfacility'],
           :save                   => current['save'],
-          :slaveof                => current['slaveof'],
+          :slaveof                => slave_info,
           :masterauth             => current['masterauth'],
           :slaveservestaledata    => current['slaveservestaledata'],
           :replpingslaveperiod    => current['replpingslaveperiod'],
