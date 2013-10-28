@@ -22,11 +22,44 @@ default['redisio']['sentinel_defaults'] = {
   'job_control'             => 'initd',
   'sentinel_port'           => 26379,
   'monitor'                 => nil,
-  'down-after-milliseconds' => 30000,
-  'can-failover'            => 'yes',
-  'parallel-syncs'          => 1,
-  'failover-timeout'        => 900000
+  # 'down-after-milliseconds' => 30000,
+  # 'can-failover'            => 'yes',
+  # 'parallel-syncs'          => 1,
+  # 'failover-timeout'        => 900000
 }
 
 default['redisio']['sentinels'] = []
 
+# Sample monitor configuration:
+# sentinels: [
+#   # Primary Sentinel
+#   {
+#     'sentinel_port' => 26379,
+#     'name' => '26379',
+#     'monitor' => [
+#         {'master_name'  => 'tl-redis1',
+#           'master_ip'   => '127.0.0.1',
+#           'master_port' => 6379,
+#         },
+#         {'master_name'  => 'tl-redis2',
+#           'master_ip'   => '127.0.0.1',
+#           'master_port' => 6380,
+#         },
+#     ],
+#   },
+#   # Secondary Sentinel
+#   {
+#     'sentinel_port' => 26380,
+#     'name' => '26380',
+#     'monitor' => [
+#         { 'master_name'  => 'tl-redis1',
+#           'master_ip'   => '127.0.0.1',
+#           'master_port' => 6379,
+#         },
+#         { 'master_name' => 'tl-redis2',
+#           'master_ip'   => '127.0.0.1',
+#           'master_port' => 6380,
+#         },
+#       ],
+#   }
+# ]
