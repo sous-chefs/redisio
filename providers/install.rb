@@ -141,7 +141,7 @@ def configure
         mode '0644'
         backup false
         action :touch
-        only_if { current['logfile'] && current['logfile'] != 'stdout' }
+        only_if { current['syslogenabled'] != 'yes' && current['logfile'] && current['logfile'] != 'stdout' }
       end
       #Set proper permissions on the AOF or RDB files
       file aof_file do
