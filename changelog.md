@@ -16,6 +16,8 @@ redisio CHANGE LOG
   - Adds a Vagrant file!
   - Switches mirror server from googlefiles to redis.io.  If you are using version of redis before 2.6.16 you will need to override the mirror server attribute
     to use the old site with archived versions.
+  - Supports redis 2.8 and its use of the empty string for stdout in the logfile option
+  - Fixes a bug where multiple redis instances were using the same swapfile (only for version os redis 2.4 and below)
 
 1.6.0 - Release 6/27/2013
 ---
@@ -50,7 +52,7 @@ redisio CHANGE LOG
 ---
   - Fixes bug in upstart script to create pid directory if it does not exist
 
-1.3.0 - Released 2/20/2013 
+1.3.0 - Released 2/20/2013
 ---
   - Adds upstart support.  This was a much requested feature. 
   - Fixes bug in uninstall resource that would have prevented it from uninstalling named servers.  
@@ -104,9 +106,9 @@ redisio CHANGE LOG
       - noappendfsynconwrite
       - aofrewritepercentage
       - aofrewriteminsize
-      
+
       It is worth nothing that since there is a configurable option for conf include files, and the fact that redis uses the most recently read configuration option... even if a new option where to show up, or and old one was not included they could be added using that pattern.
-      
+
 
 1.0.2 - Released 4/25/2012
 ---

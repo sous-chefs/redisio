@@ -41,6 +41,39 @@ def configure
     node_memory_kb.slice! "kB"
     node_memory_kb = node_memory_kb.to_i
 
+    # Here we determine what the logfile is.  It has these possible states
+    #
+    # Redis 2.6 and lower can be
+    #   stdout
+    #   A path
+    #   nil
+    # Redis 2.8 and higher can be
+    #   empty string, which means stdout)
+    #   A path
+    #   nil
+
+    if current['logfile'].nil?
+      log_file = nil
+      log_directory = nil
+    else
+      if current['logfile'] == 'stdout' || current['logfile'].empty?
+        log_directory = nil
+        log_file = current['logfile']
+      else
+        log_directory = ::File.dirname(current['logfile'])
+        log_file      = ::File.basename(current['logfile'])
+      end
+    end
+
+    puts
+    puts "*" * 100
+    puts "log_directory is #{log_directory}"
+    puts "log_file is #{log_file}"
+    puts(current['syslogenabled'] != 'yes' && log_directory)
+    puts "*" * 100
+
+
+
     maxmemory = "#{current['maxmemory']}"
     if !maxmemory.empty? && maxmemory.include?("%")
       # Just assume this is sensible like "95%" or "95 %"
@@ -90,22 +123,23 @@ def configure
         action :create
       end
       #Create the log directory if syslog is not being used
-      directory ::File.dirname("#{current['logfile']}") do
+      directory log_directory do
         owner current['user']
         group current['group']
         mode '0755'
         recursive true
         action :create
-        only_if { current['syslogenabled'] != 'yes' && current['logfile'] && current['logfile'] != 'stdout' }
+        only_if { current['syslogenabled'] != 'yes' && log_directory }
       end
-      #Create the log file is syslog is not being used
+      #Create the log file if syslog is not being used
       file current['logfile'] do
         owner current['user']
         group current['group']
         mode '0644'
         backup false
         action :touch
-        only_if { current['logfile'] && current['logfile'] != 'stdout' }
+        # in version 2.8 or higher the empty string is used instead of stdout
+        only_if { log_file && !log_file.empty? && log_file != "stdout" }
       end
       #Set proper permissions on the AOF or RDB files
       file aof_file do
