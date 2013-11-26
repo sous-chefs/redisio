@@ -62,6 +62,9 @@ def configure
       else
         log_directory = ::File.dirname(current['logfile'])
         log_file      = ::File.basename(current['logfile'])
+        if current['syslogenabled'] == 'yes'
+          Chef::Log.warn("log file is set to #{current['logfile']} but syslogenabled is also set to 'yes'")
+        end
       end
     end
 
@@ -120,7 +123,7 @@ def configure
         mode '0755'
         recursive true
         action :create
-        only_if { current['syslogenabled'] != 'yes' && log_directory }
+        only_if { log_directory }
       end
       #Create the log file if syslog is not being used
       file current['logfile'] do
@@ -220,7 +223,9 @@ def configure
           :shutdown_save => current['shutdown_save'],
           :platform => node['platform'],
           :unixsocket => current['unixsocket'],
-          :ulimit => descriptors
+          :ulimit => descriptors,
+          :required_start => node['redisio']['init.d']['required_start'].join(" "),
+          :required_stop => node['redisio']['init.d']['required_stop'].join(" ")
           })
         only_if { current['job_control'] == 'initd' }
       end

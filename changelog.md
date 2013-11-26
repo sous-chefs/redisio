@@ -18,6 +18,8 @@ redisio CHANGE LOG
     to use the old site with archived versions.
   - Supports redis 2.8 and its use of the empty string for stdout in the logfile option
   - Fixes a bug where multiple redis instances were using the same swapfile (only for version os redis 2.4 and below)
+  - Allows the user to specify required_start and required_start when using the init scripts
+  - Changes default version of redis to install to 2.8.1
 
 1.6.0 - Release 6/27/2013
 ---

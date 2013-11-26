@@ -39,11 +39,15 @@ default['redisio']['bypass_setup'] = false
 default['redisio']['mirror'] = "http://download.redis.io/releases/"
 default['redisio']['base_name'] = 'redis-'
 default['redisio']['artifact_type'] = 'tar.gz'
-default['redisio']['version'] = '2.6.16'
+default['redisio']['version'] = '2.8.1'
 default['redisio']['base_piddir'] = '/var/run/redis'
 
 # Custom installation directory
 default['redisio']['install_dir'] = nil
+
+# Init.d script related options
+default['redisio']['init.d']['required_start'] = []
+default['redisio']['init.d']['required_stop'] = []
 
 # Default settings for all redis instances, these can be overridden on a per server basis in the 'servers' hash
 default['redisio']['default_settings'] = {

@@ -9,6 +9,8 @@
 # Provides: redis<%= @port %>
 # Default-Start: 2 3 4 5
 # Default-Stop: 0 1 6
+# Required-Start: <%= @required_start %>
+# Required-Stop: <%= @required_stop %>
 # Description: redis<%= @port %> init script
 ### END INIT INFO
 
@@ -17,7 +19,7 @@ REDISPORT=<%= @port %>
 <% case @platform %>
 <% when 'ubuntu','debian','fedora' %>
 EXEC="sudo -u <%= @user %> <%= File.join(@bin_path, 'redis-server') %> <%= @configdir %>/${REDISNAME}.conf"
-<% else %> 
+<% else %>
 EXEC="runuser <%= @user %> -c \"<%= File.join(@bin_path, 'redis-server') %> <%= @configdir %>/${REDISNAME}.conf\""
 <% end %>
 CLIEXEC=<%= File.join(@bin_path, 'redis-cli') %>
