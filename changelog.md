@@ -20,6 +20,7 @@ redisio CHANGE LOG
   - Fixes a bug where multiple redis instances were using the same swapfile (only for version os redis 2.4 and below)
   - Allows the user to specify required_start and required_start when using the init scripts
   - Changes default version of redis to install to 2.8.1
+  - Warns a user if they have syslogenabled set to yes and also have logfile set
 
 1.6.0 - Release 6/27/2013
 ---
