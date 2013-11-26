@@ -31,7 +31,7 @@ CLIEXEC=<%= File.join(@bin_path, 'redis-cli') %>
 <% else %>
   <% connection_string << " -s #{@unixsocket}" %>
 <% end %>
-<% connection_string  << " -a '#{@requirepass}'" unless @requirepass.nil? %>  
+<% connection_string  << " -a '#{@requirepass}'" unless @requirepass.nil? %>
 
 PIDFILE=<%= @piddir %>/redis_${REDISNAME}.pid
 
@@ -60,7 +60,7 @@ case "$1" in
                 PID=$(cat $PIDFILE)
                 echo "Stopping ..."
 
-                <%= "$CLIEXEC #{connection_string} save" if @shutdown_save %>                 
+                <%= "$CLIEXEC #{connection_string} save" if @shutdown_save %>
                 $CLIEXEC <%= connection_string %> shutdown
 
                 while [ -x /proc/${PID} ]
