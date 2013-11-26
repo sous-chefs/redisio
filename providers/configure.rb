@@ -65,15 +65,6 @@ def configure
       end
     end
 
-    puts
-    puts "*" * 100
-    puts "log_directory is #{log_directory}"
-    puts "log_file is #{log_file}"
-    puts(current['syslogenabled'] != 'yes' && log_directory)
-    puts "*" * 100
-
-
-
     maxmemory = "#{current['maxmemory']}"
     if !maxmemory.empty? && maxmemory.include?("%")
       # Just assume this is sensible like "95%" or "95 %"
