@@ -25,7 +25,7 @@ EXEC="runuser <%= @user %> -c \"<%= File.join(@bin_path, 'redis-server') %> <%= 
 CLIEXEC=<%= File.join(@bin_path, 'redis-cli') %>
 
 <% connection_string = String.new %>
-<% if @unixsocket.nil? %> 
+<% if @unixsocket.nil? %>
   <% connection_string << " -p #{@port}" %>
   <% connection_string << " -h #{@address.respond_to?(:first) ? @address.first : @address }" if @address %>
 <% else %>
@@ -43,6 +43,17 @@ fi
 ulimit -n <%= @ulimit %>
 
 case "$1" in
+    status)
+        if [ -f $PIDFILE ]
+        then
+          echo "redis$REDISNAME $PIDFILE exists, pid is $(cat $PIDFILE)"
+          ps -p $(cat $PIDFILE) >/dev/null 2>&1
+          exit $?
+        else
+          echo "redis$REDISNAME $PIDFILE doesn't exist"
+          exit 3
+        fi
+        ;;
     start)
         if [ -f $PIDFILE ]
         then
