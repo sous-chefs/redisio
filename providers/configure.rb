@@ -167,7 +167,7 @@ def configure
           :version                => version_hash,
           :piddir                 => piddir,
           :name                   => server_name,
-          :job_control            => current['job_control'],
+          :job_control            => node['redisio']['job_control'], 
           :port                   => current['port'],
           :address                => current['address'],
           :databases              => current['databases'],
@@ -213,7 +213,7 @@ def configure
         variables({
           :name => server_name,
           :bin_path => bin_path,
-          :job_control => current['job_control'],
+          :job_control => node['redisio']['job_control'],
           :port => current['port'],
           :address => current['address'],
           :user => current['user'],
@@ -227,7 +227,7 @@ def configure
           :required_start => node['redisio']['init.d']['required_start'].join(" "),
           :required_stop => node['redisio']['init.d']['required_stop'].join(" ")
           })
-        only_if { current['job_control'] == 'initd' }
+        only_if { node['redisio']['job_control'] == 'initd' }
       end
       template "/etc/init/redis#{server_name}.conf" do
         source 'redis.upstart.conf.erb'
@@ -238,7 +238,7 @@ def configure
         variables({
           :name => server_name,
           :bin_path => bin_path,
-          :job_control => current['job_control'],
+          :job_control => node['redisio']['job_control'],
           :port => current['port'],
           :address => current['address'],
           :user => current['user'],
@@ -252,7 +252,7 @@ def configure
           :platform => node['platform'],
           :unixsocket => current['unixsocket']
         })
-        only_if { current['job_control'] == 'upstart' }
+        only_if { node['redisio']['job_control'] == 'upstart' }
       end
     end
   end # servers each loop
