@@ -39,11 +39,14 @@ default['redisio']['bypass_setup'] = false
 default['redisio']['mirror'] = "http://download.redis.io/releases/"
 default['redisio']['base_name'] = 'redis-'
 default['redisio']['artifact_type'] = 'tar.gz'
-default['redisio']['version'] = '2.8.1'
+default['redisio']['version'] = '2.8.2'
 default['redisio']['base_piddir'] = '/var/run/redis'
 
 # Custom installation directory
 default['redisio']['install_dir'] = nil
+
+# Job control related options (initd or upstart)
+default['redisio']['job_control'] = 'initd'
 
 # Init.d script related options
 default['redisio']['init.d']['required_start'] = []
@@ -73,7 +76,6 @@ default['redisio']['default_settings'] = {
   'shutdown_save'          => false,
   'save'                   => nil, # Defaults to ['900 1','300 10','60 10000'] inside of template.  Needed due to lack of hash subtraction
   'slaveof'                => nil,
-  'job_control'            => 'initd',
   'masterauth'             => nil,
   'slaveservestaledata'    => 'yes',
   'replpingslaveperiod'    => '10',

@@ -91,7 +91,7 @@ def configure
         variables({
           :piddir                 => piddir,
           :name                   => sentinel_name,
-          :job_control            => current['job_control'],
+          :job_control            => node['redisio']['job_control'],
           :sentinel_port          => current['sentinel_port'],
           :masterip               => current['master_ip'],
           :masterport             => current['master_port'],
@@ -114,13 +114,13 @@ def configure
         variables({
           :name => sentinel_name,
           :bin_path => bin_path,
-          :job_control => current['job_control'],
+          :uob_control => node['redisio']['job_control'],
           :user => current['user'],
           :configdir => current['configdir'],
           :piddir => piddir,
           :platform => node['platform'],
           })
-        only_if { current['job_control'] == 'initd' }
+        only_if { node['redisio']['job_control'] == 'initd' }
       end
       template "/etc/init/redis_#{sentinel_name}.conf" do
         source 'sentinel.upstart.conf.erb'
@@ -131,14 +131,14 @@ def configure
         variables({
           :name => sentinel_name,
           :bin_path => bin_path,
-          :job_control => current['job_control'],
+          :job_control => node['redisio']['job_control'],
           :user => current['user'],
           :group => current['group'],
           :configdir => current['configdir'],
           :piddir => piddir,
           :platform => node['platform'],
           })
-        only_if { current['job_control'] == 'upstart' }
+        only_if { node['redisio']['job_control'] == 'upstart' }
       end
     end
   end # servers each loop

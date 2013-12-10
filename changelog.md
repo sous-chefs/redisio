@@ -4,7 +4,10 @@ redisio CHANGE LOG
 2.0.0 -
 ---
   ! THIS RELEASE HAS MANY BREAKING CHANGES !
+  ! Your old role file will not work       !
 
+  - Changes the job_control per instance attribute to a global one.
+  - Adds a status command to the init.d script, uses this in the initd based service for checking status
   - Removes the uninstall recipe and resource.
   - Splits up the install resource into separate install and configure resources [Thanks to rcleere]
   - By default now calls _install_prereqs, install, and configure in the default recipe.
@@ -19,7 +22,7 @@ redisio CHANGE LOG
   - Supports redis 2.8 and its use of the empty string for stdout in the logfile option
   - Fixes a bug where multiple redis instances were using the same swapfile (only for version os redis 2.4 and below)
   - Allows the user to specify required_start and required_start when using the init scripts
-  - Changes default version of redis to install to 2.8.1
+  - Changes default version of redis to install to 2.8.2
   - Warns a user if they have syslogenabled set to yes and also have logfile set
 
 1.6.0 - Release 6/27/2013

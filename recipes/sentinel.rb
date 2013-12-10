@@ -37,13 +37,18 @@ end
 # Create a service resource for each sentinel instance, named for the port it runs on.
 sentinel_instances.each do |current_sentinel|
   sentinel_name = current_sentinel['name']
-  job_control = current_sentinel['job_control'] || redis['default_settings']['job_control'] 
+  job_control   = node['redisio']['job_control']
 
   if job_control == 'initd'
   	service "redis_sentinel_#{sentinel_name}" do
       start_command "/etc/init.d/redis_sentinel_#{sentinel_name} start"
       stop_command "/etc/init.d/redis_sentinel_#{sentinel_name} stop"
-      status_command "pgrep -lf 'redis.*#{sentinel_name}' | grep -v 'sh'"
+      case node['platform']
+      when 'centos','redhat','scientific','amazon','suse'
+        status_command "pgrep -lf 'redis.*#{sentinel_name}' | grep -v 'sh'"
+      else
+        status_command "pgrep -lf 'redis.*#{sentinel_name}'"
+      end
       restart_command "/etc/init.d/redis_sentinel_#{sentinel_name} stop && /etc/init.d/redis_sentinel_#{sentinel_name} start"
       supports :start => true, :stop => true, :restart => true, :status => false
   	end
@@ -52,7 +57,6 @@ sentinel_instances.each do |current_sentinel|
       provider Chef::Provider::Service::Upstart
       start_command "start redis_sentinel_#{sentinel_name}"
       stop_command "stop redis_sentinel_#{sentinel_name}"
-      status_command "pgrep -lf 'redis.*#{sentinel_name}' | grep -v 'sh'"
       restart_command "restart redis_sentinel_#{sentinel_name}"
       supports :start => true, :stop => true, :restart => true, :status => false
     end

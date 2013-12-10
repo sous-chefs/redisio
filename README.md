@@ -156,22 +156,6 @@ default_attributes({
 })
 ```
 
-#### Install version 2.2.2 of the redis ruby gem, if you don't list the version, it will simply install the latest available. #
-
-```ruby
-run_list *%w[
-  recipe[redisio::redis_gem]
-]
-
-default_attributes({
-  'redisio' => {
-    'gem' => {
-      'version' => '2.2.2'
-    }
-  }
-})
-```
-
 LWRP Examples
 -------------
 
@@ -241,7 +225,8 @@ Configuration options, each option corresponds to the same-named configuration o
 * `redisio['safe_install'] - prevents redis from installing itself if another version of redis is installed, default is true
 * `redisio['base_piddir'] - This is the directory that redis pidfile directories and pidfiles will be placed in.  Since redis can run as non root, it needs to have proper
                            permissions to the directory to create its pid.  Since each instance can run as a different user, these directories will all be nested inside this base one.
-* `redisio[bypass_setup'] - This attribute allows users to prevent the default recipe from calling the install and configure recipes.
+* `redisio['bypass_setup'] - This attribute allows users to prevent the default recipe from calling the install and configure recipes.
+* `redisio['job_control'] - This deteremines what job control type will be used.  Currently supports 'initd' or 'upstart' options.  Defaults to 'initd'.
 
 Default settings is a hash of default settings to be applied to to ALL instances.  These can be overridden for each individual server in the servers attribute.  If you are going to set logfile to a specific file, make sure to set syslog-enabled to no.
 
@@ -271,7 +256,6 @@ Available options and their defaults
 'syslogfacility         => 'local0',
 'save'                   => nil, - This attribute is nil but defaults to ['900 1','300 10','60 10000'], if you want to disable saving use an empty string 
 'slaveof'                => nil,
-'job_control'            => 'initd', - options are 'initd' and 'upstart'
 'masterauth'             => nil,
 'slaveservestaledata'    => 'yes',
 'replpingslaveperiod'    => '10',
