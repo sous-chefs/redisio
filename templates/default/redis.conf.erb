@@ -14,7 +14,7 @@
 
 # By default Redis does not run as a daemon. Use 'yes' if you need it.
 # Note that Redis will write a pid file in /var/run/redis.pid when daemonized.
-<% unless @job_control == 'upstart' %> 
+<% unless @job_control == 'upstart' %>
 daemonize yes
 <% end %>
 
@@ -111,6 +111,21 @@ databases <%=@databases%>
     <% end %>
   <% end %>
 
+# By default Redis will stop accepting writes if RDB snapshots are enabled
+# (at least one save point) and the latest background save failed.
+# This will make the user aware (in an hard way) that data is not persisting
+# on disk properly, otherwise chances are that no one will notice and some
+# distater will happen.
+#
+# If the background saving process will start working again Redis will
+# automatically allow writes again.
+#
+# However if you have setup your proper monitoring of the Redis server
+# and persistence, you may want to disable this feature so that Redis will
+# continue to work as usually even if there are problems with disk,
+# permissions, and so forth.
+stop-writes-on-bgsave-error <%= "#{@stopwritesonbgsaveerror}" %>
+
 # Compress string objects using LZF when dump .rdb databases?
 # For default that's set to 'yes' as it's almost always a win.
 # If you want to save some CPU in the saving child set it to 'no' but
@@ -119,15 +134,16 @@ rdbcompression yes
 
 # The filename where to dump the DB
 dbfilename dump-<%=@name%>.rdb
+
 <%end%>
 
 # The working directory.
 #
 # The DB will be written inside this directory, with the filename specified
 # above using the 'dbfilename' configuration directive.
-# 
+#
 # Also the Append Only File will be created inside this directory.
-# 
+#
 # Note that you must specify a directory here, not a file name.
 dir <%=@datadir%>
 
@@ -147,7 +163,7 @@ dir <%=@datadir%>
 # refuse the slave request.
 #
 # masterauth <master-password>
-<%= "masterauth #{@masterauth}" unless @masterauth.nil? %> 
+<%= "masterauth #{@masterauth}" unless @masterauth.nil? %>
 
 # When a slave lost the connection with the master, or when the replication
 # is still in progress, the slave can act in two different ways:
@@ -185,7 +201,7 @@ repl-timeout <%=@repltimeout%>
 #
 # This should stay commented out for backward compatibility and because most
 # people do not need auth (e.g. they run their own servers).
-# 
+#
 # Warning: since Redis is pretty fast an outside user can try up to
 # 150k passwords per second against a good box. This means that you should
 # use a very strong password otherwise it will be very easy to break.
@@ -247,14 +263,14 @@ repl-timeout <%=@repltimeout%>
 
 # MAXMEMORY POLICY: how Redis will select what to remove when maxmemory
 # is reached? You can select among five behavior:
-# 
+#
 # volatile-lru -> remove the key with an expire set using an LRU algorithm
 # allkeys-lru -> remove any key accordingly to the LRU algorithm
 # volatile-random -> remove a random key with an expire set
 # allkeys->random -> remove a random key, any key
 # volatile-ttl -> remove the key with the nearest expire time (minor TTL)
 # noeviction -> don't expire at all, just return an error on write operations
-# 
+#
 # Note: with all the kind of policies, Redis will return an error on write
 #       operations, when there are not suitable keys for eviction.
 #
@@ -298,14 +314,14 @@ maxmemory-samples <%=@maxmemorysamples%>
 
 <%if (@backuptype == 'aof' || @backuptype == 'both')%>
 appendonly yes
-<%else%> 
+<%else%>
 appendonly no
 <%end%>
 # The name of the append only file (default: "appendonly.aof")
 appendfilename appendonly-<%=@name%>.aof
 
 # The fsync() call tells the Operating System to actually write data on disk
-# instead to wait for more data in the output buffer. Some OS will really flush 
+# instead to wait for more data in the output buffer. Some OS will really flush
 # data on disk, some other OS will just try to do it ASAP.
 #
 # Redis supports three different modes:
@@ -344,7 +360,7 @@ appendfilename appendonly-<%=@name%>.aof
 # the same as "appendfsync none", that in pratical terms means that it is
 # possible to lost up to 30 seconds of log in the worst scenario (with the
 # default Linux settings).
-# 
+#
 # If you have latency problems turn this to "yes". Otherwise leave it as
 # "no" that is the safest pick from the point of view of durability.
 no-appendfsync-on-rewrite <%=@noappendfsynconrewrite%>
@@ -352,7 +368,7 @@ no-appendfsync-on-rewrite <%=@noappendfsynconrewrite%>
 # Automatic rewrite of the append only file.
 # Redis is able to automatically rewrite the log file implicitly calling
 # BGREWRITEAOF when the AOF log size will growth by the specified percentage.
-# 
+#
 # This is how it works: Redis remembers the size of the AOF file after the
 # latest rewrite (or if no rewrite happened since the restart, the size of
 # the AOF at startup is used).
@@ -377,7 +393,7 @@ auto-aof-rewrite-min-size <%=@aofrewriteminsize%>
 # but just the time needed to actually execute the command (this is the only
 # stage of command execution where the thread is blocked and can not serve
 # other requests in the meantime).
-# 
+#
 # You can configure the slow log with two parameters: one tells Redis
 # what is the execution time, in microseconds, to exceed in order for the
 # command to get logged, and the other parameter is the length of the
@@ -393,7 +409,7 @@ slowlog-log-slower-than 10000
 # You can reclaim memory used by the slow log with SLOWLOG RESET.
 slowlog-max-len 1024
 
-<% unless @version[:major].to_i == 2 && @version[:minor].to_i >= 5 %> 
+<% unless @version[:major].to_i == 2 && @version[:minor].to_i >= 5 %>
 ################################ VIRTUAL MEMORY ###############################
 
 ### WARNING! Virtual Memory is deprecated in Redis 2.4
@@ -416,7 +432,7 @@ vm-enabled no
 # file for every redis process you are running. Redis will complain if the
 # swap file is already in use.
 #
-# The best kind of storage for the Redis swap file (that's accessed at random) 
+# The best kind of storage for the Redis swap file (that's accessed at random)
 # is a Solid State Disk (SSD).
 #
 # *** WARNING *** if you are using a shared hosting the default of putting
@@ -477,7 +493,7 @@ vm-max-threads 4
 # threshold. These thresholds can be configured using the following directives.
 
 <% #Once the first official 2.6 release is out, it would make sense to remove the extraneous :minor 5 comparison %>
-<% if @version[:major].to_i == 2 && (@version[:minor].to_i == 6 || @version[:minor].to_i == 5)  %> 
+<% if @version[:major].to_i == 2 && (@version[:minor].to_i == 6 || @version[:minor].to_i == 5)  %>
   ######## Redis 2.6 ########
   hash-max-ziplist-entries 512
   hash-max-ziplist-value 64
@@ -513,7 +529,7 @@ zset-max-ziplist-value 64
 # that is rhashing, the more rehashing "steps" are performed, so if the
 # server is idle the rehashing is never complete and some more memory is used
 # by the hash table.
-# 
+#
 # The default is to use this millisecond 10 times every second in order to
 # active rehashing the main dictionaries, freeing memory when possible.
 #
