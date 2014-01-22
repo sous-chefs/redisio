@@ -77,7 +77,7 @@ def configure
     node_memory_kb.slice! "kB"
     node_memory_kb = node_memory_kb.to_i
 
-    maxmemory = "#{current['maxmemory']}"
+    maxmemory = current['maxmemory']
     if !maxmemory.empty? && maxmemory.include?("%")
       # Just assume this is sensible like "95%" or "95 %"
       percent_factor = current['maxmemory'].to_f / 100.0
@@ -126,7 +126,7 @@ def configure
         action :create
       end
       #Create the log directory if syslog is not being used
-      directory ::File.dirname("#{current['logfile']}") do
+      directory ::File.dirname(current['logfile']) do
         owner current['user']
         group current['group']
         mode '0755'
