@@ -66,13 +66,13 @@ loglevel <%=@loglevel%>
 
 # To enable logging to the system logger, just set 'syslog-enabled' to yes,
 # and optionally update the other syslog parameters to suit your needs.
-syslog-enabled <%= @syslogenabled %>
+syslog-enabled <%=@syslogenabled%>
 
 # Specify the syslog identity.
 syslog-ident redis-<%=@name%>
 
 # Specify the syslog facility.  Must be USER or between LOCAL0-LOCAL7.
-syslog-facility <%= @syslogfacility %>
+syslog-facility <%=@syslogfacility%>
 
 # Set the number of databases. The default database is DB 0, you can select
 # a different one on a per-connection basis using SELECT <dbid> where
@@ -124,7 +124,7 @@ databases <%=@databases%>
 # and persistence, you may want to disable this feature so that Redis will
 # continue to work as usually even if there are problems with disk,
 # permissions, and so forth.
-stop-writes-on-bgsave-error <%= @stopwritesonbgsaveerror %>
+stop-writes-on-bgsave-error <%=@stopwritesonbgsaveerror%>
 
 # Compress string objects using LZF when dump .rdb databases?
 # For default that's set to 'yes' as it's almost always a win.
