@@ -476,21 +476,20 @@ vm-max-threads 4
 # small number of entries, and the biggest entry does not exceed a given
 # threshold. These thresholds can be configured using the following directives.
 
-<% #Once the first official 2.6 release is out, it would make sense to remove the extraneous :minor 5 comparison %>
-<% if @version[:major].to_i == 2 && (@version[:minor].to_i == 6 || @version[:minor].to_i == 5)  %> 
-  ######## Redis 2.6 ########
-  hash-max-ziplist-entries 512
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 5 %>
+  ######## Redis 2.6+ ########
+  hash-max-ziplist-entries <%=@hashmaxziplistentries%>
   hash-max-ziplist-value 64
 <% elsif @version[:major].to_i == 2 && @version[:minor].to_i == 4 %>
   ######## Redis 2.4 ########
-  hash-max-zipmap-entries 512
+  hash-max-zipmap-entries <%=@hashmaxziplistentries%>
   hash-max-zipmap-value 64
 <% end %>
 
 # Similarly to hashes, small lists are also encoded in a special way in order
 # to save a lot of space. The special representation is only used when
 # you are under the following limits:
-list-max-ziplist-entries 512
+list-max-ziplist-entries <%=@listmaxziplistentries%>
 list-max-ziplist-value 64
 
 # Sets have a special encoding in just one case: when a set is composed
@@ -503,7 +502,7 @@ set-max-intset-entries 512
 # Similarly to hashes and lists, sorted sets are also specially encoded in
 # order to save a lot of space. This encoding is only used when the length and
 # elements of a sorted set are below the following limits:
-zset-max-ziplist-entries 128
+zset-max-ziplist-entries <%=@zsetmaxziplistentries%>
 zset-max-ziplist-value 64
 
 # Active rehashing uses 1 millisecond every 100 milliseconds of CPU time in

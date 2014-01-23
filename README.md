@@ -272,7 +272,10 @@ Available options and their defaults
 'cluster-enabled'        => 'no',
 'cluster-config-file'    => nil, # Defaults to redis instance name inside of template if cluster is enabled.
 'cluster-node-timeout'   => 5,
-'includes'               => nil
+'includes'               => nil,
+'hashmaxziplistentries'  => '512',
+'listmaxziplistentries'  => '512',
+'zsetmaxziplistentries'  => '128'
 ```
 
 * `redisio['servers']` - An array where each item is a set of key value pairs for redis instance specific settings.  The only required option is 'port'.  These settings will override the options in 'default_settings', if it is left empty it will default to [{'port' => '6379'}]

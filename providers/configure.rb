@@ -198,7 +198,10 @@ def configure
           :clusterenabled         => current['cluster-enabled'],
           :clusterconfigfile      => current['cluster-config-file'],
           :clusternodetimeout     => current['cluster-node-timeout'],
-          :includes               => current['includes']
+          :includes               => current['includes'],
+          :hashmaxziplistentries  => current['hashmaxziplistentries'],
+          :listmaxziplistentries  => current['listmaxziplistentries'],
+          :zsetmaxziplistentries  => current['zsetmaxziplistentries']
         })
       end
       #Setup init.d file

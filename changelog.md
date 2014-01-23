@@ -1,6 +1,10 @@
 redisio CHANGE LOG
 ===
 
+2.1.2 -
+---
+  - Added attributes to configure max zip list entries
+
 2.0.0 -
 ---
   ! THIS RELEASE HAS MANY BREAKING CHANGES !
