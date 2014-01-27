@@ -184,6 +184,8 @@ def configure
           :slaveof                => current['slaveof'],
           :masterauth             => current['masterauth'],
           :slaveservestaledata    => current['slaveservestaledata'],
+          :slavereadonly          => current['slavereadonly'],
+          :slavepriority          => current['slavepriority'],
           :replpingslaveperiod    => current['replpingslaveperiod'],
           :repltimeout            => current['repltimeout'],
           :requirepass            => current['requirepass'],
@@ -198,7 +200,10 @@ def configure
           :clusterenabled         => current['cluster-enabled'],
           :clusterconfigfile      => current['cluster-config-file'],
           :clusternodetimeout     => current['cluster-node-timeout'],
-          :includes               => current['includes']
+          :includes               => current['includes'],
+          :hashmaxziplistentries  => current['hashmaxziplistentries'],
+          :listmaxziplistentries  => current['listmaxziplistentries'],
+          :zsetmaxziplistentries  => current['zsetmaxziplistentries']
         })
       end
       #Setup init.d file
