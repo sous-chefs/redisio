@@ -184,6 +184,8 @@ def configure
           :slaveof                => current['slaveof'],
           :masterauth             => current['masterauth'],
           :slaveservestaledata    => current['slaveservestaledata'],
+          :slavereadonly          => current['slavereadonly'],
+          :slavepriority          => current['slavepriority'],
           :replpingslaveperiod    => current['replpingslaveperiod'],
           :repltimeout            => current['repltimeout'],
           :requirepass            => current['requirepass'],

@@ -4,6 +4,7 @@ redisio CHANGE LOG
 2.1.2 -
 ---
   - Added attributes to configure max zip list entries
+  - Added attributes to support additional configuration settings for slaves
 
 2.0.0 -
 ---
