@@ -77,7 +77,7 @@ def configure
     node_memory_kb.slice! "kB"
     node_memory_kb = node_memory_kb.to_i
 
-    maxmemory = "#{current['maxmemory']}"
+    maxmemory = current['maxmemory'].to_s
     if !maxmemory.empty? && maxmemory.include?("%")
       # Just assume this is sensible like "95%" or "95 %"
       percent_factor = current['maxmemory'].to_f / 100.0
@@ -126,7 +126,7 @@ def configure
         action :create
       end
       #Create the log directory if syslog is not being used
-      directory ::File.dirname("#{current['logfile']}") do
+      directory ::File.dirname(current['logfile'].to_s) do
         owner current['user']
         group current['group']
         mode '0755'
@@ -172,41 +172,42 @@ def configure
         group current['group']
         mode '0644'
         variables({
-          :version                => version_hash,
-          :piddir                 => piddir,
-          :name                   => server_name,
-          :job_control            => current['job_control'],
-          :port                   => current['port'],
-          :address                => current['address'],
-          :databases              => current['databases'],
-          :backuptype             => current['backuptype'],
-          :datadir                => current['datadir'],
-          :unixsocket             => current['unixsocket'],
-          :unixsocketperm         => current['unixsocketperm'],
-          :timeout                => current['timeout'],
-          :loglevel               => current['loglevel'],
-          :logfile                => current['logfile'],
-          :syslogenabled          => current['syslogenabled'],
-          :syslogfacility         => current['syslogfacility'],
-          :save                   => current['save'],
-          :slaveof                => current['slaveof'],
-          :masterauth             => current['masterauth'],
-          :slaveservestaledata    => current['slaveservestaledata'],
-          :replpingslaveperiod    => current['replpingslaveperiod'],
-          :repltimeout            => current['repltimeout'],
-          :requirepass            => current['requirepass'],
-          :maxclients             => current['maxclients'],
-          :maxmemory              => maxmemory,
-          :maxmemorypolicy        => current['maxmemorypolicy'],
-          :maxmemorysamples       => current['maxmemorysamples'],
-          :appendfsync            => current['appendfsync'],
-          :noappendfsynconrewrite => current['noappendfsynconrewrite'],
-          :aofrewritepercentage   => current['aofrewritepercentage'] ,
-          :aofrewriteminsize      => current['aofrewriteminsize'],
-          :clusterenabled         => current['cluster-enabled'],
-          :clusterconfigfile      => current['cluster-config-file'],
-          :clusternodetimeout     => current['cluster-node-timeout'],
-          :includes               => current['includes']
+          :version                 => version_hash,
+          :piddir                  => piddir,
+          :name                    => server_name,
+          :job_control             => current['job_control'],
+          :port                    => current['port'],
+          :address                 => current['address'],
+          :databases               => current['databases'],
+          :backuptype              => current['backuptype'],
+          :datadir                 => current['datadir'],
+          :unixsocket              => current['unixsocket'],
+          :unixsocketperm          => current['unixsocketperm'],
+          :timeout                 => current['timeout'],
+          :loglevel                => current['loglevel'],
+          :logfile                 => current['logfile'],
+          :syslogenabled           => current['syslogenabled'],
+          :syslogfacility          => current['syslogfacility'],
+          :save                    => current['save'],
+          :slaveof                 => current['slaveof'],
+          :masterauth              => current['masterauth'],
+          :slaveservestaledata     => current['slaveservestaledata'],
+          :stopwritesonbgsaveerror => current['stopwritesonbgsaveerror'],
+          :replpingslaveperiod     => current['replpingslaveperiod'],
+          :repltimeout             => current['repltimeout'],
+          :requirepass             => current['requirepass'],
+          :maxclients              => current['maxclients'],
+          :maxmemory               => maxmemory,
+          :maxmemorypolicy         => current['maxmemorypolicy'],
+          :maxmemorysamples        => current['maxmemorysamples'],
+          :appendfsync             => current['appendfsync'],
+          :noappendfsynconrewrite  => current['noappendfsynconrewrite'],
+          :aofrewritepercentage    => current['aofrewritepercentage'] ,
+          :aofrewriteminsize       => current['aofrewriteminsize'],
+          :clusterenabled          => current['cluster-enabled'],
+          :clusterconfigfile       => current['cluster-config-file'],
+          :clusternodetimeout      => current['cluster-node-timeout'],
+          :includes                => current['includes']
         })
       end
       #Setup init.d file
