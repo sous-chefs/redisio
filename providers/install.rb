@@ -135,13 +135,15 @@ def configure
         only_if { current['syslogenabled'] != 'yes' && current['logfile'] && current['logfile'] != 'stdout' }
       end
       #Create the log file is syslog is not being used
-      file current['logfile'] do
-        owner current['user']
-        group current['group']
-        mode '0644'
-        backup false
-        action :touch
-        only_if { current['logfile'] && current['logfile'] != 'stdout' }
+      if current['logfile']
+          file current['logfile'] do
+            owner current['user']
+            group current['group']
+            mode '0644'
+            backup false
+            action :touch
+            only_if { current['logfile'] != 'stdout' }
+          end
       end
       #Set proper permissions on the AOF or RDB files
       file aof_file do
