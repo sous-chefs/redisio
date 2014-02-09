@@ -167,7 +167,7 @@ def configure
           :version                => version_hash,
           :piddir                 => piddir,
           :name                   => server_name,
-          :job_control            => node['redisio']['job_control'], 
+          :job_control            => node['redisio']['job_control'],
           :port                   => current['port'],
           :address                => current['address'],
           :databases              => current['databases'],
