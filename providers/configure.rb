@@ -163,11 +163,15 @@ def configure
         owner current['user']
         group current['group']
         mode '0644'
+        daemonized = node['redisio']['daemonized'].nil? ?
+          (node['redisio']['job_control'] == 'initd') :
+          node['redisio']['daemonized']
         variables({
           :version                => version_hash,
           :piddir                 => piddir,
           :name                   => server_name,
-          :job_control            => node['redisio']['job_control'], 
+          :job_control            => node['redisio']['job_control'],
+          :daemonized             => daemonized,
           :port                   => current['port'],
           :address                => current['address'],
           :databases              => current['databases'],
