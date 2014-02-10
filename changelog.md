@@ -22,8 +22,9 @@ redisio CHANGE LOG
   - Supports redis 2.8 and its use of the empty string for stdout in the logfile option
   - Fixes a bug where multiple redis instances were using the same swapfile (only for version os redis 2.4 and below)
   - Allows the user to specify required_start and required_start when using the init scripts
-  - Changes default version of redis to install to 2.8.2
+  - Changes default version of redis to install to 2.8.5
   - Warns a user if they have syslogenabled set to yes and also have logfile set
+  - maxmemory will be rounded when calculated as a percentage
 
 1.7.1 - Released 2/10/2014
 ---
