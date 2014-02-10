@@ -25,6 +25,17 @@ redisio CHANGE LOG
   - Changes default version of redis to install to 2.8.2
   - Warns a user if they have syslogenabled set to yes and also have logfile set
 
+1.7.1 - Released 2/10/2014
+---
+  - Bumps default version of redis to 2.6.17
+  - Changes the redis download mirror to redis.io
+  - Fixes #76 - Default settings save as empty string breaks install. [Thanks to astlock]
+  - Fixes bug with nil file resource for logfile. [Thanks to chrismoos]
+
+1.7.0 - Released 7/25/2013
+---
+  - Adds support for address attribute as an array or string.  This is to support the feature that will be introduced in redis 2.8
+
 1.6.0 - Release 6/27/2013
 ---
   - Fixes a bug when using a percentage for max memory. [Thanks to organicveggie]
