@@ -1,3 +1,5 @@
+**Please read the changelog when upgrading from the 1.x series to the 2.x series**
+
 Description
 ===========
 
