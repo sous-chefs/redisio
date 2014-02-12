@@ -1,9 +1,7 @@
 # Example sentinel.conf
 
 # redisio Cookbook additions
-<% unless @job_control == 'upstart' %>
-daemonize yes
-<% end %>
+daemonize <%= @daemonized ? 'yes' : 'no' %>
 pidfile <%= @piddir %>/sentinel_<%=@name%>.pid
 
 # port <sentinel-port>
