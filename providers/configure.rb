@@ -200,9 +200,15 @@ def configure
           :noappendfsynconrewrite  => current['noappendfsynconrewrite'],
           :aofrewritepercentage    => current['aofrewritepercentage'] ,
           :aofrewriteminsize       => current['aofrewriteminsize'],
-          :clusterenabled          => current['cluster-enabled'],
-          :clusterconfigfile       => current['cluster-config-file'],
-          :clusternodetimeout      => current['cluster-node-timeout'],
+          :hashmaxziplistentries   => current['hashmaxziplistentries'],
+          :hashmaxziplistvalue     => current['hashmaxziplistvalue'],
+          :setmaxintsetentries     => current['setmaxintsetentries'],
+          :zsetmaxziplistentries   => current['zsetmaxziplistentries'],
+          :zsetmaxziplistvalue     => current['zsetmaxziplistvalue'],
+          :activerehasing          => current['activerehasing'],
+          :clusterenabled          => current['clusterenabled'],
+          :clusterconfigfile       => current['clusterconfigfile'],
+          :clusternodetimeout      => current['clusternodetimeout'],
           :includes                => current['includes']
         })
       end

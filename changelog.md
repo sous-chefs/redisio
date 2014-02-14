@@ -1,6 +1,7 @@
 redisio CHANGE LOG
 ===
 
+
 2.0.0 -
 ---
   ! THIS RELEASE HAS MANY BREAKING CHANGES      !
@@ -27,6 +28,8 @@ redisio CHANGE LOG
   - maxmemory will be rounded when calculated as a percentage
   - Add stop-writes-on-bgsave-error config option
   - Changes default log level from verbose to notice
+  - Adds configuration options for ziplists and active rehashing
+
 
 1.7.1 - Released 2/10/2014
 ---

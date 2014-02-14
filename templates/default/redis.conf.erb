@@ -491,35 +491,27 @@ vm-max-threads 4
 # small number of entries, and the biggest entry does not exceed a given
 # threshold. These thresholds can be configured using the following directives.
 
-<% #Once the first official 2.6 release is out, it would make sense to remove the extraneous :minor 5 comparison %>
-<% if @version[:major].to_i == 2 && (@version[:minor].to_i == 6 || @version[:minor].to_i == 5)  %> 
-  ######## Redis 2.6 ########
-  hash-max-ziplist-entries 512
-  hash-max-ziplist-value 64
-<% elsif @version[:major].to_i == 2 && @version[:minor].to_i == 4 %>
-  ######## Redis 2.4 ########
-  hash-max-zipmap-entries 512
-  hash-max-zipmap-value 64
-<% end %>
-
 # Similarly to hashes, small lists are also encoded in a special way in order
 # to save a lot of space. The special representation is only used when
 # you are under the following limits:
-list-max-ziplist-entries 512
-list-max-ziplist-value 64
+
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 6 %>
+######## Redis 2.6 and higher ########
+hash-max-ziplist-entries <%= @hashmaxziplistentries %>
+hash-max-ziplist-value <%= @hashmaxziplistvalue %>
 
 # Sets have a special encoding in just one case: when a set is composed
 # of just strings that happens to be integers in radix 10 in the range
 # of 64 bit signed integers.
 # The following configuration setting sets the limit in the size of the
 # set in order to use this special memory saving encoding.
-set-max-intset-entries 512
+set-max-intset-entries <%= @setmaxintsetentries %>
 
 # Similarly to hashes and lists, sorted sets are also specially encoded in
 # order to save a lot of space. This encoding is only used when the length and
 # elements of a sorted set are below the following limits:
-zset-max-ziplist-entries 128
-zset-max-ziplist-value 64
+zset-max-ziplist-entries <%= @zsetmaxziplistentries %>
+zset-max-ziplist-value <%= @zsetmaxziplistvalue %>
 
 # Active rehashing uses 1 millisecond every 100 milliseconds of CPU time in
 # order to help rehashing the main Redis hash table (the one mapping top-level
@@ -539,7 +531,13 @@ zset-max-ziplist-value 64
 #
 # use "activerehashing yes" if you don't have such hard requirements but
 # want to free memory asap when possible.
-activerehashing yes
+activerehashing <%= @activerehasing %>
+
+<% elsif @version[:major].to_i == 2 && @version[:minor].to_i == 4 %>
+<%  ######## Redis 2.4 ######## %>
+  hash-max-zipmap-entries 512
+  hash-max-zipmap-value 64
+<% end %>
 
 <%if @clusterenabled == 'yes' %>
 cluster-enabled yes
