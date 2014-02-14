@@ -1,35 +1,36 @@
 redisio CHANGE LOG
 ===
 
-
-2.0.0 -
+2.1.0 -
 ---
-  ! THIS RELEASE HAS MANY BREAKING CHANGES      !
-  ! Your old role file will most likelynot work !
-
-  - Changes the job_control per instance attribute to a global one.
-  - Adds a status command to the init.d script, uses this in the initd based service for checking status
   - Removes the uninstall recipe and resource.
-  - Splits up the install resource into separate install and configure resources [Thanks to rcleere]
-  - By default now calls _install_prereqs, install, and configure in the default recipe.
   - Adds the ability to skip the default recipe calling install and configure by setting redisio bypass_setup attribute to true
   - Adds support for redis sentinel [Thanks to rcleere, Ryan Walker]
-  - Adds support for passing the address attribute as an array.  This is to support the redis 2.8 series which allows binding to multiple addresses
+  - Splits up the install resource into separate install and configure resources [Thanks to rcleere]
+  - By default now calls _install_prereqs, install, and configure in the default recipe.
+  - Changes default version of redis to install to 2.8.5
   - Now depends on the build-essential cookbook.
   - Fixes issue #76 - Default settings save as empty string breaks install
-  - Adds a Vagrant file!
   - Switches mirror server from googlefiles to redis.io.  If you are using version of redis before 2.6.16 you will need to override the mirror server attribute
     to use the old site with archived versions.
-  - Supports redis 2.8 and its use of the empty string for stdout in the logfile option
-  - Fixes a bug where multiple redis instances were using the same swapfile (only for version os redis 2.4 and below)
-  - Allows the user to specify required_start and required_start when using the init scripts
-  - Changes default version of redis to install to 2.8.5
-  - Warns a user if they have syslogenabled set to yes and also have logfile set
+  - Adds a Vagrant file!
   - maxmemory will be rounded when calculated as a percentage
   - Add stop-writes-on-bgsave-error config option
   - Changes default log level from verbose to notice
   - Adds configuration options for ziplists and active rehashing
+  - Adds support for passing the address attribute as an array.  This is to support the redis 2.8 series which allows binding to multiple addresses
+  - Fixes a bug where multiple redis instances were using the same swapfile (only for version of redis 2.4 and below)
+  - Changes the job_control per instance attribute to a global one.
+  - Adds a status command to the init.d script, uses this in the initd based service for checking status
 
+2.0.0 - Never officially released
+---
+  ! THIS RELEASE HAS MANY BREAKING CHANGES       !
+  ! Your old role file will most likely not work !
+
+  - Supports redis 2.8 and its use of the empty string for stdout in the logfile option
+  - Allows the user to specify required_start and required_start when using the init scripts
+  - Warns a user if they have syslogenabled set to yes and also have logfile set
 
 1.7.1 - Released 2/10/2014
 ---
