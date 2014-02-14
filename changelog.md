@@ -3,6 +3,15 @@ redisio CHANGE LOG
 
 2.1.0 -
 ---
+
+  - Adds options for the following
+      - lua-time-limit
+      - slowlog-logs-slower-than
+      - slowlog-max-len
+      - notify-keyspace-events
+      - client-output-buffer-limit
+      - hz
+      - aof-rewrite-incremental-fsync
   - Removes the uninstall recipe and resource.
   - Adds the ability to skip the default recipe calling install and configure by setting redisio bypass_setup attribute to true
   - Adds support for redis sentinel [Thanks to rcleere, Ryan Walker]

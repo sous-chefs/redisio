@@ -39,7 +39,7 @@ default['redisio']['bypass_setup'] = false
 default['redisio']['mirror'] = "http://download.redis.io/releases/"
 default['redisio']['base_name'] = 'redis-'
 default['redisio']['artifact_type'] = 'tar.gz'
-default['redisio']['version'] = '2.8.5'
+default['redisio']['version'] = '2.8.6'
 default['redisio']['base_piddir'] = '/var/run/redis'
 
 # Custom installation directory
@@ -90,16 +90,27 @@ default['redisio']['default_settings'] = {
   'noappendfsynconrewrite'  => 'no',
   'aofrewritepercentage'    => '100',
   'aofrewriteminsize'       => '64mb',
+  'luatimelimit'            => '5000',
+  'slowloglogslowerthan'    => '10000',
+  'slowlog-max-len'         => '1024',
+  'notifykeyspaceevents'    => '',
   'hashmaxziplistentries'   => '512',
   'hashmaxziplistvalue'     => '64',
   'setmaxintsetentries'     => '512',
   'zsetmaxziplistentries'   => '128',
   'zsetmaxziplistvalue'     => '64',
   'activerehasing'          => 'yes',
-  'cluster-enabled'         => 'no',
-  'cluster-config-file'     => nil, # Defaults to redis instance name inside of template if cluster is enabled.
-  'cluster-node-timeout'    => 5,
-  'includes'                => nil
+  'clientoutputbufferlimit' => [
+    %w(normal 0 0 0),
+    %w(slave 256mb 64mb 60),
+    %w(pubsub 32mb 8mb 60)
+  ],
+  'hz'                         => '10',
+  'aofrewriteincrementalfsync' => 'yes',
+  'cluster-enabled'            => 'no',
+  'cluster-config-file'        => nil, # Defaults to redis instance name inside of template if cluster is enabled.
+  'cluster-node-timeout'       => 5,
+  'includes'                   => nil
 }
 
 # The default for this is set inside of the "install" recipe. This is due to the way deep merge handles arrays
