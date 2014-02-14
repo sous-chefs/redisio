@@ -279,7 +279,7 @@ Available options and their defaults
 'unixoscket'             => nil - The location of the unix socket to use,
 'unixsocketperm'         => nil - The permissions of the unix socket,
 'timeout'                => '0',
-'loglevel'               => 'verbose',
+'loglevel'               => 'notice',
 'logfile'                => nil,
 'syslogenabled'         => 'yes',
 'syslogfacility         => 'local0',
