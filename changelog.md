@@ -26,6 +26,7 @@ redisio CHANGE LOG
   - Warns a user if they have syslogenabled set to yes and also have logfile set
   - maxmemory will be rounded when calculated as a percentage
   - Add stop-writes-on-bgsave-error config option
+  - Changes default log level from verbose to notice
 
 1.7.1 - Released 2/10/2014
 ---
