@@ -58,8 +58,7 @@ case "$1" in
                 PID=$(cat $PIDFILE)
                 echo "Stopping ..."
 
-                <%= "$CLIEXEC #{connection_string} save" if @shutdown_save %>                 
-                $CLIEXEC <%= connection_string %> shutdown
+                $CLIEXEC <%= connection_string %> shutdown <%= "save" if @shutdown_save %>
 
                 while [ -x /proc/${PID} ]
                 do
