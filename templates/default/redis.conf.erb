@@ -476,8 +476,7 @@ vm-max-threads 4
 # small number of entries, and the biggest entry does not exceed a given
 # threshold. These thresholds can be configured using the following directives.
 
-<% #Once the first official 2.6 release is out, it would make sense to remove the extraneous :minor 5 comparison %>
-<% if @version[:major].to_i == 2 && (@version[:minor].to_i == 6 || @version[:minor].to_i == 5)  %> 
+<% if @version[:major].to_i == 2 && (@version[:minor].to_i >= 6)  %> 
   ######## Redis 2.6 ########
   hash-max-ziplist-entries 512
   hash-max-ziplist-value 64
