@@ -162,7 +162,7 @@ dir <%=@datadir%>
 # refuse the slave request.
 #
 # masterauth <master-password>
-<%= "masterauth #{@masterauth}" unless @masterauth.nil? %> 
+<%= "masterauth #{@masterauth}" unless @masterauth.nil? %>
 
 # When a slave lost the connection with the master, or when the replication
 # is still in progress, the slave can act in two different ways:
@@ -200,7 +200,7 @@ repl-timeout <%=@repltimeout%>
 #
 # This should stay commented out for backward compatibility and because most
 # people do not need auth (e.g. they run their own servers).
-# 
+#
 # Warning: since Redis is pretty fast an outside user can try up to
 # 150k passwords per second against a good box. This means that you should
 # use a very strong password otherwise it will be very easy to break.
@@ -320,7 +320,7 @@ appendonly no
 appendfilename appendonly-<%=@name%>.aof
 
 # The fsync() call tells the Operating System to actually write data on disk
-# instead to wait for more data in the output buffer. Some OS will really flush 
+# instead to wait for more data in the output buffer. Some OS will really flush
 # data on disk, some other OS will just try to do it ASAP.
 #
 # Redis supports three different modes:
@@ -426,7 +426,7 @@ slowlog-log-slower-than 10000
 # You can reclaim memory used by the slow log with SLOWLOG RESET.
 slowlog-max-len 1024
 
-<% unless @version[:major].to_i == 2 && @version[:minor].to_i >= 5 %> 
+<% unless @version[:major].to_i == 2 && @version[:minor].to_i >= 5 %>
 ################################ VIRTUAL MEMORY ###############################
 
 ### WARNING! Virtual Memory is deprecated in Redis 2.4
@@ -688,4 +688,3 @@ cluster-node-timeout <%= @clusternodetimeout %>
     <%= "include #{include_option}" %>
   <% end %>
 <% end %>
-
