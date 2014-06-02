@@ -503,6 +503,8 @@ vm-pages 134217728
 vm-max-threads 4
 <% end %>
 
+<% unless @version[:major].to_i == 2 && @version[:minor].to_i >= 8 %>
+<% ######## Redis 2.8 and higher ######## %>
 ############################# Event notification ##############################
 
 # Redis can notify Pub/Sub clients about events happening in the key space.
@@ -547,7 +549,8 @@ vm-max-threads 4
 #  By default all notifications are disabled because most users don't need
 #  this feature and the feature has some overhead. Note that if you don't
 #  specify at least one of K or E, no events will be delivered.
-notify-keyspace-events ""
+notify-keyspace-events "<%= @notifykeyspaceevents %>"
+<% end %>
 
 ############################### ADVANCED CONFIG ###############################
 
