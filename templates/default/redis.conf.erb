@@ -503,7 +503,7 @@ vm-pages 134217728
 vm-max-threads 4
 <% end %>
 
-<% unless @version[:major].to_i == 2 && @version[:minor].to_i >= 8 %>
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 8 %>
 <% ######## Redis 2.8 and higher ######## %>
 ############################# Event notification ##############################
 
