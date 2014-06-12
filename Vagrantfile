@@ -20,6 +20,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     r.vm.box     = base_box
     r.vm.box_url = url
     r.vm.network :private_network, :ip =>  "192.168.50.5"
+    r.vm.provision :shell, :inline => "sudo apt-get -y install build-essential"
     r.vm.provision :shell, :inline => chef_upgrade
     r.vm.provision :shell, :inline => easy_run_solo
 
@@ -41,6 +42,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     s.vm.box     = base_box
     s.vm.box_url = url
     s.vm.network :private_network, :ip => "192.168.50.10"
+    s.vm.provision :shell, :inline => "sudo apt-get -y install build-essential"
     s.vm.provision :shell, :inline => chef_upgrade
     s.vm.provision :shell, :inline => easy_run_solo
 

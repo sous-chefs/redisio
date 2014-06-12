@@ -109,6 +109,21 @@ databases <%=@databases%>
     <% end %>
   <% end %>
 
+# By default Redis will stop accepting writes if RDB snapshots are enabled
+# (at least one save point) and the latest background save failed.
+# This will make the user aware (in a hard way) that data is not persisting
+# on disk properly, otherwise chances are that no one will notice and some
+# disaster will happen.
+#
+# If the background saving process will start working again Redis will
+# automatically allow writes again.
+#
+# However if you have setup your proper monitoring of the Redis server
+# and persistence, you may want to disable this feature so that Redis will
+# continue to work as usual even if there are problems with disk,
+# permissions, and so forth.
+stop-writes-on-bgsave-error <%= @stopwritesonbgsaveerror %>
+
 # Compress string objects using LZF when dump .rdb databases?
 # For default that's set to 'yes' as it's almost always a win.
 # If you want to save some CPU in the saving child set it to 'no' but
@@ -123,9 +138,9 @@ dbfilename dump-<%=@name%>.rdb
 #
 # The DB will be written inside this directory, with the filename specified
 # above using the 'dbfilename' configuration directive.
-# 
+#
 # Also the Append Only File will be created inside this directory.
-# 
+#
 # Note that you must specify a directory here, not a file name.
 dir <%=@datadir%>
 
@@ -245,14 +260,14 @@ repl-timeout <%=@repltimeout%>
 
 # MAXMEMORY POLICY: how Redis will select what to remove when maxmemory
 # is reached? You can select among five behavior:
-# 
+#
 # volatile-lru -> remove the key with an expire set using an LRU algorithm
 # allkeys-lru -> remove any key accordingly to the LRU algorithm
 # volatile-random -> remove a random key with an expire set
 # allkeys->random -> remove a random key, any key
 # volatile-ttl -> remove the key with the nearest expire time (minor TTL)
 # noeviction -> don't expire at all, just return an error on write operations
-# 
+#
 # Note: with all the kind of policies, Redis will return an error on write
 #       operations, when there are not suitable keys for eviction.
 #
@@ -296,7 +311,7 @@ maxmemory-samples <%=@maxmemorysamples%>
 
 <%if (@backuptype == 'aof' || @backuptype == 'both')%>
 appendonly yes
-<%else%> 
+<%else%>
 appendonly no
 <%end%>
 # The name of the append only file (default: "appendonly.aof")
@@ -342,7 +357,7 @@ appendfilename appendonly-<%=@name%>.aof
 # the same as "appendfsync none", that in pratical terms means that it is
 # possible to lost up to 30 seconds of log in the worst scenario (with the
 # default Linux settings).
-# 
+#
 # If you have latency problems turn this to "yes". Otherwise leave it as
 # "no" that is the safest pick from the point of view of durability.
 no-appendfsync-on-rewrite <%=@noappendfsynconrewrite%>
@@ -350,7 +365,7 @@ no-appendfsync-on-rewrite <%=@noappendfsynconrewrite%>
 # Automatic rewrite of the append only file.
 # Redis is able to automatically rewrite the log file implicitly calling
 # BGREWRITEAOF when the AOF log size will growth by the specified percentage.
-# 
+#
 # This is how it works: Redis remembers the size of the AOF file after the
 # latest rewrite (or if no rewrite happened since the restart, the size of
 # the AOF at startup is used).
@@ -367,6 +382,24 @@ no-appendfsync-on-rewrite <%=@noappendfsynconrewrite%>
 auto-aof-rewrite-percentage <%=@aofrewritepercentage%>
 auto-aof-rewrite-min-size <%=@aofrewriteminsize%>
 
+################################ LUA SCRIPTING  ###############################
+
+# Max execution time of a Lua script in milliseconds.
+#
+# If the maximum execution time is reached Redis will log that a script is
+# still in execution after the maximum allowed time and will start to
+# reply to queries with an error.
+#
+# When a long running script exceed the maximum execution time only the
+# SCRIPT KILL and SHUTDOWN NOSAVE commands are available. The first can be
+# used to stop a script that did not yet called write commands. The second
+# is the only way to shut down the server in the case a write commands was
+# already issue by the script but the user don't want to wait for the natural
+# termination of the script.
+#
+# Set it to 0 or a negative value for unlimited execution without warnings.
+lua-time-limit <%= @luatimelimit %>
+
 ################################## SLOW LOG ###################################
 
 # The Redis Slow Log is a system to log queries that exceeded a specified
@@ -375,7 +408,7 @@ auto-aof-rewrite-min-size <%=@aofrewriteminsize%>
 # but just the time needed to actually execute the command (this is the only
 # stage of command execution where the thread is blocked and can not serve
 # other requests in the meantime).
-# 
+#
 # You can configure the slow log with two parameters: one tells Redis
 # what is the execution time, in microseconds, to exceed in order for the
 # command to get logged, and the other parameter is the length of the
@@ -468,41 +501,79 @@ vm-pages 134217728
 vm-max-threads 4
 <% end %>
 
+############################# Event notification ##############################
+
+# Redis can notify Pub/Sub clients about events happening in the key space.
+# This feature is documented at http://redis.io/topics/keyspace-events
+#
+# For instance if keyspace events notification is enabled, and a client
+# performs a DEL operation on key "foo" stored in the Database 0, two
+# messages will be published via Pub/Sub:
+#
+# PUBLISH __keyspace@0__:foo del
+# PUBLISH __keyevent@0__:del foo
+#
+# It is possible to select the events that Redis will notify among a set
+# of classes. Every class is identified by a single character:
+#
+#  K     Keyspace events, published with __keyspace@<db>__ prefix.
+#  E     Keyevent events, published with __keyevent@<db>__ prefix.
+#  g     Generic commands (non-type specific) like DEL, EXPIRE, RENAME, ...
+#  $     String commands
+#  l     List commands
+#  s     Set commands
+#  h     Hash commands
+#  z     Sorted set commands
+#  x     Expired events (events generated every time a key expires)
+#  e     Evicted events (events generated when a key is evicted for maxmemory)
+#  A     Alias for g$lshzxe, so that the "AKE" string means all the events.
+#
+#  The "notify-keyspace-events" takes as argument a string that is composed
+#  by zero or multiple characters. The empty string means that notifications
+#  are disabled at all.
+#
+#  Example: to enable list and generic events, from the point of view of the
+#           event name, use:
+#
+#  notify-keyspace-events Elg
+#
+#  Example 2: to get the stream of the expired keys subscribing to channel
+#             name __keyevent@0__:expired use:
+#
+#  notify-keyspace-events Ex
+#
+#  By default all notifications are disabled because most users don't need
+#  this feature and the feature has some overhead. Note that if you don't
+#  specify at least one of K or E, no events will be delivered.
+notify-keyspace-events ""
+
 ############################### ADVANCED CONFIG ###############################
 
 # Hashes are encoded using a memory efficient data structure when they have a
 # small number of entries, and the biggest entry does not exceed a given
 # threshold. These thresholds can be configured using the following directives.
 
-<% #Once the first official 2.6 release is out, it would make sense to remove the extraneous :minor 5 comparison %>
-<% if @version[:major].to_i == 2 && (@version[:minor].to_i == 6 || @version[:minor].to_i == 5)  %> 
-  ######## Redis 2.6 ########
-  hash-max-ziplist-entries 512
-  hash-max-ziplist-value 64
-<% elsif @version[:major].to_i == 2 && @version[:minor].to_i == 4 %>
-  ######## Redis 2.4 ########
-  hash-max-zipmap-entries 512
-  hash-max-zipmap-value 64
-<% end %>
-
 # Similarly to hashes, small lists are also encoded in a special way in order
 # to save a lot of space. The special representation is only used when
 # you are under the following limits:
-list-max-ziplist-entries 512
-list-max-ziplist-value 64
+
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 6 %>
+<% ######## Redis 2.6 and higher ######## %>
+hash-max-ziplist-entries <%= @hashmaxziplistentries %>
+hash-max-ziplist-value <%= @hashmaxziplistvalue %>
 
 # Sets have a special encoding in just one case: when a set is composed
 # of just strings that happens to be integers in radix 10 in the range
 # of 64 bit signed integers.
 # The following configuration setting sets the limit in the size of the
 # set in order to use this special memory saving encoding.
-set-max-intset-entries 512
+set-max-intset-entries <%= @setmaxintsetentries %>
 
 # Similarly to hashes and lists, sorted sets are also specially encoded in
 # order to save a lot of space. This encoding is only used when the length and
 # elements of a sorted set are below the following limits:
-zset-max-ziplist-entries 128
-zset-max-ziplist-value 64
+zset-max-ziplist-entries <%= @zsetmaxziplistentries %>
+zset-max-ziplist-value <%= @zsetmaxziplistvalue %>
 
 # Active rehashing uses 1 millisecond every 100 milliseconds of CPU time in
 # order to help rehashing the main Redis hash table (the one mapping top-level
@@ -511,7 +582,7 @@ zset-max-ziplist-value 64
 # that is rhashing, the more rehashing "steps" are performed, so if the
 # server is idle the rehashing is never complete and some more memory is used
 # by the hash table.
-# 
+#
 # The default is to use this millisecond 10 times every second in order to
 # active rehashing the main dictionaries, freeing memory when possible.
 #
@@ -522,7 +593,78 @@ zset-max-ziplist-value 64
 #
 # use "activerehashing yes" if you don't have such hard requirements but
 # want to free memory asap when possible.
-activerehashing yes
+activerehashing <%= @activerehasing %>
+
+<% elsif @version[:major].to_i == 2 && @version[:minor].to_i == 4 %>
+<%  ######## Redis 2.4 ######## %>
+  hash-max-zipmap-entries 512
+  hash-max-zipmap-value 64
+<% end %>
+
+# The client output buffer limits can be used to force disconnection of clients
+# that are not reading data from the server fast enough for some reason (a
+# common reason is that a Pub/Sub client can't consume messages as fast as the
+# publisher can produce them).
+#
+# The limit can be set differently for the three different classes of clients:
+#
+# normal -> normal clients
+# slave  -> slave clients and MONITOR clients
+# pubsub -> clients subscribed to at least one pubsub channel or pattern
+#
+# The syntax of every client-output-buffer-limit directive is the following:
+#
+# client-output-buffer-limit <class> <hard limit> <soft limit> <soft seconds>
+#
+# A client is immediately disconnected once the hard limit is reached, or if
+# the soft limit is reached and remains reached for the specified number of
+# seconds (continuously).
+# So for instance if the hard limit is 32 megabytes and the soft limit is
+# 16 megabytes / 10 seconds, the client will get disconnected immediately
+# if the size of the output buffers reach 32 megabytes, but will also get
+# disconnected if the client reaches 16 megabytes and continuously overcomes
+# the limit for 10 seconds.
+#
+# By default normal clients are not limited because they don't receive data
+# without asking (in a push way), but just after a request, so only
+# asynchronous clients may create a scenario where data is requested faster
+# than it can read.
+#
+# Instead there is a default limit for pubsub and slave clients, since
+# subscribers and slaves receive data in a push fashion.
+#
+# Both the hard or the soft limit can be disabled by setting them to zero.
+
+#client-output-buffer-limit normal 0 0 0
+#client-output-buffer-limit slave 256mb 64mb 60
+#client-output-buffer-limit pubsub 32mb 8mb 60
+
+<% @clientoutputbufferlimit.each do |c| %>
+<%= "client-output-buffer-limit #{c.flatten.join(' ')}" %>
+<% end %>
+
+# Redis calls an internal function to perform many background tasks, like
+# closing connections of clients in timeout, purging expired keys that are
+# never requested, and so forth.
+#
+# Not all tasks are performed with the same frequency, but Redis checks for
+# tasks to perform accordingly to the specified "hz" value.
+#
+# By default "hz" is set to 10. Raising the value will use more CPU when
+# Redis is idle, but at the same time will make Redis more responsive when
+# there are many keys expiring at the same time, and timeouts may be
+# handled with more precision.
+#
+# The range is between 1 and 500, however a value over 100 is usually not
+# a good idea. Most users should use the default of 10 and raise this up to
+# 100 only in environments where very low latency is required.
+hz <%= @hz %>
+
+# When a child rewrites the AOF file, if the following option is enabled
+# the file will be fsync-ed every 32 MB of data generated. This is useful
+# in order to commit the file to the disk more incrementally and avoid
+# big latency spikes.
+aof-rewrite-incremental-fsync <%= @aofrewriteincrementalfsync %>
 
 <%if @clusterenabled == 'yes' %>
 cluster-enabled yes

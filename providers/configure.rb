@@ -73,7 +73,7 @@ def configure
       # Just assume this is sensible like "95%" or "95 %"
       percent_factor = current['maxmemory'].to_f / 100.0
       # Ohai reports memory in KB as it looks in /proc/meminfo
-      maxmemory = (node_memory_kb * 1024 * percent_factor / new_resource.servers.length).to_s
+      maxmemory = (node_memory_kb * 1024 * percent_factor / new_resource.servers.length).round.to_s
     end
 
     descriptors = current['ulimit'] == 0 ? current['maxclients'] + 32 : current['maxclients']
@@ -117,23 +117,27 @@ def configure
         action :create
       end
       #Create the log directory if syslog is not being used
-      directory log_directory do
-        owner current['user']
-        group current['group']
-        mode '0755'
-        recursive true
-        action :create
-        only_if { log_directory }
+      if log_directory
+        directory log_directory do
+          owner current['user']
+          group current['group']
+          mode '0755'
+          recursive true
+          action :create
+          only_if { log_directory }
+        end
       end
       #Create the log file if syslog is not being used
-      file current['logfile'] do
-        owner current['user']
-        group current['group']
-        mode '0644'
-        backup false
-        action :touch
-        # in version 2.8 or higher the empty string is used instead of stdout
-        only_if { log_file && !log_file.empty? && log_file != "stdout" }
+      if log_file
+        file current['logfile'] do
+          owner current['user']
+          group current['group']
+          mode '0644'
+          backup false
+          action :touch
+          # in version 2.8 or higher the empty string is used instead of stdout
+          only_if { !log_file.empty? && log_file != "stdout" }
+        end
       end
       #Set proper permissions on the AOF or RDB files
       file aof_file do
@@ -167,42 +171,56 @@ def configure
           (node['redisio']['job_control'] == 'initd') :
           node['redisio']['daemonized']
         variables({
-          :version                => version_hash,
-          :piddir                 => piddir,
-          :name                   => server_name,
-          :job_control            => node['redisio']['job_control'],
-          :daemonized             => daemonized,
-          :port                   => current['port'],
-          :address                => current['address'],
-          :databases              => current['databases'],
-          :backuptype             => current['backuptype'],
-          :datadir                => current['datadir'],
-          :unixsocket             => current['unixsocket'],
-          :unixsocketperm         => current['unixsocketperm'],
-          :timeout                => current['timeout'],
-          :loglevel               => current['loglevel'],
-          :logfile                => current['logfile'],
-          :syslogenabled          => current['syslogenabled'],
-          :syslogfacility         => current['syslogfacility'],
-          :save                   => current['save'],
-          :slaveof                => current['slaveof'],
-          :masterauth             => current['masterauth'],
-          :slaveservestaledata    => current['slaveservestaledata'],
-          :replpingslaveperiod    => current['replpingslaveperiod'],
-          :repltimeout            => current['repltimeout'],
-          :requirepass            => current['requirepass'],
-          :maxclients             => current['maxclients'],
-          :maxmemory              => maxmemory,
-          :maxmemorypolicy        => current['maxmemorypolicy'],
-          :maxmemorysamples       => current['maxmemorysamples'],
-          :appendfsync            => current['appendfsync'],
-          :noappendfsynconrewrite => current['noappendfsynconrewrite'],
-          :aofrewritepercentage   => current['aofrewritepercentage'] ,
-          :aofrewriteminsize      => current['aofrewriteminsize'],
-          :clusterenabled         => current['cluster-enabled'],
-          :clusterconfigfile      => current['cluster-config-file'],
-          :clusternodetimeout     => current['cluster-node-timeout'],
-          :includes               => current['includes']
+          :version                    => version_hash,
+          :piddir                     => piddir,
+          :name                       => server_name,
+          :job_control                => node['redisio']['job_control'],
+          :daemonized                 => daemonized,
+          :port                       => current['port'],
+          :address                    => current['address'],
+          :databases                  => current['databases'],
+          :backuptype                 => current['backuptype'],
+          :datadir                    => current['datadir'],
+          :unixsocket                 => current['unixsocket'],
+          :unixsocketperm             => current['unixsocketperm'],
+          :timeout                    => current['timeout'],
+          :loglevel                   => current['loglevel'],
+          :logfile                    => current['logfile'],
+          :syslogenabled              => current['syslogenabled'],
+          :syslogfacility             => current['syslogfacility'],
+          :save                       => current['save'],
+          :stopwritesonbgsaveerror    => current['stopwritesonbgsaveerror'],
+          :slaveof                    => current['slaveof'],
+          :masterauth                 => current['masterauth'],
+          :slaveservestaledata        => current['slaveservestaledata'],
+          :replpingslaveperiod        => current['replpingslaveperiod'],
+          :repltimeout                => current['repltimeout'],
+          :requirepass                => current['requirepass'],
+          :maxclients                 => current['maxclients'],
+          :maxmemory                  => maxmemory,
+          :maxmemorypolicy            => current['maxmemorypolicy'],
+          :maxmemorysamples           => current['maxmemorysamples'],
+          :appendfsync                => current['appendfsync'],
+          :noappendfsynconrewrite     => current['noappendfsynconrewrite'],
+          :aofrewritepercentage       => current['aofrewritepercentage'] ,
+          :aofrewriteminsize          => current['aofrewriteminsize'],
+          :luatimelimit               => current['luatimelimit'],
+          :slowloglogslowerthan       => current['slowloglogslowerthan'],
+          :slowlogmaxlen              => current['slowlogmaxlen'],
+          :notifykeyspaceevents       => current['notifykeyspaceevents'],
+          :hashmaxziplistentries      => current['hashmaxziplistentries'],
+          :hashmaxziplistvalue        => current['hashmaxziplistvalue'],
+          :setmaxintsetentries        => current['setmaxintsetentries'],
+          :zsetmaxziplistentries      => current['zsetmaxziplistentries'],
+          :zsetmaxziplistvalue        => current['zsetmaxziplistvalue'],
+          :activerehasing             => current['activerehasing'],
+          :clientoutputbufferlimit    => current['clientoutputbufferlimit'],
+          :hz                         => current['hz'],
+          :aofrewriteincrementalfsync => current['aofrewriteincrementalfsync'],
+          :clusterenabled             => current['clusterenabled'],
+          :clusterconfigfile          => current['clusterconfigfile'],
+          :clusternodetimeout         => current['clusternodetimeout'],
+          :includes                   => current['includes']
         })
       end
       #Setup init.d file
