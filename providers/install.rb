@@ -100,6 +100,7 @@ def configure
         home current['homedir']
         shell current['shell']
         system current['systemuser']
+        not_if { node['etc']['passwd']["#{current['user']}"] }
       end
       #Create the redis configuration directory
       directory current['configdir'] do
