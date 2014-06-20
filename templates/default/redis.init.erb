@@ -18,7 +18,7 @@ REDISPORT=<%= @port %>
 <% when 'ubuntu','debian','fedora' %>
 EXEC="sudo -u <%= @user %> <%= File.join(@bin_path, 'redis-server') %> <%= @configdir %>/${REDISNAME}.conf"
 <% else %> 
-EXEC="runuser <%= @user %> -c \"<%= File.join(@bin_path, 'redis-server') %> <%= @configdir %>/${REDISNAME}.conf\""
+EXEC="/sbin/runuser <%= @user %> -c \"<%= File.join(@bin_path, 'redis-server') %> <%= @configdir %>/${REDISNAME}.conf\""
 <% end %>
 CLIEXEC=<%= File.join(@bin_path, 'redis-cli') %>
 
