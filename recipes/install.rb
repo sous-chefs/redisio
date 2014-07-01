@@ -46,7 +46,7 @@ redis_instances.each do |current_server|
   	service "redis#{server_name}" do
       start_command "/etc/init.d/redis#{server_name} start"
       stop_command "/etc/init.d/redis#{server_name} stop"
-      status_command "pgrep -lf 'redis.*#{server_name}' | grep -v 'sh'"
+      status_command "pgrep -lf 'redis.*#{current_server['port']}' | grep -v 'sh'"
       restart_command "/etc/init.d/redis#{server_name} stop && /etc/init.d/redis#{server_name} start"
       supports :start => true, :stop => true, :restart => true, :status => false
   	end
@@ -55,7 +55,7 @@ redis_instances.each do |current_server|
 	  provider Chef::Provider::Service::Upstart
       start_command "start redis#{server_name}"
       stop_command "stop redis#{server_name}"
-      status_command "pgrep -lf 'redis.*#{server_name}' | grep -v 'sh'"
+      status_command "pgrep -lf 'redis.*#{current_server['port']}' | grep -v 'sh'"
       restart_command "restart redis#{server_name}"
       supports :start => true, :stop => true, :restart => true, :status => false
   	end
