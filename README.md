@@ -251,9 +251,11 @@ Configuration options, each option corresponds to the same-named configuration o
 * `redisio['base_name']` - the base name of the redis package to be downloaded (the part before the version), default is 'redis-'
 * `redisio['artifact_type']` - the file extension of the package.  currently only .tar.gz and .tgz are supported, default is 'tar.gz'
 * `redisio['version']` - the version number of redis to install (also appended to the `base_name` for downloading), default is '2.6.10'
-* `redisio['safe_install'] - prevents redis from installing itself if another version of redis is installed, default is true
-* `redisio['base_piddir'] - This is the directory that redis pidfile directories and pidfiles will be placed in.  Since redis can run as non root, it needs to have proper
+* `redisio['safe_install']` - prevents redis from installing itself if another version of redis is installed, default is true
+* `redisio['base_piddir']` - This is the directory that redis pidfile directories and pidfiles will be placed in.  Since redis can run as non root, it needs to have proper
                            permissions to the directory to create its pid.  Since each instance can run as a different user, these directories will all be nested inside this base one.
+* `redisio['install_dir']` - This is the directory that redis will install its binaries.  Defaults to nil which uses the redis default (/usr/local/bin)
+
 
 Default settings is a hash of default settings to be applied to to ALL instances.  These can be overridden for each individual server in the servers attribute.  If you are going to set logfile to a specific file, make sure to set syslog-enabled to no.
 
@@ -270,7 +272,7 @@ Available options and their defaults
 'ulimit'                 => 0 - 0 is a special value causing the ulimit to be maxconnections +32.  Set to nil or false to disable setting ulimits
 'configdir'              => '/etc/redis' - configuration directory
 'name'                   => nil, Allows you to name the server with something other than port.  Useful if you want to use unix sockets
-'address'                => nil,
+'address'                => nil, Can accept a single string or an array. When using an array, the FIRST value will be used by the init script for connecting to redis
 'databases'              => '16',
 'backuptype'             => 'rdb',
 'datadir'                => '/var/lib/redis',
