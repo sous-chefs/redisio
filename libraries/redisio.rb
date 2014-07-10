@@ -38,15 +38,38 @@ module RedisioHelper
   end
 
   def self.version_to_hash(version_string)
-    version_array = version_string.split('.') 
+    version_array = version_string.split('.')
     version_array[2] = version_array[2].split("-")
     version_array.flatten!
-    version_hash = { 
+    version_hash = {
         :major => version_array[0],
         :minor => version_array[1],
         :tiny => version_array[2],
         :rc => version_array[3]
     }
+  end
+
+  def valid_oom_score_adjust(value)
+    a, b = (old_kernel? ? [-17, 15] : [-1000, 1000])
+    if value.to_i.between?(a, b)
+      value
+    else
+      nil
+    end
+  rescue
+    nil
+  end
+
+  def oom_score_attribute
+    if old_kernel?
+      'oom_adj'
+    else
+      'oom_score_adj'
+    end
+  end
+
+  def old_kernel?
+    Gem::Version.new(node['kernel']['release']) < Gem::Version.new('2.6.29')
   end
 end
 
