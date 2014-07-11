@@ -49,9 +49,8 @@ module RedisioHelper
     }
   end
 
-  def valid_oom_score_adjust(value)
-    a, b = (old_kernel? ? [-17, 15] : [-1000, 1000])
-    if value.to_i.between?(a, b)
+  def self.valid_oom_score_adjust(value)
+    if value.to_i.between?(*self.oom_score_limits)
       value
     else
       nil
@@ -60,16 +59,27 @@ module RedisioHelper
     nil
   end
 
-  def oom_score_attribute
-    if old_kernel?
+  def self.oom_score_limits
+    if self.old_kernel?
+      [ -17, 15 ]
+    else
+      [ -1000, 1000 ]
+    end
+  end
+
+  def self.oom_score_attribute
+    if self.old_kernel?
       'oom_adj'
     else
       'oom_score_adj'
     end
   end
 
-  def old_kernel?
-    Gem::Version.new(node['kernel']['release']) < Gem::Version.new('2.6.29')
+  def self.old_kernel?
+    # node object is not always available to us here ... so use
+    # a more direct way to obtain node['kernel']['release']
+    @kernel_release ||= %x(uname -r).split('-').first
+    Gem::Version.new(@kernel_release) < Gem::Version.new('2.6.29')
   end
 end
 

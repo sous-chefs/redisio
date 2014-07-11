@@ -87,6 +87,10 @@ def configure
 
     descriptors = current['ulimit'] == 0 ? current['maxclients'] + 32 : current['maxclients']
 
+    # ensure oom score adjust value is within limits for kernel
+    oom_score_adj = RedisioHelper.valid_oom_score_adjust(current['oom_score_adj'])
+    Chef::Log.debug "OOM: original = #{current['oom_score_adj']}, validated = #{oom_score_adj}"
+
     recipe_eval do
       server_name = current['name'] || current['port']
       piddir = "#{base_piddir}/#{server_name}"
@@ -234,7 +238,7 @@ def configure
           :platform => node['platform'],
           :unixsocket => current['unixsocket'],
           :ulimit => descriptors,
-          :oom_score_adj => RedisioHelper.valid_oom_score_adjust(current['oom_score_adj'])
+          :oom_score_adj => oom_score_adj
           })
         only_if { current['job_control'] == 'initd' }
       end
@@ -259,7 +263,7 @@ def configure
           :piddir => piddir,
           :platform => node['platform'],
           :unixsocket => current['unixsocket'],
-          :oom_score_adj => RedisioHelper.valid_oom_score_adjust(current['oom_score_adj'])
+          :oom_score_adj => oom_score_adj
         })
         only_if { current['job_control'] == 'upstart' }
       end

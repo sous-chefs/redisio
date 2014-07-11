@@ -46,16 +46,20 @@ case "$1" in
         then
                 echo "$PIDFILE exists, process is already running or crashed"
         else
-                echo "Starting Redis server..."
+                echo "Starting Redis server ..."
                 eval $EXEC
         fi
         <% if @oom_score_adj -%>
+
+        sleep 1
         while [ ! -f $PIDFILE ]
         do
-            echo -n "."
+            echo "Waiting for Redis server to start ..."
             sleep 1
         done
+
         PID=$(cat $PIDFILE)
+
         echo "Current oom_score is $(cat /proc/${PID}/<%= RedisioHelper.oom_score_attribute %>)"
         echo "Updating <%= RedisioHelper.oom_score_attribute %> to <%= @oom_score_adj %>"
         echo "<%= @oom_score_adj %>" > /proc/${PID}/<%= RedisioHelper.oom_score_attribute %>

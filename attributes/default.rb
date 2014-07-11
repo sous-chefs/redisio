@@ -31,10 +31,6 @@ else
   homedir = '/redis'
 end
 
-# OOM score adjustment to give redis preferential treatment
-# during an out of memory condition to avoid loss of redis data
-default['redisio']['oom_score_adj'] = nil  # use system default
-
 #Install related attributes
 default['redisio']['safe_install'] = true
 
@@ -90,7 +86,7 @@ default['redisio']['default_settings'] = {
   'cluster-config-file'    => nil, # Defaults to redis instance name inside of template if cluster is enabled.
   'cluster-node-timeout'   => 5,
   'includes'               => nil,
-  'oom_score_adj'          => node['redisio']['oom_score_adj']
+  'oom_score_adj'          => nil  # Set this to provide preferential treatment by OOM killer to protect data
 }
 
 # The default for this is set inside of the "install" recipe. This is due to the way deep merge handles arrays
