@@ -11,6 +11,11 @@ script
   fi
 end script
 
+<% if @oom_score_adj -%>
+# Influence the out of memory killer candidate calculations
+oom score <%= @oom_score_adj %>
+<% end -%>
+
 # If the job exits, restart it. Give up with more than 10 restarts in 30 seconds.
 respawn
 respawn limit 10 30

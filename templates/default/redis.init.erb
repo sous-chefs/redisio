@@ -17,19 +17,19 @@ REDISPORT=<%= @port %>
 <% case @platform %>
 <% when 'ubuntu','debian','fedora' %>
 EXEC="sudo -u <%= @user %> <%= File.join(@bin_path, 'redis-server') %> <%= @configdir %>/${REDISNAME}.conf"
-<% else %> 
+<% else %>
 EXEC="runuser <%= @user %> -c \"<%= File.join(@bin_path, 'redis-server') %> <%= @configdir %>/${REDISNAME}.conf\""
 <% end %>
 CLIEXEC=<%= File.join(@bin_path, 'redis-cli') %>
 
 <% connection_string = String.new %>
-<% if @unixsocket.nil? %> 
+<% if @unixsocket.nil? %>
   <% connection_string << " -p #{@port}" %>
   <% connection_string << " -h #{@address.respond_to?(:first) ? @address.first : @address }" if @address %>
 <% else %>
   <% connection_string << " -s #{@unixsocket}" %>
 <% end %>
-<% connection_string  << " -a '#{@requirepass}'" unless @requirepass.nil? %>  
+<% connection_string  << " -a '#{@requirepass}'" unless @requirepass.nil? %>
 
 PIDFILE=<%= @piddir %>/redis_${REDISNAME}.pid
 
@@ -46,9 +46,25 @@ case "$1" in
         then
                 echo "$PIDFILE exists, process is already running or crashed"
         else
-                echo "Starting Redis server..."
+                echo "Starting Redis server ..."
                 eval $EXEC
         fi
+        <% if @oom_score_adj -%>
+
+        sleep 1
+        while [ ! -f $PIDFILE ]
+        do
+            echo "Waiting for Redis server to start ..."
+            sleep 1
+        done
+
+        PID=$(cat $PIDFILE)
+
+        echo "Current oom_score is $(cat /proc/${PID}/<%= RedisioHelper.oom_score_attribute %>)"
+        echo "Updating <%= RedisioHelper.oom_score_attribute %> to <%= @oom_score_adj %>"
+        echo "<%= @oom_score_adj %>" > /proc/${PID}/<%= RedisioHelper.oom_score_attribute %>
+        echo "Updated oom_score is $(cat /proc/${PID}/oom_score)"
+        <% end -%>
         ;;
     stop)
         if [ ! -f $PIDFILE ]
@@ -58,7 +74,7 @@ case "$1" in
                 PID=$(cat $PIDFILE)
                 echo "Stopping ..."
 
-                <%= "$CLIEXEC #{connection_string} save" if @shutdown_save %>                 
+                <%= "$CLIEXEC #{connection_string} save" if @shutdown_save %>
                 $CLIEXEC <%= connection_string %> shutdown
 
                 while [ -x /proc/${PID} ]
