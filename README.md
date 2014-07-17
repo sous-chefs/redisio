@@ -278,11 +278,12 @@ Available options and their defaults
 'datadir'                => '/var/lib/redis',
 'unixoscket'             => nil - The location of the unix socket to use,
 'unixsocketperm'         => nil - The permissions of the unix socket,
+'keepalive'              => '0',
 'timeout'                => '0',
 'loglevel'               => 'verbose',
 'logfile'                => nil,
-'syslogenabled'         => 'yes',
-'syslogfacility         => 'local0',
+'syslogenabled'          => 'yes',
+'syslogfacility'         => 'local0',
 'save'                   => nil, - This attribute is nil but defaults to ['900 1','300 10','60 10000'], if you want to disable saving use an empty string 
 'slaveof'                => nil,
 'job_control'            => 'initd', - options are 'initd' and 'upstart'
