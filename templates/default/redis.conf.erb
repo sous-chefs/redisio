@@ -292,7 +292,7 @@ repl-timeout <%=@repltimeout%>
 # using the following configuration directive.
 #
 # maxmemory-samples 3
-maxmemory-samples <%=@maxmemorysamples%>
+<%= "maxmemory-samples #{@maxmemorysamples}" unless @maxmemorysamples.nil? %>
 
 ############################## APPEND ONLY MODE ###############################
 
