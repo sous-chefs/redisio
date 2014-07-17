@@ -60,6 +60,7 @@ default['redisio']['default_settings'] = {
   'datadir'                => '/var/lib/redis',
   'unixsocket'             => nil,
   'unixsocketperm'         => nil,
+  'keepalive'              => '0',
   'timeout'                => '0',
   'loglevel'               => 'verbose',
   'logfile'                => nil,
