@@ -215,8 +215,8 @@ def configure
       bin_path = "/usr/local/bin"
       bin_path = ::File.join(node['redisio']['install_dir'], 'bin') if node['redisio']['install_dir']
       template "/etc/init.d/redis#{server_name}" do
-        source 'redis.init.erb'
-        cookbook 'redisio'
+        source new_resource.init_template
+        cookbook new_resource.init_cookbook
         owner 'root'
         group 'root'
         mode '0755'
