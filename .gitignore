@@ -5,3 +5,4 @@ metadata.json
 cookbooks/
 tmp/
 .vagrant/
+.kitchen/
