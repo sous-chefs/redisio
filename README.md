@@ -46,6 +46,8 @@ The disable recipe just stops redis and removes it from run levels.
 
 The cookbook also contains a recipe to allow for the installation of the redis ruby gem. 
 
+Redis-sentinel will write configuration and state data back into its configuration file.  This creates obvious problems when that config is managed by chef.  There is an attribute set to false which controls if chef manages the redis-sentinel config.  By default chef will write out this config file once and then leave it in the hands of sentinel to manage.  If needed you can set the node[:redis][:sentinel][:manage_config] to true if you would like chef to manage this config.  This is only advised for when you are pushing new changes to the config file as it will create a flapping state between chef and sentinel when sentinel writes out state to the file.
+
 Recipes
 -------
 
@@ -56,6 +58,8 @@ Recipes
 * install - This recipe is used to install redis.
 * redis_gem - This recipe can be used to install the redis ruby gem
 * uninstall - This recipe can be used to remove the configuration files and redis binaries
+* sentinel - This recipe can be used to install and configure sentinel
+* sentinel_enable - This recipe can be used to enable the sentinel service(s)
 
 Role File Examples
 ------------------
@@ -157,6 +161,16 @@ default_attributes({
   }
 })
 ```
+
+#### Install a single redis-sentinel to listen for a master on localhost and default port #
+
+```ruby
+run_list *%w[
+  recipe[redisio::sentinel]
+  recipe[redisio::sentinel_enable]
+]
+```
+
 
 LWRP Examples
 -------------
