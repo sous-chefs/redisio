@@ -52,10 +52,6 @@ default['redisio']['job_control'] = 'initd'
 default['redisio']['init.d']['required_start'] = []
 default['redisio']['init.d']['required_stop'] = []
 
-# Manage Sentinel Config File
-## Will write out the base config one time then no longer manage the config allowing sentinel to take over
-default['redisio']['manage_config'] = false
-
 # Default settings for all redis instances, these can be overridden on a per server basis in the 'servers' hash
 default['redisio']['default_settings'] = {
   'user'                    => 'redis',

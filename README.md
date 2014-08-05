@@ -46,7 +46,7 @@ The disable recipe just stops redis and removes it from run levels.
 
 The cookbook also contains a recipe to allow for the installation of the redis ruby gem. 
 
-Redis-sentinel will write configuration and state data back into its configuration file.  This creates obvious problems when that config is managed by chef.  There is an attribute set to false which controls if chef manages the redis-sentinel config.  By default chef will write out this config file once and then leave it in the hands of sentinel to manage.  If needed you can set the node[:redis][:sentinel][:manage_config] to true if you would like chef to manage this config.  This is only advised for when you are pushing new changes to the config file as it will create a flapping state between chef and sentinel when sentinel writes out state to the file.
+Redis-sentinel will write configuration and state data back into its configuration file.  This creates obvious problems when that config is managed by chef.  There is an attribute set to true which controls if chef manages the redis-sentinel config.  By default chef will write out this config file and manage it.  If deploying sentenel it is recommened that you set the node[:redis][:sentinel][:manage_config] to false allowing chef to write out the initial config and then allow redis-sentiniel to manage.  If running sentinel it is only advices to have node[:redis][:sentinel][:manage_config] = true when you are pushing new changes to the config file as it will create a flapping state between chef and sentinel when sentinel writes out state to the file.
 
 Recipes
 -------
