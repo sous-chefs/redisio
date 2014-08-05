@@ -1,6 +1,10 @@
 redisio CHANGE LOG
 ===
 
+2.2.0 -
+---
+  - Adds behavior to allow the cookbook to NOT manage the redis config files as redis itself will write to them now if you are using sentinel
+
 2.1.0 -
 ---
 
