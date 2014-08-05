@@ -25,16 +25,16 @@ default['redisio']['sentinel_defaults'] = {
   'can-failover'            => 'yes',
   'parallel-syncs'          => 1,
   'failover-timeout'        => 900000,
-  'loglevel'                    => 'notice',
-  'logfile'                     => nil,
-  'syslogenabled'       => 'yes',
+  'loglevel'                => 'notice',
+  'logfile'                 => nil,
+  'syslogenabled'           => 'yes',
   'syslogfacility'          => 'local0',
-  'quorum_count'        => 2
+  'quorum_count'            => 2
 }
 
 # Manage Sentinel Config File
 ## Will write out the base config one time then no longer manage the config allowing sentinel to take over
-default['redisio']['sentinel']['manage_config'] = false
+default['redisio']['sentinel']['manage_config'] = true
 
 default['redisio']['sentinels'] = []
 
