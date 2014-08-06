@@ -79,7 +79,7 @@ def configure
     descriptors = current['ulimit'] == 0 ? current['maxclients'] + 32 : current['maxclients']
 
     #Manage Redisio Config?
-    if node['redisio']['manage_config'] == true
+    if node['redisio']['sentinel']['manage_config'] == true
       config_action = :create
     else
       config_action = :create_if_missing

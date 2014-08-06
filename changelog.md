@@ -1,5 +1,8 @@
 redisio CHANGE LOG
 ===
+2.2.1 -
+---
+  - Allow sentinel to control both redis and redis-sentinel configs depending on attribute `redisio.sentinel.manage_config` state.
 
 2.2.0 -
 ---
