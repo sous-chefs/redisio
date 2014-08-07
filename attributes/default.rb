@@ -69,6 +69,7 @@ default['redisio']['default_settings'] = {
   'unixsocket'              => nil,
   'unixsocketperm'          => nil,
   'timeout'                 => '0',
+  'keepalive'               => '0',
   'loglevel'                => 'notice',
   'logfile'                 => nil,
   'syslogenabled'           => 'yes',
