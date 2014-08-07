@@ -15,6 +15,8 @@ easy_run_solo    = %q{ echo "sudo chef-solo -c /tmp/vagrant-chef-1/solo.rb -j /t
 
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.berkshelf.berksfile_path = "./Berksfile"
+  config.berkshelf.enabled = true
 
   config.vm.define :redisio do |r|
     r.vm.box     = base_box

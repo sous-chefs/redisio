@@ -1,0 +1,18 @@
+---
+driver:
+  name: vagrant
+driver_config:
+  require_chef_omnibus: true
+  use_vagrant_berkshelf_plugin: true
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: ubuntu-12.04
+
+suites:
+  - name: default
+    run_list:
+      - recipe[redisio::default]
+    attributes:
