@@ -280,7 +280,7 @@ Available options and their defaults
 'requirepass'            => nil,
 'maxclients'             => '10000',
 'maxmemory'              => nil, - This allows the use of percentages, you must append % to the number.
-'maxmemorypolicy'        => 'volatile-lru',
+'maxmemorypolicy'        => nil,
 'maxmemorysamples'       => nil,
 'appendfsync'            => 'everysec',
 'noappendfsynconrewrite' => 'no',
