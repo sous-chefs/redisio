@@ -15,4 +15,11 @@ suites:
   - name: default
     run_list:
       - recipe[redisio::default]
+      - recipe[redisio::enable]
     attributes:
+     redisio:
+        servers: [
+              {
+                port: 6379,
+              }
+            ]
