@@ -266,6 +266,7 @@ Available options and their defaults
 'unixoscket'             => nil - The location of the unix socket to use,
 'unixsocketperm'         => nil - The permissions of the unix socket,
 'timeout'                => '0',
+'keepalive'              => '0',
 'loglevel'               => 'verbose',
 'logfile'                => nil,
 'syslogenabled'         => 'yes',
@@ -279,8 +280,8 @@ Available options and their defaults
 'requirepass'            => nil,
 'maxclients'             => '10000',
 'maxmemory'              => nil, - This allows the use of percentages, you must append % to the number.
-'maxmemorypolicy'        => 'volatile-lru',
-'maxmemorysamples'       => '3',
+'maxmemorypolicy'        => nil,
+'maxmemorysamples'       => nil,
 'appendfsync'            => 'everysec',
 'noappendfsynconrewrite' => 'no',
 'aofrewritepercentage'   => '100',

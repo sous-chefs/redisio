@@ -46,6 +46,22 @@ port <%=@port%>
 # Close the connection after a client is idle for N seconds (0 to disable)
 <%= "timeout #{@timeout}" %>
 
+# TCP keepalive.
+#
+# If non-zero, use SO_KEEPALIVE to send TCP ACKs to clients in absence
+# of communication. This is useful for two reasons:
+#
+# 1) Detect dead peers.
+# 2) Take the connection alive from the point of view of network
+#    equipment in the middle.
+#
+# On Linux, the specified value (in seconds) is the period used to send ACKs.
+# Note that to close the connection the double of the time is needed.
+# On other kernels the period depends on the kernel configuration.
+#
+# A reasonable value for this option is 60 seconds.
+tcp-keepalive <%=@keepalive%>
+
 # Set server verbosity to 'debug'
 # it can be one of:
 # debug (a lot of information, useful for development/testing)
@@ -106,7 +122,7 @@ databases <%=@databases%>
     save 300 10
     save 60 10000
   <% else %>
-    <% @save.each_line do |save_option| %>
+    <% @save.each do |save_option| %>
       <%= "save #{save_option}" %>
     <% end %>
   <% end %>
@@ -291,7 +307,7 @@ repl-timeout <%=@repltimeout%>
 # using the following configuration directive.
 #
 # maxmemory-samples 3
-maxmemory-samples <%=@maxmemorysamples%>
+<%= "maxmemory-samples #{@maxmemorysamples}" unless @maxmemorysamples.nil? %>
 
 ############################## APPEND ONLY MODE ###############################
 
