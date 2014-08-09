@@ -188,6 +188,7 @@ def configure
           :unixsocket                 => current['unixsocket'],
           :unixsocketperm             => current['unixsocketperm'],
           :timeout                    => current['timeout'],
+          :keepalive                  => current['keepalive'],
           :loglevel                   => current['loglevel'],
           :logfile                    => current['logfile'],
           :syslogenabled              => current['syslogenabled'],
