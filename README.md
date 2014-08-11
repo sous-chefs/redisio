@@ -46,6 +46,8 @@ The disable recipe just stops redis and removes it from run levels.
 
 The cookbook also contains a recipe to allow for the installation of the redis ruby gem. 
 
+Redis-sentinel will write configuration and state data back into its configuration file.  This creates obvious problems when that config is managed by chef.  There is an attribute set to true which controls if chef manages the redis-sentinel config.  By default chef will write out this config file and manage it.  If deploying sentenel it is recommened that you set the node[:redis][:sentinel][:manage_config] to false allowing chef to write out the initial config and then allow redis-sentiniel to manage.  If running sentinel it is only advices to have node[:redis][:sentinel][:manage_config] = true when you are pushing new changes to the config file as it will create a flapping state between chef and sentinel when sentinel writes out state to the file.
+
 Recipes
 -------
 
@@ -56,6 +58,8 @@ Recipes
 * install - This recipe is used to install redis.
 * redis_gem - This recipe can be used to install the redis ruby gem
 * uninstall - This recipe can be used to remove the configuration files and redis binaries
+* sentinel - This recipe can be used to install and configure sentinel
+* sentinel_enable - This recipe can be used to enable the sentinel service(s)
 
 Role File Examples
 ------------------
@@ -158,6 +162,16 @@ default_attributes({
 })
 ```
 
+#### Install a single redis-sentinel to listen for a master on localhost and default port #
+
+```ruby
+run_list *%w[
+  recipe[redisio::sentinel]
+  recipe[redisio::sentinel_enable]
+]
+```
+
+
 LWRP Examples
 -------------
 
@@ -252,6 +266,7 @@ Available options and their defaults
 'unixoscket'             => nil - The location of the unix socket to use,
 'unixsocketperm'         => nil - The permissions of the unix socket,
 'timeout'                => '0',
+'keepalive'              => '0',
 'loglevel'               => 'verbose',
 'logfile'                => nil,
 'syslogenabled'         => 'yes',
@@ -265,8 +280,8 @@ Available options and their defaults
 'requirepass'            => nil,
 'maxclients'             => '10000',
 'maxmemory'              => nil, - This allows the use of percentages, you must append % to the number.
-'maxmemorypolicy'        => 'volatile-lru',
-'maxmemorysamples'       => '3',
+'maxmemorypolicy'        => nil,
+'maxmemorysamples'       => nil,
 'appendfsync'            => 'everysec',
 'noappendfsynconrewrite' => 'no',
 'aofrewritepercentage'   => '100',

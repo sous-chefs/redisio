@@ -39,7 +39,7 @@ default['redisio']['bypass_setup'] = false
 default['redisio']['mirror'] = "http://download.redis.io/releases/"
 default['redisio']['base_name'] = 'redis-'
 default['redisio']['artifact_type'] = 'tar.gz'
-default['redisio']['version'] = '2.8.6'
+default['redisio']['version'] = '2.8.13'
 default['redisio']['base_piddir'] = '/var/run/redis'
 
 # Custom installation directory
@@ -69,6 +69,7 @@ default['redisio']['default_settings'] = {
   'unixsocket'              => nil,
   'unixsocketperm'          => nil,
   'timeout'                 => '0',
+  'keepalive'               => '0',
   'loglevel'                => 'notice',
   'logfile'                 => nil,
   'syslogenabled'           => 'yes',
@@ -84,8 +85,8 @@ default['redisio']['default_settings'] = {
   'requirepass'             => nil,
   'maxclients'              => 10000,
   'maxmemory'               => nil,
-  'maxmemorypolicy'         => 'volatile-lru',
-  'maxmemorysamples'        => '3',
+  'maxmemorypolicy'         => nil,
+  'maxmemorysamples'        => nil,
   'appendfsync'             => 'everysec',
   'noappendfsynconrewrite'  => 'no',
   'aofrewritepercentage'    => '100',

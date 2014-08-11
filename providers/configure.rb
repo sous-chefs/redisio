@@ -78,6 +78,13 @@ def configure
 
     descriptors = current['ulimit'] == 0 ? current['maxclients'] + 32 : current['maxclients']
 
+    #Manage Redisio Config?
+    if node['redisio']['sentinel']['manage_config'] == true
+      config_action = :create
+    else
+      config_action = :create_if_missing
+    end
+
     recipe_eval do
       server_name = current['name'] || current['port']
       piddir = "#{base_piddir}/#{server_name}"
@@ -167,6 +174,7 @@ def configure
         owner current['user']
         group current['group']
         mode '0644'
+        action config_action
         variables({
           :version                    => version_hash,
           :piddir                     => piddir,
@@ -180,6 +188,7 @@ def configure
           :unixsocket                 => current['unixsocket'],
           :unixsocketperm             => current['unixsocketperm'],
           :timeout                    => current['timeout'],
+          :keepalive                  => current['keepalive'],
           :loglevel                   => current['loglevel'],
           :logfile                    => current['logfile'],
           :syslogenabled              => current['syslogenabled'],

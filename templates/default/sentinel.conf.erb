@@ -5,6 +5,11 @@
 daemonize yes
 <% end %>
 pidfile <%= @piddir %>/sentinel_<%=@name%>.pid
+loglevel <%=@loglevel%>
+syslog-enabled <%= "#{@syslogenabled}" %>
+syslog-ident redis-<%=@name%>
+syslog-facility <%= "#{@syslogfacility}" %>
+<%= "logfile #{@logfile}" unless @logfile.nil? %>
 
 # port <sentinel-port>
 # The port that this sentinel instance will run on
@@ -18,7 +23,7 @@ port <%=@sentinel_port%>
 # Note: master name should not include special characters or spaces.
 # The valid charset is A-z 0-9 and the three characters ".-_".
 # sentinel monitor mymaster 127.0.0.1 6379 2
-sentinel monitor <%=@name%> <%=@masterip%> <%=@masterport%> 2
+sentinel monitor <%=@name%> <%=@masterip%> <%=@masterport%> <%= @quorum_count %>
 
 # sentinel auth-pass <master-name> <password>
 #
@@ -38,9 +43,7 @@ sentinel monitor <%=@name%> <%=@masterip%> <%=@masterport%> 2
 # Example:
 #
 # sentinel auth-pass mymaster MySUPER--secret-0123passw0rd
-<% unless @authpass.nil? %>
-sentinel auth-pass <%=@name%> <%=@authpass%>
-<% end %>
+<%= "sentinel auth-pass #{@name} #{@authpass}" unless @authpass.nil? %>
 
 # sentinel down-after-milliseconds <master-name> <milliseconds>
 #
