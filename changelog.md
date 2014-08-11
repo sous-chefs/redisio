@@ -1,8 +1,24 @@
 redisio CHANGE LOG
 ===
+2.2.1 -
+---
+  - Allow sentinel to control both redis and redis-sentinel configs depending on attribute `redisio.sentinel.manage_config` state.
+
+2.2.0 -
+---
+  - Adds behavior to allow the cookbook to NOT manage the redis config files as redis itself will write to them now if you are using sentinel
 
 2.1.0 -
 ---
+
+  - Adds options for the following
+      - lua-time-limit
+      - slowlog-logs-slower-than
+      - slowlog-max-len
+      - notify-keyspace-events
+      - client-output-buffer-limit
+      - hz
+      - aof-rewrite-incremental-fsync
   - Removes the uninstall recipe and resource.
   - Adds the ability to skip the default recipe calling install and configure by setting redisio bypass_setup attribute to true
   - Adds support for redis sentinel [Thanks to rcleere, Ryan Walker]

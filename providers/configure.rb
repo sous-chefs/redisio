@@ -78,6 +78,13 @@ def configure
 
     descriptors = current['ulimit'] == 0 ? current['maxclients'] + 32 : current['maxclients']
 
+    #Manage Redisio Config?
+    if node['redisio']['sentinel']['manage_config'] == true
+      config_action = :create
+    else
+      config_action = :create_if_missing
+    end
+
     recipe_eval do
       server_name = current['name'] || current['port']
       piddir = "#{base_piddir}/#{server_name}"
@@ -167,49 +174,58 @@ def configure
         owner current['user']
         group current['group']
         mode '0644'
+        action config_action
         variables({
-          :version                 => version_hash,
-          :piddir                  => piddir,
-          :name                    => server_name,
-          :job_control             => node['redisio']['job_control'], 
-          :port                    => current['port'],
-          :address                 => current['address'],
-          :databases               => current['databases'],
-          :backuptype              => current['backuptype'],
-          :datadir                 => current['datadir'],
-          :unixsocket              => current['unixsocket'],
-          :unixsocketperm          => current['unixsocketperm'],
-          :timeout                 => current['timeout'],
-          :loglevel                => current['loglevel'],
-          :logfile                 => current['logfile'],
-          :syslogenabled           => current['syslogenabled'],
-          :syslogfacility          => current['syslogfacility'],
-          :save                    => current['save'],
-          :stopwritesonbgsaveerror => current['stopwritesonbgsaveerror'],
-          :slaveof                 => current['slaveof'],
-          :masterauth              => current['masterauth'],
-          :slaveservestaledata     => current['slaveservestaledata'],
-          :replpingslaveperiod     => current['replpingslaveperiod'],
-          :repltimeout             => current['repltimeout'],
-          :requirepass             => current['requirepass'],
-          :maxclients              => current['maxclients'],
-          :maxmemory               => maxmemory,
-          :maxmemorypolicy         => current['maxmemorypolicy'],
-          :maxmemorysamples        => current['maxmemorysamples'],
-          :appendfsync             => current['appendfsync'],
-          :noappendfsynconrewrite  => current['noappendfsynconrewrite'],
-          :aofrewritepercentage    => current['aofrewritepercentage'] ,
-          :aofrewriteminsize       => current['aofrewriteminsize'],
-          :hashmaxziplistentries   => current['hashmaxziplistentries'],
-          :hashmaxziplistvalue     => current['hashmaxziplistvalue'],
-          :setmaxintsetentries     => current['setmaxintsetentries'],
-          :zsetmaxziplistentries   => current['zsetmaxziplistentries'],
-          :zsetmaxziplistvalue     => current['zsetmaxziplistvalue'],
-          :activerehasing          => current['activerehasing'],
-          :clusterenabled          => current['clusterenabled'],
-          :clusterconfigfile       => current['clusterconfigfile'],
-          :clusternodetimeout      => current['clusternodetimeout'],
-          :includes                => current['includes']
+          :version                    => version_hash,
+          :piddir                     => piddir,
+          :name                       => server_name,
+          :job_control                => node['redisio']['job_control'],
+          :port                       => current['port'],
+          :address                    => current['address'],
+          :databases                  => current['databases'],
+          :backuptype                 => current['backuptype'],
+          :datadir                    => current['datadir'],
+          :unixsocket                 => current['unixsocket'],
+          :unixsocketperm             => current['unixsocketperm'],
+          :timeout                    => current['timeout'],
+          :keepalive                  => current['keepalive'],
+          :loglevel                   => current['loglevel'],
+          :logfile                    => current['logfile'],
+          :syslogenabled              => current['syslogenabled'],
+          :syslogfacility             => current['syslogfacility'],
+          :save                       => current['save'],
+          :stopwritesonbgsaveerror    => current['stopwritesonbgsaveerror'],
+          :slaveof                    => current['slaveof'],
+          :masterauth                 => current['masterauth'],
+          :slaveservestaledata        => current['slaveservestaledata'],
+          :replpingslaveperiod        => current['replpingslaveperiod'],
+          :repltimeout                => current['repltimeout'],
+          :requirepass                => current['requirepass'],
+          :maxclients                 => current['maxclients'],
+          :maxmemory                  => maxmemory,
+          :maxmemorypolicy            => current['maxmemorypolicy'],
+          :maxmemorysamples           => current['maxmemorysamples'],
+          :appendfsync                => current['appendfsync'],
+          :noappendfsynconrewrite     => current['noappendfsynconrewrite'],
+          :aofrewritepercentage       => current['aofrewritepercentage'] ,
+          :aofrewriteminsize          => current['aofrewriteminsize'],
+          :luatimelimit               => current['luatimelimit'],
+          :slowloglogslowerthan       => current['slowloglogslowerthan'],
+          :slowlogmaxlen              => current['slowlogmaxlen'],
+          :notifykeyspaceevents       => current['notifykeyspaceevents'],
+          :hashmaxziplistentries      => current['hashmaxziplistentries'],
+          :hashmaxziplistvalue        => current['hashmaxziplistvalue'],
+          :setmaxintsetentries        => current['setmaxintsetentries'],
+          :zsetmaxziplistentries      => current['zsetmaxziplistentries'],
+          :zsetmaxziplistvalue        => current['zsetmaxziplistvalue'],
+          :activerehasing             => current['activerehasing'],
+          :clientoutputbufferlimit    => current['clientoutputbufferlimit'],
+          :hz                         => current['hz'],
+          :aofrewriteincrementalfsync => current['aofrewriteincrementalfsync'],
+          :clusterenabled             => current['clusterenabled'],
+          :clusterconfigfile          => current['clusterconfigfile'],
+          :clusternodetimeout         => current['clusternodetimeout'],
+          :includes                   => current['includes']
         })
       end
       #Setup init.d file

@@ -61,4 +61,3 @@ sentinel_instances.each do |current_sentinel|
 
 end
 
-node.set['redisio']['sentinels'] = sentinel_instances

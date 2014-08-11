@@ -34,6 +34,13 @@ def configure
     #Merge the configuration defaults with the provided array of configurations provided
     current = current_defaults_hash.merge(current_instance_hash)
 
+    #Manage Sentinel Configs?
+    if node['redisio']['sentinel']['manage_config'] == true
+      config_action = :create
+    else
+      config_action = :create_if_missing
+    end
+
     recipe_eval do
       sentinel_name = current['name'] || current['port']
       sentinel_name = "sentinel_#{sentinel_name}"
@@ -63,6 +70,8 @@ def configure
         recursive true
         action :create
       end
+     
+    unless current['logfile'].nil?
       #Create the log directory if syslog is not being used
       directory ::File.dirname("#{current['logfile']}") do
         owner current['user']
@@ -72,7 +81,8 @@ def configure
         action :create
         only_if { current['syslogenabled'] != 'yes' && current['logfile'] && current['logfile'] != 'stdout' }
       end
-      #Create the log file is syslog is not being used
+    
+     #Create the log file is syslog is not being used
       file current['logfile'] do
         owner current['user']
         group current['group']
@@ -81,6 +91,8 @@ def configure
         action :touch
         only_if { current['logfile'] && current['logfile'] != 'stdout' }
       end
+    end
+
       #Lay down the configuration files for the current instance
       template "#{current['configdir']}/#{sentinel_name}.conf" do
         source 'sentinel.conf.erb'
@@ -88,6 +100,7 @@ def configure
         owner current['user']
         group current['group']
         mode '0644'
+        action config_action
         variables({
           :piddir                 => piddir,
           :name                   => sentinel_name,
@@ -99,7 +112,12 @@ def configure
           :downaftermil           => current['down-after-milliseconds'],
           :canfailover            => current['can-failover'],
           :parallelsyncs          => current['parallel-syncs'],
-          :failovertimeout        => current['failover-timeout']
+          :failovertimeout        => current['failover-timeout'],
+          :loglevel               => current['loglevel'],
+          :logfile                => current['logfile'],
+          :syslogenabled          => current['syslogenabled'],
+          :syslogfacility         => current['syslogfacility'],
+          :quorum_count       => current['quorum_count']
         })
       end
       #Setup init.d file
