@@ -2,9 +2,7 @@
 driver:
   name: vagrant
 driver_config:
-  require_chef_omnibus: true
   use_vagrant_berkshelf_plugin: true
-  use_cachier_plugin: true
 
 provisioner:
   name: chef_solo
