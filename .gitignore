@@ -24,5 +24,3 @@ bin/*
 *swo
 metadata.json
 tmp/
-.vagrant/
-.kitchen/
