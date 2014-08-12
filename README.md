@@ -20,6 +20,13 @@ Platforms
 * Debian, Ubuntu
 * CentOS, Red Hat, Fedora, Scientific Linux
 
+Testing
+-------
+This cookbook is tested with test-kitchen and serverspec.  Run `bundle install` to install required gems.
+
+* knife cookbook test redisio -o ../
+* kitchen test
+
 Tested on:
 
 * Ubuntu 12.04
