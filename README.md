@@ -1,5 +1,6 @@
 **Please read the changelog when upgrading from the 1.x series to the 2.x series**
 
+![cookbook version](http://img.shields.io/badge/cookbook%20version-2.2.1-blue.svg)
 Description
 ===========
 
@@ -21,11 +22,10 @@ Platforms
 
 Tested on:
 
-* Ubuntu 10.10, 12.04
-* Debian 6.0
-* Fedora 16
-* Scientific Linux 6.2
-* Centos 6.2, 6.3
+* Ubuntu 12.04
+* Debian 6.0.8
+* Fedora 20
+* Centos 6.4
 
 Usage
 =====
