@@ -43,12 +43,7 @@ sentinel_instances.each do |current_sentinel|
   	service "redis_sentinel_#{sentinel_name}" do
       start_command "/etc/init.d/redis_sentinel_#{sentinel_name} start"
       stop_command "/etc/init.d/redis_sentinel_#{sentinel_name} stop"
-      case node['platform']
-      when 'centos','redhat','scientific','amazon','suse'
-        status_command "pgrep -lf 'redis.*#{sentinel_name}' | grep -v 'sh'"
-      else
-        status_command "pgrep -lf 'redis.*#{sentinel_name}'"
-      end
+      status_command "/etc/init.d/redis_sentinel_#{sentinel_name} status"
       restart_command "/etc/init.d/redis_sentinel_#{sentinel_name} stop && /etc/init.d/redis_sentinel_#{sentinel_name} start"
       supports :start => true, :stop => true, :restart => true, :status => false
   	end
@@ -65,5 +60,4 @@ sentinel_instances.each do |current_sentinel|
   end
 
 end
-
 
