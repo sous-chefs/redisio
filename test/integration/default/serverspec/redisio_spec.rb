@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Redisio' do
+describe 'Redis' do
   
   it 'enables the redis service' do
     expect(service 'redis6379').to be_enabled
