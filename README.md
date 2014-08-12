@@ -31,7 +31,7 @@ Tested on:
 
 * Ubuntu 12.04
 * Debian 6.0.8
-* Fedora 20
+* Fedora 20 `(Currently Failing)`
 * Centos 6.4
 
 Usage
