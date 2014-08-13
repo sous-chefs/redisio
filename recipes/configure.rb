@@ -41,11 +41,9 @@ redis_instances.each do |current_server|
 
   if job_control == 'initd'
   	service "redis#{server_name}" do
-      start_command "/etc/init.d/redis#{server_name} start"
-      stop_command "/etc/init.d/redis#{server_name} stop"
-      status_command "/etc/init.d/redis#{server_name} status"
-      restart_command "/etc/init.d/redis#{server_name} stop && /etc/init.d/redis#{server_name} start"
-      supports :start => true, :stop => true, :restart => true, :status => true
+      # don't supply start/stop/restart commands, Chef::Provider::Service::*
+      # do a fine job on it's own, and support systemd correctly
+      supports :start => true, :stop => true, :restart => false, :status => true
   	end
   elsif job_control == 'upstart'
   	service "redis#{server_name}" do
@@ -62,4 +60,3 @@ redis_instances.each do |current_server|
 end
 
 node.set['redisio']['servers'] = redis_instances
-
