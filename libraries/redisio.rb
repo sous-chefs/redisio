@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 
+# Helper module for the redis cookbook
 module RedisioHelper
   def recipe_eval
     sub_run_context = @run_context.dup
@@ -47,5 +48,6 @@ module RedisioHelper
       tiny: version_array[2],
       rc: version_array[3]
     }
+    version_hash
   end
 end

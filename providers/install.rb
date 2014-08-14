@@ -40,15 +40,15 @@ end
 def unpack
   install_dir = "#{new_resource.base_name}#{new_resource.version}"
   case new_resource.artifact_type
-    when 'tar.gz', '.tgz'
-      execute %(cd #{new_resource.download_dir} ; mkdir -p '#{install_dir}' ; tar zxf '#{@tarball}' --strip-components=1 -C '#{install_dir}')
-    else
-      fail Chef::Exceptions::UnsupportedAction, "Current package type #{new_resource.artifact_type} is unsupported"
+  when 'tar.gz', '.tgz'
+    execute %(cd #{new_resource.download_dir} ; mkdir -p '#{install_dir}' ; tar zxf '#{@tarball}' --strip-components=1 -C '#{install_dir}')
+  else
+    fail Chef::Exceptions::UnsupportedAction, "Current package type #{new_resource.artifact_type} is unsupported"
   end
 end
 
 def build
-  execute"cd #{new_resource.download_dir}/#{new_resource.base_name}#{new_resource.version} && make clean && make"
+  execute "cd #{new_resource.download_dir}/#{new_resource.base_name}#{new_resource.version} && make clean && make"
 end
 
 def install

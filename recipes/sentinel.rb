@@ -40,11 +40,11 @@ sentinel_instances.each do |current_sentinel|
   job_control   = node['redisio']['job_control']
 
   if job_control == 'initd'
-  	 service "redis_sentinel_#{sentinel_name}" do
+    service "redis_sentinel_#{sentinel_name}" do
       # don't supply start/stop/restart commands, Chef::Provider::Service::*
       # do a fine job on it's own, and support systemd correctly
       supports start: true, stop: true, restart: true, status: false
-   	end
+    end
   elsif job_control == 'upstart'
     service "redis_sentinel_#{sentinel_name}" do
       provider Chef::Provider::Service::Upstart

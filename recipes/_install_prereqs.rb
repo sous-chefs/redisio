@@ -27,7 +27,7 @@ when 'debian', 'ubuntu'
 when 'redhat', 'centos', 'fedora', 'scientific', 'suse', 'amazon'
   %w(tar).each do |pkg|
     package pkg do
-        action :install
-      end
+      action :install
+    end
   end
 end
