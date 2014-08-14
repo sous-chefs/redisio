@@ -1,0 +1,34 @@
+# Agree to disagree with rubocop on some specific rules
+
+# Disable requirement of "encoding" headers on files
+Encoding:
+  Enabled: false
+
+# Increase line length, we're not on VT220s anymore
+LineLength:
+  Max: 180
+
+# Increase allowed lines in a method.  Short methods are good, but 10 lines
+#   is a bit too low.
+MethodLength:
+  Max: 40
+
+# Favor explicit over implicit code: don't complain of "redundant returns"
+RedundantReturn:
+  Enabled: false
+
+# Raise allowed CyclomaticComplexity to 10.
+CyclomaticComplexity:
+  Max: 10
+
+# Disable Single Space before first arg
+SingleSpaceBeforeFirstArg:
+  Enabled: false
+
+# Don't force a word array unless 5 elements
+WordArray:
+  MinSize: 5
+
+# Don't complain about unused block args
+UnusedBlockArgument:
+  Enabled: false
