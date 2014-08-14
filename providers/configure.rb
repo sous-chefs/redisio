@@ -68,7 +68,7 @@ def configure
       end
     end
 
-    maxmemory = "#{current['maxmemory']}"
+    maxmemory = current['maxmemory']
     if !maxmemory.empty? && maxmemory.include?("%")
       # Just assume this is sensible like "95%" or "95 %"
       percent_factor = current['maxmemory'].to_f / 100.0

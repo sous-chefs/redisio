@@ -73,7 +73,7 @@ def configure
      
     unless current['logfile'].nil?
       #Create the log directory if syslog is not being used
-      directory ::File.dirname("#{current['logfile']}") do
+      directory ::File.dirname(current['logfile']) do
         owner current['user']
         group current['group']
         mode '0755'

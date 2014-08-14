@@ -6,9 +6,9 @@ daemonize yes
 <% end %>
 pidfile <%= @piddir %>/sentinel_<%=@name%>.pid
 loglevel <%=@loglevel%>
-syslog-enabled <%= "#{@syslogenabled}" %>
-syslog-ident redis-<%=@name%>
-syslog-facility <%= "#{@syslogfacility}" %>
+syslog-enabled <%= @syslogenabled %>
+syslog-ident redis-<%= @name %>
+syslog-facility <%= @syslogfacility %>
 <%= "logfile #{@logfile}" unless @logfile.nil? %>
 
 # port <sentinel-port>
