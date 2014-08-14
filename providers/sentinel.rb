@@ -117,7 +117,7 @@ def configure
           :logfile                => current['logfile'],
           :syslogenabled          => current['syslogenabled'],
           :syslogfacility         => current['syslogfacility'],
-          :quorum_count       => current['quorum_count']
+          :quorum_count           => current['quorum_count']
         })
       end
       #Setup init.d file
