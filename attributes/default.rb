@@ -17,15 +17,15 @@
 #
 
 case node['platform']
-when 'ubuntu','debian'
+when 'ubuntu', 'debian'
   shell = '/bin/false'
   homedir = '/var/lib/redis'
-when 'centos','redhat','scientific','amazon','suse'
+when 'centos', 'redhat', 'scientific', 'amazon', 'suse'
   shell = '/bin/sh'
   homedir = '/var/lib/redis'
 when 'fedora'
   shell = '/bin/sh'
-  homedir = '/home' #this is necessary because selinux by default prevents the homedir from being managed in /var/lib/
+  homedir = '/home' # this is necessary because selinux by default prevents the homedir from being managed in /var/lib/
 else
   shell = '/bin/sh'
   homedir = '/redis'
@@ -36,7 +36,7 @@ default['redisio']['safe_install'] = true
 default['redisio']['bypass_setup'] = false
 
 # Tarball and download related defaults
-default['redisio']['mirror'] = "http://download.redis.io/releases/"
+default['redisio']['mirror'] = 'http://download.redis.io/releases/'
 default['redisio']['base_name'] = 'redis-'
 default['redisio']['artifact_type'] = 'tar.gz'
 default['redisio']['version'] = '2.8.13'
@@ -83,7 +83,7 @@ default['redisio']['default_settings'] = {
   'replpingslaveperiod'     => '10',
   'repltimeout'             => '60',
   'requirepass'             => nil,
-  'maxclients'              => 10000,
+  'maxclients'              => 10_000,
   'maxmemory'               => nil,
   'maxmemorypolicy'         => nil,
   'maxmemorysamples'        => nil,
@@ -116,4 +116,3 @@ default['redisio']['default_settings'] = {
 
 # The default for this is set inside of the "install" recipe. This is due to the way deep merge handles arrays
 default['redisio']['servers'] = nil
-

@@ -23,7 +23,7 @@ include_recipe 'ulimit::default'
 redis = node['redisio']
 location = "#{redis['mirror']}/#{redis['base_name']}#{redis['version']}.#{redis['artifact_type']}"
 
-redisio_install "redis-installation" do
+redisio_install 'redis-installation' do
   version redis['version']
   download_url location
   safe_install redis['safe_install']
