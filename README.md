@@ -14,6 +14,8 @@ Requirements
 This cookbook builds redis from source, so it should work on any architecture for the supported distributions.  Init scripts are installed into /etc/init.d/
 It depends on the ulimit cookbook: https://github.com/bmhatfield/chef-ulimit
 
+This cookbook supports Ruby 1.9 or greater and Chef 10 and greater.
+
 Platforms
 ---------
 
@@ -45,13 +47,13 @@ The most common use case for the redisio cookbook is to use the default recipe, 
 
 Another common use case is to use the default, and then call the service resources created by it from another cookbook.  
 
-It is important to note that changing the configuration options of redis does not make them take effect on the next chef run.  Due to how redis works, you cannot reload a configuration without restarting the redis service.  Redis does not offer a reload option, in order to have new options be used redis must be stopped and started. 
+It is important to note that changing the configuration options of redis does not make them take effect on the next chef run.  Due to how redis works, you cannot reload a configuration without restarting the redis service.  Redis does not offer a reload option, in order to have new options be used redis must be stopped and started.
 
 You should make sure to set the ulimit for the user you want to run redis as to be higher than the max connections you allow.
 
 The disable recipe just stops redis and removes it from run levels.
 
-The cookbook also contains a recipe to allow for the installation of the redis ruby gem. 
+The cookbook also contains a recipe to allow for the installation of the redis ruby gem.
 
 Redis-sentinel will write configuration and state data back into its configuration file.  This creates obvious problems when that config is managed by chef.  There is an attribute set to true which controls if chef manages the redis-sentinel config.  By default chef will write out this config file and manage it.  If deploying sentenel it is recommened that you set the node[:redis][:sentinel][:manage_config] to false allowing chef to write out the initial config and then allow redis-sentiniel to manage.  If running sentinel it is only advices to have node[:redis][:sentinel][:manage_config] = true when you are pushing new changes to the config file as it will create a flapping state between chef and sentinel when sentinel writes out state to the file.
 
@@ -260,7 +262,7 @@ Available options and their defaults
 ```
 'user'                   => 'redis' - the user to own the redis datadir, redis will also run under this user
 'group'                  => 'redis' - the group to own the redis datadir
-'homedir'                => Home directory of the user. Varies on distribution, check attributes file 
+'homedir'                => Home directory of the user. Varies on distribution, check attributes file
 'shell'                  => Users shell. Varies on distribution, check attributes file
 'systemuser'             => true - Sets up the instances user as a system user
 'ulimit'                 => 0 - 0 is a special value causing the ulimit to be maxconnections +32.  Set to nil or false to disable setting ulimits
@@ -278,7 +280,7 @@ Available options and their defaults
 'logfile'                => nil,
 'syslogenabled'         => 'yes',
 'syslogfacility         => 'local0',
-'save'                   => nil, - This attribute is nil but defaults to ['900 1','300 10','60 10000'], if you want to disable saving use an empty string 
+'save'                   => nil, - This attribute is nil but defaults to ['900 1','300 10','60 10000'], if you want to disable saving use an empty string
 'slaveof'                => nil,
 'masterauth'             => nil,
 'slaveservestaledata'    => 'yes',
@@ -401,4 +403,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
