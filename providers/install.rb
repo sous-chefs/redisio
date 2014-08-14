@@ -27,6 +27,7 @@ action :run do
     build
     install
   end
+  new_resource.updated_by_last_action(true)
 end
 
 def download
