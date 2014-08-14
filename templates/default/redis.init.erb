@@ -46,7 +46,7 @@ case "$1" in
     status)
         if [ -f $PIDFILE ]
         then
-          echo "redis$REDISNAME $PIDFILE exists, pid is $(cat $PIDFILE)"
+          echo "redis$REDISNAME $PIDFILE exists, pid is $(cat $PIDFILE), should be running"
           ps -p $(cat $PIDFILE) >/dev/null 2>&1
           exit $?
         else

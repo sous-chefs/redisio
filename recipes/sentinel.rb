@@ -41,10 +41,8 @@ sentinel_instances.each do |current_sentinel|
 
   if job_control == 'initd'
   	service "redis_sentinel_#{sentinel_name}" do
-      start_command "/etc/init.d/redis_sentinel_#{sentinel_name} start"
-      stop_command "/etc/init.d/redis_sentinel_#{sentinel_name} stop"
-      status_command "/etc/init.d/redis_sentinel_#{sentinel_name} status"
-      restart_command "/etc/init.d/redis_sentinel_#{sentinel_name} stop && /etc/init.d/redis_sentinel_#{sentinel_name} start"
+      # don't supply start/stop/restart commands, Chef::Provider::Service::*
+      # do a fine job on it's own, and support systemd correctly
       supports :start => true, :stop => true, :restart => true, :status => false
   	end
   elsif job_control == 'upstart'
@@ -60,4 +58,3 @@ sentinel_instances.each do |current_sentinel|
   end
 
 end
-

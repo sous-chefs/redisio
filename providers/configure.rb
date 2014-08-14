@@ -20,6 +20,7 @@
 
 action :run do
   configure
+  new_resource.updated_by_last_action(true)
 end
 
 def configure
@@ -68,7 +69,7 @@ def configure
       end
     end
 
-    maxmemory = "#{current['maxmemory']}"
+    maxmemory = current['maxmemory'].to_s
     if !maxmemory.empty? && maxmemory.include?("%")
       # Just assume this is sensible like "95%" or "95 %"
       percent_factor = current['maxmemory'].to_f / 100.0
@@ -162,11 +163,11 @@ def configure
         only_if { ::File.exists?(rdb_file) }
       end
       #Setup the redis users descriptor limits
-      if current['ulimit']
-        user_ulimit current['user'] do
-          filehandle_limit descriptors
-        end
+      user_ulimit current['user'] do
+        filehandle_limit descriptors
+        only_if { current['ulimit'] }
       end
+      
       #Lay down the configuration files for the current instance
       template "#{current['configdir']}/#{server_name}.conf" do
         source 'redis.conf.erb'
