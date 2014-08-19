@@ -11,7 +11,7 @@ describe 'Redis-Sentinel' do
   end
 
   it 'is listening on port 26379' do
-    expect(port 26_379).to be_listening
+    expect(port 26379).to be_listening
   end
 
 end

@@ -24,7 +24,7 @@ if platform?('debian', 'ubuntu')
     ignore_failure true
     only_if do
       !File.exist?('/var/lib/apt/periodic/update-success-stamp') ||
-      File.mtime('/var/lib/apt/periodic/update-success-stamp') < Time.now - 86_400
+      File.mtime('/var/lib/apt/periodic/update-success-stamp') < Time.now - 86400
     end
   end
 end
