@@ -1,5 +1,19 @@
 redisio CHANGE LOG
 ===
+2.2.2 -
+
+  - Please refer to changelog for 2.0.0.
+      - If moving from 1.7.x this release has many breaking changes. You will likely need to update your wrapper cookbook or role.
+  - Added test-kitchen and serverspec coverage for both redis and redis_sentinel
+  - Added cookbook testing information to readme
+  - Bug fix for a fix that was introduced to resolve foodcritic rule fc002
+  - Fix init script to use su instead of sudo for ubuntu debian fedora
+  - Fix sentinel_enable recipe to properly run if using default attributes
+  - Save property for redis config now is defined by using an array
+  - Small changes to default configuration options to bring in line with redis defaults.
+  - Added options for the following
+      - tcp-keepalive
+
 2.2.1 -
 ---
   - Allow sentinel to control both redis and redis-sentinel configs depending on attribute `redisio.sentinel.manage_config` state.
@@ -94,10 +108,10 @@ redisio CHANGE LOG
 
 1.3.0 - Released 2/20/2013
 ---
-  - Adds upstart support.  This was a much requested feature. 
+  - Adds upstart support.  This was a much requested feature.
   - Fixes bug in uninstall resource that would have prevented it from uninstalling named servers.  
   - Reworks the init script to take into account the IP redis is listening on, and if it is listening on a socket.
-  - Adds an attribute called "shutdown_save" which will explicitly call save on redis shutdown 
+  - Adds an attribute called "shutdown_save" which will explicitly call save on redis shutdown
   - Updates the README.md with a shorter and hopefully equally as useful usage section
   - maxmemory attribute now allows the use of percentages.  You must include a % sign after the value.
   - Bumps default version of redis to install to the current stable, 2.6.10
@@ -108,11 +122,11 @@ redisio CHANGE LOG
   - Fixes bug where the version method was not properly parsing version strings in redis 2.6.x, as the version string from redis-server -v changed
   - Fixes bug in default attributes for fedora default redis data directory
   - Now uses chefs service resource for each redis instance instead of using a custom redisio_service resource.  This cleans up many issues, including a lack of updated_by_last_action
-  - The use of the redisio_service resource is deprecated.  Use the redis<port_number> instead. 
+  - The use of the redisio_service resource is deprecated.  Use the redis<port_number> instead.
   - The default version of redis has been bumped to the current stable, which is 2.6.9
   - Adds metadata.json to the gitignore file so that the cookbook can be submoduled.
   - Adds the ability to handle non standard bind address in the init scripts stop command
-  - Adds attributes to allow redis to listen on a socket 
+  - Adds attributes to allow redis to listen on a socket
   - Adds an attribute to allow redis service accounts to be created as system users, defaults this to true
   - Adds a per server "name" attribute that allows a server to use that instead of the port for its configuration files, service resource, and init script.
   - Shifts the responsbility for handling the case of default redis instances into the install recipe due to the behavior of arrays and deep merge
@@ -130,7 +144,7 @@ redisio CHANGE LOG
   - The init script now properly respects the configdir attribute
   - Changed the redis data directories to be 775 instead of 755 (this allows multiple instances with different owners to write their data to the same shared dir so long as they are in a common group)
   - Changed default for maxclients to be 10000 instead of 0.  This is to account for the fact that maxclients no longer supports 0 as 'unlimited' in the 2.6 series
-  - Added logic to replace hash-max-ziplist-entries, hash-max-ziplist-value with  hash-max-zipmap-entires, hash-max-zipmap-value when using 2.6 series 
+  - Added logic to replace hash-max-ziplist-entries, hash-max-ziplist-value with  hash-max-zipmap-entires, hash-max-zipmap-value when using 2.6 series
   - Added the ability to log to any file, not just syslog.  Please do make sure after you set your file with the logfile attribute you also set syslogenabled to 'no'
 
 1.0.3 - Released 5/2/2012
