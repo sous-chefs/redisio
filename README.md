@@ -1,6 +1,6 @@
 **Please read the changelog when upgrading from the 1.x series to the 2.x series**
 
-![cookbook version](http://img.shields.io/badge/cookbook%20version-2.2.1-blue.svg)
+![cookbook version](http://img.shields.io/badge/cookbook%20version-2.2.2-blue.svg)
 Description
 ===========
 
@@ -31,13 +31,13 @@ Tested on:
 
 * Ubuntu 12.04
 * Debian 6.0.8
-* Fedora 20 `(Currently Failing)`
+* Fedora 20
 * Centos 6.4
 
 Usage
 =====
 
-The redisio cookbook contains LWRP for installing, configuring and managing redis.
+The redisio cookbook contains LWRP for installing, configuring and managing redis and redis_sentinel.
 
 The install recipe will only build, compile and install redis. The configure recipe will configure redis and setup service resources.  These resources will be named for the port of the redis server, unless a "name" attribute was specified.  Example names would be: service["redis6379"] or service["redismaster"] if the name attribute was "master".
 
@@ -45,13 +45,13 @@ The most common use case for the redisio cookbook is to use the default recipe, 
 
 Another common use case is to use the default, and then call the service resources created by it from another cookbook.  
 
-It is important to note that changing the configuration options of redis does not make them take effect on the next chef run.  Due to how redis works, you cannot reload a configuration without restarting the redis service.  Redis does not offer a reload option, in order to have new options be used redis must be stopped and started. 
+It is important to note that changing the configuration options of redis does not make them take effect on the next chef run.  Due to how redis works, you cannot reload a configuration without restarting the redis service.  Redis does not offer a reload option, in order to have new options be used redis must be stopped and started.
 
 You should make sure to set the ulimit for the user you want to run redis as to be higher than the max connections you allow.
 
 The disable recipe just stops redis and removes it from run levels.
 
-The cookbook also contains a recipe to allow for the installation of the redis ruby gem. 
+The cookbook also contains a recipe to allow for the installation of the redis ruby gem.
 
 Redis-sentinel will write configuration and state data back into its configuration file.  This creates obvious problems when that config is managed by chef.  There is an attribute set to true which controls if chef manages the redis-sentinel config.  By default chef will write out this config file and manage it.  If deploying sentenel it is recommened that you set the node[:redis][:sentinel][:manage_config] to false allowing chef to write out the initial config and then allow redis-sentiniel to manage.  If running sentinel it is only advices to have node[:redis][:sentinel][:manage_config] = true when you are pushing new changes to the config file as it will create a flapping state between chef and sentinel when sentinel writes out state to the file.
 
@@ -169,7 +169,7 @@ default_attributes({
 })
 ```
 
-#### Install a single redis-sentinel to listen for a master on localhost and default port #
+#### Install a single redis-sentinel to listen for a master on localhost and default port number
 
 ```ruby
 run_list *%w[
@@ -213,26 +213,18 @@ redisio_configure "redis-servers" do
 end
 ```
 
-service resource
+sentinel resource
 ----------------
 
-The install recipe sets up a service resource for each redis instance.
+The sentinel resource installs and configures all of your redis_sentinels defined in sentinel_instances
 
-The service resources created will use the 'name' attribute if it is specified, and will default to the port as it's name if no name is given.
-
-Using the service resources:
+Using the sentinel resources:
 
 ```ruby
-service "redis6379" do
-  action :start
-end
-```
-
-Or if you have named your server "Master"
-
-```ruby
-service "redisMaster" do
-  action :start
+redisio_sentinel "redis-sentinels" do
+  sentinel_defaults redis['sentinel_defaults']
+  sentinels sentinel_instances
+  base_piddir redis['base_piddir']
 end
 ```
 
@@ -258,45 +250,64 @@ Default settings is a hash of default settings to be applied to to ALL instances
 Available options and their defaults
 
 ```
-'user'                   => 'redis' - the user to own the redis datadir, redis will also run under this user
-'group'                  => 'redis' - the group to own the redis datadir
-'homedir'                => Home directory of the user. Varies on distribution, check attributes file 
-'shell'                  => Users shell. Varies on distribution, check attributes file
-'systemuser'             => true - Sets up the instances user as a system user
-'ulimit'                 => 0 - 0 is a special value causing the ulimit to be maxconnections +32.  Set to nil or false to disable setting ulimits
-'configdir'              => '/etc/redis' - configuration directory
-'name'                   => nil, Allows you to name the server with something other than port.  Useful if you want to use unix sockets
-'address'                => nil, Can accept a single string or an array. When using an array, the FIRST value will be used by the init script for connecting to redis
-'databases'              => '16',
-'backuptype'             => 'rdb',
-'datadir'                => '/var/lib/redis',
-'unixoscket'             => nil - The location of the unix socket to use,
-'unixsocketperm'         => nil - The permissions of the unix socket,
-'timeout'                => '0',
-'keepalive'              => '0',
-'loglevel'               => 'verbose',
-'logfile'                => nil,
-'syslogenabled'         => 'yes',
-'syslogfacility         => 'local0',
-'save'                   => nil, - This attribute is nil but defaults to ['900 1','300 10','60 10000'], if you want to disable saving use an empty string 
-'slaveof'                => nil,
-'masterauth'             => nil,
-'slaveservestaledata'    => 'yes',
-'replpingslaveperiod'    => '10',
-'repltimeout'            => '60',
-'requirepass'            => nil,
-'maxclients'             => '10000',
-'maxmemory'              => nil, - This allows the use of percentages, you must append % to the number.
-'maxmemorypolicy'        => nil,
-'maxmemorysamples'       => nil,
-'appendfsync'            => 'everysec',
-'noappendfsynconrewrite' => 'no',
-'aofrewritepercentage'   => '100',
-'aofrewriteminsize'      => '64mb',
-'cluster-enabled'        => 'no',
-'cluster-config-file'    => nil, # Defaults to redis instance name inside of template if cluster is enabled.
-'cluster-node-timeout'   => 5,
-'includes'               => nil
+'user'                    => 'redis' - the user to own the redis datadir, redis will also run under this user
+'group'                   => 'redis' - the group to own the redis datadir
+'homedir'                 => Home directory of the user. Varies on distribution, check attributes file
+'shell'                   => Users shell. Varies on distribution, check attributes file
+'systemuser'              => true - Sets up the instances user as a system user
+'ulimit'                  => 0 - 0 is a special value causing the ulimit to be maxconnections +32.  Set to nil or false to disable setting ulimits
+'configdir'               => '/etc/redis' - configuration directory
+'name'                    => nil, Allows you to name the server with something other than port.  Useful if you want to use unix sockets
+'address'                 => nil, Can accept a single string or an array. When using an array, the FIRST value will be used by the init script for connecting to redis
+'databases'               => '16',
+'backuptype'              => 'rdb',
+'datadir'                 => '/var/lib/redis',
+'unixoscket'              => nil - The location of the unix socket to use,
+'unixsocketperm'          => nil - The permissions of the unix socket,
+'timeout'                 => '0',
+'keepalive'               => '0',
+'loglevel'                => 'notice',
+'logfile'                 => nil,
+'syslogenabled'           => 'yes',
+'syslogfacility'          => 'local0',
+'shutdown_save'           => false,
+'save'                    => nil, # Defaults to ['900 1','300 10','60 10000'] inside of template.  Needed due to lack of hash subtraction
+'stopwritesonbgsaveerror' => 'yes',
+'slaveof'                 => nil,
+'masterauth'              => nil,
+'slaveservestaledata'     => 'yes',
+'replpingslaveperiod'     => '10',
+'repltimeout'             => '60',
+'requirepass'             => nil,
+'maxclients'              => 10000,
+'maxmemory'               => nil,
+'maxmemorypolicy'         => nil,
+'maxmemorysamples'        => nil,
+'appendfsync'             => 'everysec',
+'noappendfsynconrewrite'  => 'no',
+'aofrewritepercentage'    => '100',
+'aofrewriteminsize'       => '64mb',
+'luatimelimit'            => '5000',
+'slowloglogslowerthan'    => '10000',
+'slowlog-max-len'         => '1024',
+'notifykeyspaceevents'    => '',
+'hashmaxziplistentries'   => '512',
+'hashmaxziplistvalue'     => '64',
+'setmaxintsetentries'     => '512',
+'zsetmaxziplistentries'   => '128',
+'zsetmaxziplistvalue'     => '64',
+'activerehasing'          => 'yes',
+'clientoutputbufferlimit' => [
+  %w(normal 0 0 0),
+  %w(slave 256mb 64mb 60),
+  %w(pubsub 32mb 8mb 60)
+],
+'hz'                         => '10',
+'aofrewriteincrementalfsync' => 'yes',
+'cluster-enabled'            => 'no',
+'cluster-config-file'        => nil, # Defaults to redis instance name inside of template if cluster is enabled.
+'cluster-node-timeout'       => 5,
+'includes'                   => nil
 ```
 
 * `redisio['servers']` - An array where each item is a set of key value pairs for redis instance specific settings.  The only required option is 'port'.  These settings will override the options in 'default_settings', if it is left empty it will default to [{'port' => '6379'}]
@@ -305,6 +316,31 @@ The redis_gem recipe  will also allow you to install the redis ruby gem, these a
 
 * `redisio['gem']['name']` - the name of the gem to install, defaults to 'redis'  
 * `redisio['gem']['version']` -  the version of the gem to install.  if it is nil, the latest available version will be installed.
+
+The sentinel recipe's use their own attribute file.
+
+* `redisio['sentinel_defaults']` - { 'sentinel-option' => 'option setting' }
+
+```
+'user'                    => 'redis',
+'configdir'               => '/etc/redis',
+'sentinel_port'           => 26379,
+'monitor'                 => nil,
+'down-after-milliseconds' => 30000,
+'can-failover'            => 'yes',
+'parallel-syncs'          => 1,
+'failover-timeout'        => 900000,
+'loglevel'                => 'notice',
+'logfile'                 => nil,
+'syslogenabled'           => 'yes',
+'syslogfacility'          => 'local0',
+'quorum_count'            => 2
+```
+
+* `redisio['redisio']['sentinel']['manage_config']` - Should the cookbook manage the redis and redis sentinel config files.  This is best set to false when using redis_sentinel as it will write state into both configuration files.
+
+* `redisio['redisio']['sentinels']` - Array of sentinels to configure on the node.
+
 
 Resources/Providers
 ===================
@@ -401,4 +437,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
