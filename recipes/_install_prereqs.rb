@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: redisio
-# Recipe:: uninstall
+# Recipe:: _install_prereqs
 #
 # Copyright 2013, Brian Bianco <brian.bianco@gmail.com>
 #
@@ -17,9 +17,18 @@
 # limitations under the License.
 #
 
-redis = node['redisio']
-
-redisio_uninstall "redis-servers" do
-  servers redis['servers']
-  action :run
+case node["platform"]
+when 'debian','ubuntu'
+  %w[tar].each do |pkg|
+    package pkg do
+      action :install
+    end
+  end
+when 'redhat','centos','fedora','scientific','suse','amazon'
+  %w[tar].each do |pkg|
+    package pkg do
+      action :install
+      end
+  end
 end
+

@@ -1,0 +1,40 @@
+---
+driver:
+  name: vagrant
+driver_config:
+  use_vagrant_berkshelf_plugin: true
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: ubuntu-12.04
+  - name: debian-6.0.8
+  - name: centos-6.4
+  - name: fedora-20
+
+suites:
+  - name: default
+    run_list:
+      - recipe[redisio::default]
+      - recipe[redisio::enable]
+    attributes:
+     redisio:
+        servers: [
+              {
+                port: 6379,
+              }
+            ]
+  - name: sentinel
+    run_list:
+      - recipe[redisio::default]
+      - recipe[redisio::enable]
+      - recipe[redisio::sentinel]
+      - recipe[redisio::sentinel_enable]
+    attributes:
+     redisio:
+        servers: [
+              {
+                port: 6379,
+              }
+            ]

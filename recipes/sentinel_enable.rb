@@ -1,8 +1,9 @@
 #
 # Cookbook Name:: redisio
-# Resource::uninstall
+# Recipe:: sentinel_enable
 #
 # Copyright 2013, Brian Bianco <brian.bianco@gmail.com>
+#
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,12 +18,15 @@
 # limitations under the License.
 #
 
-actions :run, :nothing
-
-attribute :servers, :kind_of => Array, :default => nil
-
-def initialize(name, run_context=nil)
-  super
-  @action = :nothing
+sentinel_instances = node['redisio']['sentinels']
+if sentinel_instances.empty?
+  sentinel_instances = [{'port' => '26379', 'name' => 'mycluster', 'master_ip' => '127.0.0.1', 'master_port' => 6379}]
 end
 
+sentinel_instances.each do |current_sentinel|
+  sentinel_name = current_sentinel['name']
+  resource = resources("service[redis_sentinel_#{sentinel_name}]")
+  resource.action Array(resource.action)
+  resource.action << :start
+  resource.action << :enable
+end

@@ -27,4 +27,3 @@ redis['servers'].each do |current_server|
   resource.action << :start
   resource.action << :enable
 end
-
