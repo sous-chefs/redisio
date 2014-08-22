@@ -1,7 +1,7 @@
 redisio CHANGE LOG
 ===
 2.2.2 -
-
+---
   - Please refer to changelog for 2.0.0.
       - If moving from 1.7.x this release has many breaking changes. You will likely need to update your wrapper cookbook or role.
   - Added test-kitchen and serverspec coverage for both redis and redis_sentinel
