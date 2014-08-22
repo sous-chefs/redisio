@@ -419,10 +419,10 @@ end
 License and Author
 ==================
 
-Author:: [Brian Bianco] (<brian.bianco@gmail.com>)
-Author\_Website:: http://www.brianbianco.com
-Twitter:: @brianwbianco
-IRC:: geekbri on freenode
+Author:: [Brian Bianco](<brian.bianco@gmail.com>)  
+Author\_Website:: http://www.brianbianco.com  
+Twitter:: [@brianwbianco ](http://twitter.com/brianwbianco)  
+IRC:: geekbri on freenode  
 
 Copyright 2013, Brian Bianco
 
