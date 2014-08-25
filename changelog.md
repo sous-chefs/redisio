@@ -1,5 +1,9 @@
 redisio CHANGE LOG
 ===
+2.2.3 -
+---
+  - Bug Fix: Repackages the chef supermarket releaes with gnutar instead of BSD tar
+
 2.2.2 -
 ---
   - Please refer to changelog for 2.0.0.
