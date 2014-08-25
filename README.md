@@ -1,6 +1,6 @@
 **Please read the changelog when upgrading from the 1.x series to the 2.x series**
 
-![cookbook version](http://img.shields.io/badge/cookbook%20version-2.2.2-blue.svg)
+![cookbook version](http://img.shields.io/badge/cookbook%20version-2.2.3-blue.svg)
 Description
 ===========
 
