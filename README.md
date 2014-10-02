@@ -1,6 +1,6 @@
 **Please read the changelog when upgrading from the 1.x series to the 2.x series**
 
-![cookbook version](http://img.shields.io/badge/cookbook%20version-2.2.3-blue.svg)
+![cookbook version](http://img.shields.io/badge/cookbook%20version-2.2.4-blue.svg)
 Description
 ===========
 
@@ -436,4 +436,4 @@ Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License.
+

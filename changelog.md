@@ -1,5 +1,10 @@
 redisio CHANGE LOG
 ===
+2.2.4 -
+---
+  - Updates installed version of redis to the latest stable (2.8.17)
+  - Fixes backwards compatability bug with older version of redis (namely 2.6.x series) related to keyspaces
+
 2.2.3 -
 ---
   - Bug Fix: Repackages the chef supermarket releaes with gnutar instead of BSD tar
