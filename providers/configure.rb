@@ -77,8 +77,6 @@ def configure
       maxmemory = (node_memory_kb * 1024 * percent_factor / new_resource.servers.length).round.to_s
     end
 
-    descriptors = current['ulimit'] == 0 ? current['maxclients'] + 32 : current['maxclients']
-
     #Manage Redisio Config?
     if node['redisio']['sentinel']['manage_config'] == true
       config_action = :create
@@ -251,7 +249,7 @@ def configure
           :shutdown_save => current['shutdown_save'],
           :platform => node['platform'],
           :unixsocket => current['unixsocket'],
-          :ulimit => descriptors,
+          :ulimit => current['ulimit'],
           :required_start => node['redisio']['init.d']['required_start'].join(" "),
           :required_stop => node['redisio']['init.d']['required_stop'].join(" ")
           })
