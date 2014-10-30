@@ -122,7 +122,7 @@ databases <%=@databases%>
     save 300 10
     save 60 10000
   <% else %>
-    <% @save.each_line do |save_option| %>
+    <% @save.each do |save_option| %>
       <%= "save #{save_option}" %>
     <% end %>
   <% end %>
@@ -248,7 +248,7 @@ repl-timeout <%=@repltimeout%>
 # Once the limit is reached Redis will close all the new connections sending
 # an error 'max number of clients reached'.
 #
-<%= "maxclients #{@maxclients}" %>
+<%= "maxclients #{@maxclients}" unless @maxclients.nil? or !@maxclients.zero? %>
 
 # Don't use more memory than the specified amount of bytes.
 # When the memory limit is reached Redis will try to remove keys
