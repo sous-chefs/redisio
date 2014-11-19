@@ -19,8 +19,8 @@
 #
 
 sentinel_instances = node['redisio']['sentinels']
-if sentinel_instances.empty?
-  sentinel_instances = [{'port' => '26379', 'name' => 'mycluster', 'master_ip' => '127.0.0.1', 'master_port' => 6379}]
+if sentinel_instances && sentinel_instances.empty?
+  sentinel_instances = [{'sentinel_port' => '26379', 'name' => 'mycluster', 'master_ip' => '127.0.0.1', 'master_port' => '6379'}]
 end
 
 sentinel_instances.each do |current_sentinel|
