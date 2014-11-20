@@ -36,5 +36,4 @@ default['redisio']['sentinel_defaults'] = {
 ## Will write out the base config one time then no longer manage the config allowing sentinel to take over
 default['redisio']['sentinel']['manage_config'] = true
 
-default['redisio']['sentinels'] = []
-
+default['redisio']['sentinels'] = nil

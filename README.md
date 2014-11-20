@@ -310,7 +310,7 @@ Available options and their defaults
 'includes'                   => nil
 ```
 
-* `redisio['servers']` - An array where each item is a set of key value pairs for redis instance specific settings.  The only required option is 'port'.  These settings will override the options in 'default_settings', if it is left empty it will default to [{'port' => '6379'}]
+* `redisio['servers']` - An array where each item is a set of key value pairs for redis instance specific settings.  The only required option is 'port'.  These settings will override the options in 'default_settings', if it is left `nil` it will default to `[{'port' => '6379'}]`. If set to `[]` (empty array), no instances will be created.
 
 The redis_gem recipe  will also allow you to install the redis ruby gem, these are attributes related to that, and are in the redis_gem attributes file.
 
@@ -339,7 +339,7 @@ The sentinel recipe's use their own attribute file.
 
 * `redisio['redisio']['sentinel']['manage_config']` - Should the cookbook manage the redis and redis sentinel config files.  This is best set to false when using redis_sentinel as it will write state into both configuration files.
 
-* `redisio['redisio']['sentinels']` - Array of sentinels to configure on the node.
+* `redisio['redisio']['sentinels']` - Array of sentinels to configure on the node. These settings will override the options in 'sentinel_defaults', if it is left `nil` it will default to `[{'port' => '26379', 'name' => 'mycluster', 'master_ip' => '127.0.0.1', 'master_port' => 6379}]`. If set to `[]` (empty array), no instances will be created. 
 
 
 Resources/Providers
@@ -436,4 +436,3 @@ Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-

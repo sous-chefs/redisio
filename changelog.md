@@ -1,5 +1,9 @@
 redisio CHANGE LOG
 ===
+2.next -
+---
+  - Sentinel instances attribute (`node['redisio']['sentinels']`) should behave like Redis instances attribute (#158)
+
 2.2.4 -
 ---
   - Updates installed version of redis to the latest stable (2.8.17)
