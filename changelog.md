@@ -3,6 +3,7 @@ redisio CHANGE LOG
 2.next -
 ---
   - Sentinel instances attribute (`node['redisio']['sentinels']`) should behave like Redis instances attribute (#158)
+  - Add Rakefile and unit tests for verifying issues fixed are actually resolved (#158)
 
 2.2.4 -
 ---

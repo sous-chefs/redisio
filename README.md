@@ -22,8 +22,10 @@ Platforms
 
 Testing
 -------
-This cookbook is tested with test-kitchen and serverspec.  Run `bundle install` to install required gems.
+This cookbook is tested with rspec/chefspec and test-kitchen/serverspec.  Run `bundle install` to install required gems.
 
+* rake spec
+* rake integration
 * knife cookbook test redisio -o ../
 * kitchen test
 
@@ -339,7 +341,7 @@ The sentinel recipe's use their own attribute file.
 
 * `redisio['redisio']['sentinel']['manage_config']` - Should the cookbook manage the redis and redis sentinel config files.  This is best set to false when using redis_sentinel as it will write state into both configuration files.
 
-* `redisio['redisio']['sentinels']` - Array of sentinels to configure on the node. These settings will override the options in 'sentinel_defaults', if it is left `nil` it will default to `[{'port' => '26379', 'name' => 'mycluster', 'master_ip' => '127.0.0.1', 'master_port' => 6379}]`. If set to `[]` (empty array), no instances will be created. 
+* `redisio['redisio']['sentinels']` - Array of sentinels to configure on the node. These settings will override the options in 'sentinel_defaults', if it is left `nil` it will default to `[{'port' => '26379', 'name' => 'mycluster', 'master_ip' => '127.0.0.1', 'master_port' => 6379}]`. If set to `[]` (empty array), no instances will be created.
 
 
 Resources/Providers
