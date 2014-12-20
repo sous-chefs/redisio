@@ -1,0 +1,15 @@
+# default: on
+# description: redis role check
+service redischk
+{
+        flags           = REUSE
+        socket_type     = stream
+        port            = 10240
+        wait            = no
+        user            = nobody
+        server          = /usr/sbin/redis-role.sh
+        log_on_failure  += USERID
+        disable         = no
+        only_from       = 0.0.0.0/0
+        per_source      = UNLIMITED
+}
