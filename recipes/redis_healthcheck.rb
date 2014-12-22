@@ -11,7 +11,7 @@
 #
 
 
-package "xinted" do
+package "xinetd" do
   action :install
 end
 
