@@ -12,7 +12,9 @@ Requirements
 ============
 
 This cookbook builds redis from source, so it should work on any architecture for the supported distributions.  Init scripts are installed into /etc/init.d/
-It depends on the ulimit cookbook: https://github.com/bmhatfield/chef-ulimit
+
+It depends on the ulimit cookbook: https://github.com/bmhatfield/chef-ulimit and the build-essentials cookbook: https://github.com/opscode-cookbooks/build-essential
+
 
 Platforms
 ---------
