@@ -283,7 +283,7 @@ Available options and their defaults
 'replpingslaveperiod'     => '10',
 'repltimeout'             => '60',
 'requirepass'             => nil,
-'maxclients'              => 10000,
+'maxclients'              => nil,
 'maxmemory'               => nil,
 'maxmemorypolicy'         => nil,
 'maxmemorysamples'        => nil,

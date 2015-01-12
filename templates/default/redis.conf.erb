@@ -110,19 +110,13 @@ databases <%=@databases%>
 #   after 60 sec if at least 10000 keys changed
 #
 #   Note: you can disable saving at all commenting all the "save" lines.
-
-#save 900 1
-#save 300 10
-#save 60 10000
-
 <% if (@backuptype == 'rdb' || @backuptype == 'both') %>
-
   <% if @save.nil? %>
     save 900 1
     save 300 10
     save 60 10000
   <% else %>
-    <% @save.each_line do |save_option| %>
+    <% @save.each do |save_option| %>
       <%= "save #{save_option}" %>
     <% end %>
   <% end %>
@@ -248,7 +242,7 @@ repl-timeout <%=@repltimeout%>
 # Once the limit is reached Redis will close all the new connections sending
 # an error 'max number of clients reached'.
 #
-<%= "maxclients #{@maxclients}" %>
+<%= "maxclients #{@maxclients}" unless @maxclients.nil? %>
 
 # Don't use more memory than the specified amount of bytes.
 # When the memory limit is reached Redis will try to remove keys
