@@ -16,10 +16,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+use_inline_resources
 
 action :run do
   configure
-  new_resource.updated_by_last_action(true)
 end
 
 def configure
@@ -42,7 +42,6 @@ def configure
       config_action = :create_if_missing
     end
 
-    recipe_eval do
       sentinel_name = current['name'] || current['port']
       sentinel_name = "sentinel_#{sentinel_name}"
       piddir = "#{base_piddir}/#{sentinel_name}"
@@ -159,7 +158,6 @@ def configure
           })
         only_if { node['redisio']['job_control'] == 'upstart' }
       end
-    end
   end # servers each loop
 end
 

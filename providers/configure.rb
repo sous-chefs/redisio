@@ -18,9 +18,10 @@
 # limitations under the License.
 #
 
+use_inline_resources
+
 action :run do
   configure
-  new_resource.updated_by_last_action(true)
 end
 
 def configure
@@ -86,7 +87,6 @@ def configure
       config_action = :create_if_missing
     end
 
-    recipe_eval do
       server_name = current['name'] || current['port']
       piddir = "#{base_piddir}/#{server_name}"
       aof_file = "#{current['datadir']}/appendonly-#{server_name}.aof"
@@ -282,7 +282,6 @@ def configure
         })
         only_if { node['redisio']['job_control'] == 'upstart' }
       end
-    end
   end # servers each loop
 end
 
