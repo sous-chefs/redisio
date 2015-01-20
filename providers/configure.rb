@@ -18,10 +18,11 @@
 # limitations under the License.
 #
 
-use_inline_resources
+use_inline_resources if respond_to?(:use_inline_resources)
 
 action :run do
   configure
+  new_resource.updated_by_last_action(true) unless respond_to?(:use_inline_resources)
 end
 
 def configure

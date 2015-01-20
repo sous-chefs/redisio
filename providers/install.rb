@@ -17,7 +17,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-use_inline_resources
+use_inline_resources if respond_to?(:use_inline_resources)
 
 action :run do
   @tarball = "#{new_resource.base_name}#{new_resource.version}.#{new_resource.artifact_type}"
@@ -28,6 +28,7 @@ action :run do
     unpack
     build
     install
+    new_resource.updated_by_last_action(true) unless respond_to?(:use_inline_resources)
   end
 end
 
