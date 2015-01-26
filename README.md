@@ -150,7 +150,7 @@ default_attributes({
     'default_settings' => { 'datadir' => '/mnt/redis/'},
     'servers' => [
       {'port' => '6379','backuptype' => 'aof'},
-      {'port' => '6380','backuptype' => 'both'}
+      {'port' => '6380','backuptype' => 'both'},
       {'port' => '6381','backuptype' => 'rdb', 'datadir' => '/mnt/redis6381'}
     ]
   }
