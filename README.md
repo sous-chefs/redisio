@@ -68,7 +68,6 @@ Recipes
 * enable - This recipe can be used to enable the redis services and add it to runlevels
 * install - This recipe is used to install redis.
 * redis_gem - This recipe can be used to install the redis ruby gem
-* uninstall - This recipe can be used to remove the configuration files and redis binaries
 * sentinel - This recipe can be used to install and configure sentinel
 * sentinel_enable - This recipe can be used to enable the sentinel service(s)
 
