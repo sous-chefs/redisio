@@ -19,8 +19,17 @@
 #
 
 action :run do
+  sysconfig
   configure
   new_resource.updated_by_last_action(true)
+end
+
+def sysconfig
+  hugepage_file = "/sys/kernel/mm/transparent_hugepage/enabled"
+  file hugepage_file do
+    content 'never'
+    only_if { ::File.exists?(hugepage_file) }
+  end
 end
 
 def configure
