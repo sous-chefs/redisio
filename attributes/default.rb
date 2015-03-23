@@ -31,6 +31,10 @@ else
   homedir = '/redis'
 end
 
+# Overwite template
+default['redisio']['template_cookbook'] = "redisio"
+default['redisio']['template_source'] = "redis.conf.erb"
+
 # Install related attributes
 default['redisio']['safe_install'] = true
 default['redisio']['bypass_setup'] = false
