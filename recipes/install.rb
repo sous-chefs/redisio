@@ -16,16 +16,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-include_recipe 'redisio::_install_prereqs'
-include_recipe 'build-essential::default'
-include_recipe 'ulimit::default'
+if node['redisio']['package_install']
+  package "redisio_package_name" do
+    package_name node['redisio']['package_name']
+    action :install
+  end
+else
+  include_recipe 'redisio::_install_prereqs'
+  include_recipe 'build-essential::default'
 
-redis = node['redisio']
-location = "#{redis['mirror']}/#{redis['base_name']}#{redis['version']}.#{redis['artifact_type']}"
+  redis = node['redisio']
+  location = "#{redis['mirror']}/#{redis['base_name']}#{redis['version']}.#{redis['artifact_type']}"
 
-redisio_install "redis-installation" do
-  version redis['version']
-  download_url location
-  safe_install redis['safe_install']
-  install_dir redis['install_dir']
+  redisio_install "redis-installation" do
+    version redis['version']
+    download_url location
+    safe_install redis['safe_install']
+    install_dir redis['install_dir']
+  end
 end
+
+include_recipe 'ulimit::default'

@@ -122,7 +122,7 @@ def configure
         })
       end
       #Setup init.d file
-      bin_path = "/usr/local/bin"
+      bin_path = node['redisio']['bin_path']
       bin_path = ::File.join(node['redisio']['install_dir'], 'bin') if node['redisio']['install_dir']
       template "/etc/init.d/redis_#{sentinel_name}" do
         source 'sentinel.init.erb'

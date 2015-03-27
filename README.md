@@ -11,7 +11,7 @@ Installs and configures Redis server instances
 Requirements
 ============
 
-This cookbook builds redis from source, so it should work on any architecture for the supported distributions.  Init scripts are installed into /etc/init.d/
+This cookbook builds redis from source or install it from packages, so it should work on any architecture for the supported distributions.  Init scripts are installed into /etc/init.d/
 
 It depends on the ulimit cookbook: https://github.com/bmhatfield/chef-ulimit and the build-essentials cookbook: https://github.com/opscode-cookbooks/build-essential
 
@@ -43,7 +43,7 @@ Usage
 
 The redisio cookbook contains LWRP for installing, configuring and managing redis and redis_sentinel.
 
-The install recipe will only build, compile and install redis. The configure recipe will configure redis and setup service resources.  These resources will be named for the port of the redis server, unless a "name" attribute was specified.  Example names would be: service["redis6379"] or service["redismaster"] if the name attribute was "master".
+The install recipe can build, compile and install redis from sources or install from packages. The configure recipe will configure redis and setup service resources.  These resources will be named for the port of the redis server, unless a "name" attribute was specified.  Example names would be: service["redis6379"] or service["redismaster"] if the name attribute was "master".
 
 The most common use case for the redisio cookbook is to use the default recipe, followed by the enable recipe.  
 
@@ -83,6 +83,21 @@ run_list *%w[
 ]
 
 default_attributes({})
+```
+#### Install redis with packages and setup an instance with default settings on default port, and start the service through a role file #
+
+```ruby
+run_list *%w[
+  recipe[redisio]
+  recipe[redisio::enable]
+]
+
+default_attributes({
+  'redisio' => {
+    package_install: true
+    version:
+  }
+})
 ```
 
 #### Install redis, give the instance a name, and use a unix socket #
