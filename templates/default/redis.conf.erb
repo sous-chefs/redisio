@@ -442,7 +442,7 @@ slowlog-log-slower-than 10000
 # You can reclaim memory used by the slow log with SLOWLOG RESET.
 slowlog-max-len 1024
 
-<% unless @version[:major].to_i == 2 && @version[:minor].to_i >= 5 %>
+<% unless @version[:major].to_i == 2 && @version[:minor].to_i >= 5 || @version[:major].to_i == 3 %>
 ################################ VIRTUAL MEMORY ###############################
 
 ### WARNING! Virtual Memory is deprecated in Redis 2.4
@@ -519,7 +519,7 @@ vm-pages 134217728
 vm-max-threads 4
 <% end %>
 
-<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 8 %>
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 8 || @version[:major].to_i == 3 %>
 <% ######## Redis 2.8 and higher ######## %>
 ############################# Event notification ##############################
 
@@ -578,7 +578,7 @@ notify-keyspace-events "<%= @notifykeyspaceevents %>"
 # to save a lot of space. The special representation is only used when
 # you are under the following limits:
 
-<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 6 %>
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 6 || @version[:major].to_i == 3 %>
 <% ######## Redis 2.6 and higher ######## %>
 hash-max-ziplist-entries <%= @hashmaxziplistentries %>
 hash-max-ziplist-value <%= @hashmaxziplistvalue %>
