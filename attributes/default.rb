@@ -33,14 +33,24 @@ end
 
 # Install related attributes
 default['redisio']['safe_install'] = true
+default['redisio']['package_install'] = false
+default['redisio']['package_name'] = 'redis'
 default['redisio']['bypass_setup'] = false
 
 # Tarball and download related defaults
 default['redisio']['mirror'] = "http://download.redis.io/releases/"
 default['redisio']['base_name'] = 'redis-'
 default['redisio']['artifact_type'] = 'tar.gz'
-default['redisio']['version'] = '2.8.17'
 default['redisio']['base_piddir'] = '/var/run/redis'
+
+# Version
+if node['redisio']['package_install']
+  # latest version (only for package install)
+  default['redisio']['version'] = nil
+else
+  # force version for tarball
+  default['redisio']['version'] = '2.8.17'
+end
 
 # Custom installation directory
 default['redisio']['install_dir'] = nil
@@ -117,3 +127,9 @@ default['redisio']['default_settings'] = {
 # The default for this is set inside of the "install" recipe. This is due to the way deep merge handles arrays
 default['redisio']['servers'] = nil
 
+# Define binary path
+if node['redisio']['package_install']
+  default['redisio']['bin_path'] = '/usr/bin'
+else
+  default['redisio']['bin_path'] = '/usr/local/bin'
+end

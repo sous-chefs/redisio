@@ -28,7 +28,7 @@ if redis_instances.nil?
 end
 
 redisio_configure "redis-servers" do
-  version redis['version']
+  version redis['version'] if redis['version']
   default_settings redis['default_settings']
   servers redis_instances
   base_piddir redis['base_piddir']

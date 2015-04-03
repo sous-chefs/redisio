@@ -11,6 +11,9 @@ platforms:
   - name: ubuntu-12.04
   - name: debian-6.0.8
   - name: centos-6.4
+    run_list:
+      - recipe[yum-epel::default]
+      - recipe[yum-remi::default]
   - name: fedora-20
 
 suites:
@@ -25,6 +28,23 @@ suites:
                 port: 6379,
               }
             ]
+  - name: redis-package
+    run_list:
+      - recipe[redisio::default]
+      - recipe[redisio::enable]
+    attributes:
+     redisio:
+        servers: [
+              {
+                port: 6379,
+              }
+            ]
+        package_install: true
+        version: 
+    excludes:
+      - ubuntu-12.04
+      - debian-6.0.8
+      - fedora-20
   - name: sentinel
     run_list:
       - recipe[redisio::default]
