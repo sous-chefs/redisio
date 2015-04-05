@@ -6,10 +6,12 @@ describe 'Redis' do
     expect(service 'redis6379').to be_enabled
   end
 
-  it 'starts the redis service' do
-    # be_running uses ps aux, the service runs as redis-server *:6379 not as the service name redis6379
-    # Ensure a redis process is running on port 6379. .* regex to match everything between redis and port
-    expect(service 'redis6379').to be_running
+  context 'starts the redis service' do
+    # We use grep and commands here, since serverspec only checks systemd on fedora 20
+    # instead of also being able to check sysv style init systems.
+    describe command('ps aux | grep -v grep | grep \'redis-server\' | grep \'*:6379\'') do
+      its(:exit_status) { should eq(0) }
+    end
   end
 
   it 'is listening on port 6379' do

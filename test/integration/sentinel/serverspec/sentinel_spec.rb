@@ -6,8 +6,10 @@ describe 'Redis-Sentinel' do
     expect(service 'redis_sentinel_mycluster').to be_enabled
   end
 
-  it 'starts the redis-setinel service' do
-    expect(service 'redis_sentinel_mycluster').to be_running
+  context 'starts the redis-setinel service' do
+    describe command('ps aux | grep -v grep | grep \'redis-server\' | grep \'*:26379\'') do
+      its(:exit_status) { should eq(0) }
+    end
   end
 
   it 'is listening on port 26379' do
