@@ -44,7 +44,6 @@ def configure
 
     recipe_eval do
       sentinel_name = current['name'] || current['port']
-      sentinel_name = "sentinel_#{sentinel_name}"
       piddir = "#{base_piddir}/#{sentinel_name}"
 
       #Create the owner of the redis data directory
@@ -95,7 +94,7 @@ def configure
     end
 
       #Lay down the configuration files for the current instance
-      template "#{current['configdir']}/#{sentinel_name}.conf" do
+      template "#{current['configdir']}/sentinel_#{sentinel_name}.conf" do
         source 'sentinel.conf.erb'
         cookbook 'redisio'
         owner current['user']
@@ -124,7 +123,7 @@ def configure
       #Setup init.d file
       bin_path = node['redisio']['bin_path']
       bin_path = ::File.join(node['redisio']['install_dir'], 'bin') if node['redisio']['install_dir']
-      template "/etc/init.d/redis_#{sentinel_name}" do
+      template "/etc/init.d/redis_sentinel_#{sentinel_name}" do
         source 'sentinel.init.erb'
         cookbook 'redisio'
         owner 'root'
@@ -141,7 +140,7 @@ def configure
           })
         only_if { node['redisio']['job_control'] == 'initd' }
       end
-      template "/etc/init/redis_#{sentinel_name}.conf" do
+      template "/etc/init/redis_sentinel_#{sentinel_name}.conf" do
         source 'sentinel.upstart.conf.erb'
         cookbook 'redisio'
         owner current['user']
