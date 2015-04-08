@@ -251,7 +251,7 @@ Attributes
 
 Configuration options, each option corresponds to the same-named configuration option in the redis configuration file;  default values listed
 
-* `redisio['mirror']` - mirror server with path to download redis package, default is https://redis.googlecode.com/files
+* `redisio['mirror']` - mirror server with path to download redis package, default is http://download.redis.io/releases/
 * `redisio['base_name']` - the base name of the redis package to be downloaded (the part before the version), default is 'redis-'
 * `redisio['artifact_type']` - the file extension of the package.  currently only .tar.gz and .tgz are supported, default is 'tar.gz'
 * `redisio['version']` - the version number of redis to install (also appended to the `base_name` for downloading), default is '2.8.17'
