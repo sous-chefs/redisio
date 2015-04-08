@@ -41,7 +41,9 @@ default['redisio']['sentinel_defaults'] = {
   'data_bag_item'           => nil,
   'data_bag_key'            => nil,
   'announce-ip'             => nil,
-  'announce-port'           => nil
+  'announce-port'           => nil,
+  'notification-script'     => nil,
+  'client-reconfig-script'  => nil
 }
 
 # Manage Sentinel Config File

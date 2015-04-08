@@ -25,6 +25,14 @@ end
 def configure
   base_piddir = new_resource.base_piddir
 
+  if not new_resource.version
+    redis_output = %x[#{node['redisio']['bin_path']}/redis-server -v]
+    current_version = redis_output.gsub(/.*v=((\d+\.){2}\d+).*/, '\1')
+  else
+    current_version = new_resource.version
+  end
+  version_hash = RedisioHelper.version_to_hash(current_version)
+
   # Setup a configuration file and init script for each configuration provided
   new_resource.sentinels.each do |current_instance|
     # Retrieve the default settings hash and the current server setups settings hash.
@@ -155,18 +163,21 @@ def configure
         mode '0644'
         action :create
         variables(
-          name:              current['name'],
-          piddir:            piddir,
-          job_control:       node['redisio']['job_control'],
-          sentinel_bind:     current['sentinel_bind'],
-          sentinel_port:     current['sentinel_port'],
-          loglevel:          current['loglevel'],
-          logfile:           current['logfile'],
-          syslogenabled:     current['syslogenabled'],
-          syslogfacility:    current['syslogfacility'],
-          masters:           masters_with_defaults,
-          announce_ip:       current['announce-ip'],
-          announce_port:     current['announce-port']
+          name:                   current['name'],
+          piddir:                 piddir,
+          version:                version_hash,
+          job_control:            node['redisio']['job_control'],
+          sentinel_bind:          current['sentinel_bind'],
+          sentinel_port:          current['sentinel_port'],
+          loglevel:               current['loglevel'],
+          logfile:                current['logfile'],
+          syslogenabled:          current['syslogenabled'],
+          syslogfacility:         current['syslogfacility'],
+          masters:                masters_with_defaults,
+          announce_ip:            current['announce-ip'],
+          announce_port:          current['announce-port'],
+          notification_script:    current['notification-script'],
+          client_reconfig_script: current['client-reconfig-script']
         )
         not_if { ::File.exist?("#{current['configdir']}/#{sentinel_name}.conf.breadcrumb") }
       end
