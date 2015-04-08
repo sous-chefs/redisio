@@ -118,7 +118,9 @@ def configure
           :logfile                => current['logfile'],
           :syslogenabled          => current['syslogenabled'],
           :syslogfacility         => current['syslogfacility'],
-          :quorum_count           => current['quorum_count']
+          :quorum_count           => current['quorum_count'],
+          :notification_script    => current['notification-script'],
+          :client_reconfig_script => current['client-reconfig-script']
         })
       end
       #Setup init.d file

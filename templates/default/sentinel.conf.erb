@@ -117,6 +117,7 @@ sentinel failover-timeout <%=@name%> <%=@failovertimeout%>
 # Example:
 #
 # sentinel notification-script mymaster /var/redis/notify.sh
+<%= "sentinel notification-script #{@name} #{@notification_script}" unless @notification_script.nil? %>
 
 # CLIENTS RECONFIGURATION SCRIPT
 #
@@ -154,3 +155,4 @@ sentinel failover-timeout <%=@name%> <%=@failovertimeout%>
 # Example:
 #
 # sentinel client-reconfig-script mymaster /var/redis/reconfig.sh
+<%= "sentinel client-reconfig-script #{@name} #{@client_reconfig_script}" unless @client_reconfig_script.nil? %>
