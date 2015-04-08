@@ -25,8 +25,8 @@ if sentinel_instances.nil?
 end
 
 sentinel_instances.each do |current_sentinel|
-  sentinel_name = current_sentinel['name']
-  resource = resources("service[redis_sentinel_#{sentinel_name}]")
+  master_name = current_sentinel['name']
+  resource = resources("service[redis_sentinel_#{master_name}]")
   resource.action Array(resource.action)
   resource.action << :start
   resource.action << :enable
