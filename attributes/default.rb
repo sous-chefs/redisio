@@ -20,21 +20,25 @@ case node['platform']
 when 'ubuntu','debian'
   shell = '/bin/false'
   homedir = '/var/lib/redis'
+  package_name = 'redis-server'
 when 'centos','redhat','scientific','amazon','suse'
   shell = '/bin/sh'
   homedir = '/var/lib/redis'
+  package_name = 'redis'
 when 'fedora'
   shell = '/bin/sh'
   homedir = '/home' #this is necessary because selinux by default prevents the homedir from being managed in /var/lib/
+  package_name = 'redis'
 else
   shell = '/bin/sh'
   homedir = '/redis'
+  package_name = 'redis'
 end
 
 # Install related attributes
 default['redisio']['safe_install'] = true
 default['redisio']['package_install'] = false
-default['redisio']['package_name'] = 'redis'
+default['redisio']['package_name'] = package_name
 default['redisio']['bypass_setup'] = false
 
 # Tarball and download related defaults
