@@ -43,9 +43,8 @@ def configure
     end
 
     recipe_eval do
-      sentinel_name = current['name'] || current['port']
-      sentinel_name = "sentinel_#{sentinel_name}"
-      piddir = "#{base_piddir}/#{sentinel_name}"
+      master_name = current['name'] || current['port']
+      piddir = "#{base_piddir}/#{master_name}"
 
       #Create the owner of the redis data directory
       user current['user'] do
@@ -95,7 +94,7 @@ def configure
     end
 
       #Lay down the configuration files for the current instance
-      template "#{current['configdir']}/#{sentinel_name}.conf" do
+      template "#{current['configdir']}/sentinel_#{master_name}.conf" do
         source 'sentinel.conf.erb'
         cookbook 'redisio'
         owner current['user']
@@ -104,7 +103,7 @@ def configure
         action config_action
         variables({
           :piddir                 => piddir,
-          :name                   => sentinel_name,
+          :name                   => master_name,
           :job_control            => node['redisio']['job_control'],
           :sentinel_port          => current['sentinel_port'],
           :masterip               => current['master_ip'],
@@ -124,14 +123,14 @@ def configure
       #Setup init.d file
       bin_path = node['redisio']['bin_path']
       bin_path = ::File.join(node['redisio']['install_dir'], 'bin') if node['redisio']['install_dir']
-      template "/etc/init.d/redis_#{sentinel_name}" do
+      template "/etc/init.d/redis_sentinel_#{master_name}" do
         source 'sentinel.init.erb'
         cookbook 'redisio'
         owner 'root'
         group 'root'
         mode '0755'
         variables({
-          :name => sentinel_name,
+          :name => master_name,
           :bin_path => bin_path,
           :uob_control => node['redisio']['job_control'],
           :user => current['user'],
@@ -141,14 +140,14 @@ def configure
           })
         only_if { node['redisio']['job_control'] == 'initd' }
       end
-      template "/etc/init/redis_#{sentinel_name}.conf" do
+      template "/etc/init/redis_sentinel_#{master_name}.conf" do
         source 'sentinel.upstart.conf.erb'
         cookbook 'redisio'
         owner current['user']
         group current['group']
         mode '0644'
         variables({
-          :name => sentinel_name,
+          :name => master_name,
           :bin_path => bin_path,
           :job_control => node['redisio']['job_control'],
           :user => current['user'],
