@@ -345,7 +345,6 @@ The sentinel recipe's use their own attribute file.
 'sentinel_port'           => 26379,
 'monitor'                 => nil,
 'down-after-milliseconds' => 30000,
-'can-failover'            => 'yes',
 'parallel-syncs'          => 1,
 'failover-timeout'        => 900000,
 'loglevel'                => 'notice',

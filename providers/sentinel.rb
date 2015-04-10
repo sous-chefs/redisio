@@ -35,6 +35,31 @@ def configure
     #Merge the configuration defaults with the provided array of configurations provided
     current = current_defaults_hash.merge(current_instance_hash)
 
+    sentinel_name = current['name'] || current['port']
+    sentinel_name = "sentinel_#{sentinel_name}"
+    master_name = current['master_name'] || sentinel_name
+    piddir = "#{base_piddir}/#{sentinel_name}"
+
+
+    # Build master defaults from top level of current configuration
+    current_master_defaults_hash = {
+        name: master_name,
+        ip: current['master_ip'],
+        port: current['master_port'],
+        quorum_count: current['quorum_count'],
+        authpass: current['auth-pass'],
+        downaftermil: current['down-after-milliseconds'],
+        parallelsyncs: current['parallel-syncs'],
+        failovertimeout: current['failover-timeout']
+    }
+
+    # Merge the current instance configuration with the masters
+    if current['masters'].nil?
+      current_masters = [current_master_defaults_hash]
+    else
+      current_masters = current['masters'].collect { |master| current_master_defaults_hash.merge(master) }
+    end
+
     #Manage Sentinel Configs?
     if node['redisio']['sentinel']['manage_config'] == true
       config_action = :create
@@ -43,11 +68,6 @@ def configure
     end
 
     recipe_eval do
-      sentinel_name = current['name'] || current['port']
-      master_name = current['master_name'] || sentinel_name
-      sentinel_name = "sentinel_#{sentinel_name}"
-      piddir = "#{base_piddir}/#{sentinel_name}"
-
       #Create the owner of the redis data directory
       user current['user'] do
         comment 'Redis service account'
@@ -106,21 +126,13 @@ def configure
         variables({
           :piddir                 => piddir,
           :name                   => sentinel_name,
-          :mastername             => master_name,
           :job_control            => node['redisio']['job_control'],
-          :sentinel_port          => current['sentinel_port'],
-          :masterip               => current['master_ip'],
-          :masterport             => current['master_port'],
-          :authpass               => current['auth-pass'],
-          :downaftermil           => current['down-after-milliseconds'],
-          :canfailover            => current['can-failover'],
-          :parallelsyncs          => current['parallel-syncs'],
-          :failovertimeout        => current['failover-timeout'],
           :loglevel               => current['loglevel'],
           :logfile                => current['logfile'],
           :syslogenabled          => current['syslogenabled'],
           :syslogfacility         => current['syslogfacility'],
-          :quorum_count           => current['quorum_count']
+          :sentinel_port          => current['sentinel_port'],
+          :masters                => current_masters
         })
       end
       #Setup init.d file
