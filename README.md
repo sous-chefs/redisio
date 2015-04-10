@@ -240,9 +240,9 @@ Using the sentinel resources:
 
 ```ruby
 redisio_sentinel "redis-sentinels" do
-  sentinel_defaults redis['sentinel_defaults']
+  sentinel_defaults node['redisio']['sentinel_defaults']
   sentinels sentinel_instances
-  base_piddir redis['base_piddir']
+  base_piddir node['redisio']['base_piddir']
 end
 ```
 
