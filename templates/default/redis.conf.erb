@@ -691,6 +691,7 @@ aof-rewrite-incremental-fsync <%= @aofrewriteincrementalfsync %>
 cluster-enabled yes
 cluster-config-file <%= @clusterconfigfile || "nodes-#{@name}.conf" %>
 cluster-node-timeout <%= @clusternodetimeout %>
+cluster-require-full-coverage <%= @clusterrequirefullcoverage || "yes" %>
 <%end%>
 
 ################################## INCLUDES ###################################
