@@ -26,27 +26,28 @@ end
 def configure
   base_piddir = new_resource.base_piddir
 
-  if not new_resource.version
-    redis_output = %x[#{node['redisio']['bin_path']}/redis-server -v]
+  if !new_resource.version
+    redis_output = %x(#{node['redisio']['bin_path']}/redis-server -v)
     current_version = redis_output.gsub(/.*v=((\d+\.){2}\d+).*/, '\1')
   else
     current_version = new_resource.version
   end
   version_hash = RedisioHelper.version_to_hash(current_version)
 
-  #Setup a configuration file and init script for each configuration provided
+  # Setup a configuration file and init script for each configuration provided
   new_resource.servers.each do |current_instance|
-
-    #Retrieve the default settings hash and the current server setups settings hash.
+    # Retrieve the default settings hash and
+    # the current server setups settings hash.
     current_instance_hash = current_instance.to_hash
     current_defaults_hash = new_resource.default_settings.to_hash
 
-    #Merge the configuration defaults with the provided array of configurations provided
+    # Merge the configuration defaults
+    # with the provided array of configurations provided
     current = current_defaults_hash.merge(current_instance_hash)
 
-    #Merge in the default maxmemory
-    node_memory_kb = node["memory"]["total"]
-    node_memory_kb.slice! "kB"
+    # Merge in the default maxmemory
+    node_memory_kb = node['memory']['total']
+    node_memory_kb.slice! 'kB'
     node_memory_kb = node_memory_kb.to_i
 
     # Here we determine what the logfile is.  It has these possible states
@@ -77,7 +78,7 @@ def configure
     end
 
     maxmemory = current['maxmemory'].to_s
-    if !maxmemory.empty? && maxmemory.include?("%")
+    if !maxmemory.empty? && maxmemory.include?('%')
       # Just assume this is sensible like "95%" or "95 %"
       percent_factor = current['maxmemory'].to_f / 100.0
       # Ohai reports memory in KB as it looks in /proc/meminfo
@@ -86,7 +87,7 @@ def configure
 
     descriptors = current['ulimit'] == 0 ? current['maxclients'] + 32 : current['maxclients']
 
-    #Manage Redisio Config?
+    # Manage Redisio Config?
     if node['redisio']['sentinel']['manage_config'] == true
       config_action = :create
     else
@@ -99,16 +100,16 @@ def configure
       aof_file = "#{current['datadir']}/appendonly-#{server_name}.aof"
       rdb_file = "#{current['datadir']}/dump-#{server_name}.rdb"
 
-      #Create the owner of the redis data directory
+      # Create the owner of the redis data directory
       user current['user'] do
         comment 'Redis service account'
-        supports :manage_home => true
+        supports manage_home: true
         home current['homedir']
         shell current['shell']
         system current['systemuser']
         not_if { node['etc']['passwd']["#{current['user']}"] }
       end
-      #Create the redis configuration directory
+      # Create the redis configuration directory
       directory current['configdir'] do
         owner 'root'
         group 'root'
@@ -116,7 +117,7 @@ def configure
         recursive true
         action :create
       end
-      #Create the instance data directory
+      # Create the instance data directory
       directory current['datadir'] do
         owner current['user']
         group current['group']
@@ -124,7 +125,7 @@ def configure
         recursive true
         action :create
       end
-      #Create the pid file directory
+      # Create the pid file directory
       directory piddir do
         owner current['user']
         group current['group']
@@ -132,7 +133,7 @@ def configure
         recursive true
         action :create
       end
-      #Create the log directory if syslog is not being used
+      # Create the log directory if syslog is not being used
       if log_directory
         directory log_directory do
           owner current['user']
@@ -143,7 +144,7 @@ def configure
           only_if { log_directory }
         end
       end
-      #Create the log file if syslog is not being used
+      # Create the log file if syslog is not being used
       if log_file
         file current['logfile'] do
           owner current['user']
@@ -152,25 +153,25 @@ def configure
           backup false
           action :touch
           # in version 2.8 or higher the empty string is used instead of stdout
-          only_if { !log_file.empty? && log_file != "stdout" }
+          only_if { !log_file.empty? && log_file != 'stdout' }
         end
       end
-      #Set proper permissions on the AOF or RDB files
+      # Set proper permissions on the AOF or RDB files
       file aof_file do
         owner current['user']
         group current['group']
         mode '0644'
         only_if { current['backuptype'] == 'aof' || current['backuptype'] == 'both' }
-        only_if { ::File.exists?(aof_file) }
+        only_if { ::File.exist?(aof_file) }
       end
       file rdb_file  do
         owner current['user']
         group current['group']
         mode '0644'
         only_if { current['backuptype'] == 'rdb' || current['backuptype'] == 'both' }
-        only_if { ::File.exists?(rdb_file) }
+        only_if { ::File.exist?(rdb_file) }
       end
-      #Setup the redis users descriptor limits
+      # Setup the redis users descriptor limits
       user_ulimit current['user'] do
         filehandle_limit descriptors
         only_if { current['ulimit'] }
@@ -183,7 +184,7 @@ def configure
         Chef::Log.warn("#{server_name}: This will be deprecated in future versions of the redisio cookbook.")
       end
 
-      #Lay down the configuration files for the current instance
+      # Lay down the configuration files for the current instance
       template "#{current['configdir']}/#{server_name}.conf" do
         source 'redis.conf.erb'
         cookbook 'redisio'
@@ -192,59 +193,59 @@ def configure
         mode '0644'
         action config_action
         variables({
-          :version                    => version_hash,
-          :piddir                     => piddir,
-          :name                       => server_name,
-          :job_control                => node['redisio']['job_control'],
-          :port                       => current['port'],
-          :address                    => current['address'],
-          :databases                  => current['databases'],
-          :backuptype                 => current['backuptype'],
-          :datadir                    => current['datadir'],
-          :unixsocket                 => current['unixsocket'],
-          :unixsocketperm             => current['unixsocketperm'],
-          :timeout                    => current['timeout'],
-          :keepalive                  => current['keepalive'],
-          :loglevel                   => current['loglevel'],
-          :logfile                    => current['logfile'],
-          :syslogenabled              => current['syslogenabled'],
-          :syslogfacility             => current['syslogfacility'],
-          :save                       => computed_save,
-          :stopwritesonbgsaveerror    => current['stopwritesonbgsaveerror'],
-          :slaveof                    => current['slaveof'],
-          :masterauth                 => current['masterauth'],
-          :slaveservestaledata        => current['slaveservestaledata'],
-          :replpingslaveperiod        => current['replpingslaveperiod'],
-          :repltimeout                => current['repltimeout'],
-          :requirepass                => current['requirepass'],
-          :maxclients                 => current['maxclients'],
-          :maxmemory                  => maxmemory,
-          :maxmemorypolicy            => current['maxmemorypolicy'],
-          :maxmemorysamples           => current['maxmemorysamples'],
-          :appendfsync                => current['appendfsync'],
-          :noappendfsynconrewrite     => current['noappendfsynconrewrite'],
-          :aofrewritepercentage       => current['aofrewritepercentage'] ,
-          :aofrewriteminsize          => current['aofrewriteminsize'],
-          :luatimelimit               => current['luatimelimit'],
-          :slowloglogslowerthan       => current['slowloglogslowerthan'],
-          :slowlogmaxlen              => current['slowlogmaxlen'],
-          :notifykeyspaceevents       => current['notifykeyspaceevents'],
-          :hashmaxziplistentries      => current['hashmaxziplistentries'],
-          :hashmaxziplistvalue        => current['hashmaxziplistvalue'],
-          :setmaxintsetentries        => current['setmaxintsetentries'],
-          :zsetmaxziplistentries      => current['zsetmaxziplistentries'],
-          :zsetmaxziplistvalue        => current['zsetmaxziplistvalue'],
-          :activerehasing             => current['activerehasing'],
-          :clientoutputbufferlimit    => current['clientoutputbufferlimit'],
-          :hz                         => current['hz'],
-          :aofrewriteincrementalfsync => current['aofrewriteincrementalfsync'],
-          :clusterenabled             => current['clusterenabled'],
-          :clusterconfigfile          => current['clusterconfigfile'],
-          :clusternodetimeout         => current['clusternodetimeout'],
-          :includes                   => current['includes']
+          version:                    version_hash,
+          piddir:                     piddir,
+          name:                       server_name,
+          job_control:                node['redisio']['job_control'],
+          port:                       current['port'],
+          address:                    current['address'],
+          databases:                  current['databases'],
+          backuptype:                 current['backuptype'],
+          datadir:                    current['datadir'],
+          unixsocket:                 current['unixsocket'],
+          unixsocketperm:             current['unixsocketperm'],
+          timeout:                    current['timeout'],
+          keepalive:                  current['keepalive'],
+          loglevel:                   current['loglevel'],
+          logfile:                    current['logfile'],
+          syslogenabled:              current['syslogenabled'],
+          syslogfacility:             current['syslogfacility'],
+          save:                       computed_save,
+          stopwritesonbgsaveerror:    current['stopwritesonbgsaveerror'],
+          slaveof:                    current['slaveof'],
+          masterauth:                 current['masterauth'],
+          slaveservestaledata:        current['slaveservestaledata'],
+          replpingslaveperiod:        current['replpingslaveperiod'],
+          repltimeout:                current['repltimeout'],
+          requirepass:                current['requirepass'],
+          maxclients:                 current['maxclients'],
+          maxmemory:                  maxmemory,
+          maxmemorypolicy:            current['maxmemorypolicy'],
+          maxmemorysamples:           current['maxmemorysamples'],
+          appendfsync:                current['appendfsync'],
+          noappendfsynconrewrite:     current['noappendfsynconrewrite'],
+          aofrewritepercentage:       current['aofrewritepercentage'],
+          aofrewriteminsize:          current['aofrewriteminsize'],
+          luatimelimit:               current['luatimelimit'],
+          slowloglogslowerthan:       current['slowloglogslowerthan'],
+          slowlogmaxlen:              current['slowlogmaxlen'],
+          notifykeyspaceevents:       current['notifykeyspaceevents'],
+          hashmaxziplistentries:      current['hashmaxziplistentries'],
+          hashmaxziplistvalue:        current['hashmaxziplistvalue'],
+          setmaxintsetentries:        current['setmaxintsetentries'],
+          zsetmaxziplistentries:      current['zsetmaxziplistentries'],
+          zsetmaxziplistvalue:        current['zsetmaxziplistvalue'],
+          activerehasing:             current['activerehasing'],
+          clientoutputbufferlimit:    current['clientoutputbufferlimit'],
+          hz:                         current['hz'],
+          aofrewriteincrementalfsync: current['aofrewriteincrementalfsync'],
+          clusterenabled:             current['clusterenabled'],
+          clusterconfigfile:          current['clusterconfigfile'],
+          clusternodetimeout:         current['clusternodetimeout'],
+          includes:                   current['includes']
         })
       end
-      #Setup init.d file
+      # Setup init.d file
 
       bin_path = node['redisio']['bin_path']
       bin_path = ::File.join(node['redisio']['install_dir'], 'bin') if node['redisio']['install_dir']
@@ -255,21 +256,21 @@ def configure
         group 'root'
         mode '0755'
         variables({
-          :name => server_name,
-          :bin_path => bin_path,
-          :job_control => node['redisio']['job_control'],
-          :port => current['port'],
-          :address => current['address'],
-          :user => current['user'],
-          :configdir => current['configdir'],
-          :piddir => piddir,
-          :requirepass => current['requirepass'],
-          :shutdown_save => current['shutdown_save'],
-          :platform => node['platform'],
-          :unixsocket => current['unixsocket'],
-          :ulimit => descriptors,
-          :required_start => node['redisio']['init.d']['required_start'].join(" "),
-          :required_stop => node['redisio']['init.d']['required_stop'].join(" ")
+          name: server_name,
+          bin_path: bin_path,
+          job_control: node['redisio']['job_control'],
+          port: current['port'],
+          address: current['address'],
+          user: current['user'],
+          configdir: current['configdir'],
+          piddir: piddir,
+          requirepass: current['requirepass'],
+          shutdown_save: current['shutdown_save'],
+          platform: node['platform'],
+          unixsocket: current['unixsocket'],
+          ulimit: descriptors,
+          required_start: node['redisio']['init.d']['required_start'].join(' '),
+          required_stop: node['redisio']['init.d']['required_stop'].join(' ')
           })
         only_if { node['redisio']['job_control'] == 'initd' }
       end
@@ -280,21 +281,21 @@ def configure
         group current['group']
         mode '0644'
         variables({
-          :name => server_name,
-          :bin_path => bin_path,
-          :job_control => node['redisio']['job_control'],
-          :port => current['port'],
-          :address => current['address'],
-          :user => current['user'],
-          :group => current['group'],
-          :maxclients => current['maxclients'],
-          :requirepass => current['requirepass'],
-          :shutdown_save => current['shutdown_save'],
-          :save => current['save'],
-          :configdir => current['configdir'],
-          :piddir => piddir,
-          :platform => node['platform'],
-          :unixsocket => current['unixsocket']
+          name: server_name,
+          bin_path: bin_path,
+          job_control: node['redisio']['job_control'],
+          port: current['port'],
+          address: current['address'],
+          user: current['user'],
+          group: current['group'],
+          maxclients: current['maxclients'],
+          requirepass: current['requirepass'],
+          shutdown_save: current['shutdown_save'],
+          save: current['save'],
+          configdir: current['configdir'],
+          piddir: piddir,
+          platform: node['platform'],
+          unixsocket: current['unixsocket']
         })
         only_if { node['redisio']['job_control'] == 'upstart' }
       end

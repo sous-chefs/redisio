@@ -20,7 +20,7 @@
 action :run do
   # Package install
   if node['redisio']['package_install']
-    package "redisio_package_name" do
+    package 'redisio_package_name' do
       package_name node['redisio']['package_name']
       version node['redisio']['version']
       action :install
@@ -29,7 +29,7 @@ action :run do
   else
     @tarball = "#{new_resource.base_name}#{new_resource.version}.#{new_resource.artifact_type}"
 
-    unless ( current_resource.version == new_resource.version || (redis_exists? && new_resource.safe_install) )
+    unless current_resource.version == new_resource.version || (redis_exists? && new_resource.safe_install)
       Chef::Log.info("Installing Redis #{new_resource.version} from source")
       download
       unpack
@@ -50,19 +50,19 @@ end
 def unpack
   install_dir = "#{new_resource.base_name}#{new_resource.version}"
   case new_resource.artifact_type
-    when "tar.gz",".tgz"
-      execute %(cd #{new_resource.download_dir} ; mkdir -p '#{install_dir}' ; tar zxf '#{@tarball}' --strip-components=1 -C '#{install_dir}')
-    else
-      raise Chef::Exceptions::UnsupportedAction, "Current package type #{new_resource.artifact_type} is unsupported"
+  when 'tar.gz', '.tgz'
+    execute %(cd #{new_resource.download_dir} ; mkdir -p '#{install_dir}' ; tar zxf '#{@tarball}' --strip-components=1 -C '#{install_dir}')
+  else
+    fail Chef::Exceptions::UnsupportedAction, "Current package type #{new_resource.artifact_type} is unsupported"
   end
 end
 
 def build
-  execute"cd #{new_resource.download_dir}/#{new_resource.base_name}#{new_resource.version} && make clean && make"
+  execute "cd #{new_resource.download_dir}/#{new_resource.base_name}#{new_resource.version} && make clean && make"
 end
 
 def install
-  install_prefix = ""
+  install_prefix = ''
   install_prefix = "PREFIX=#{new_resource.install_dir}" if new_resource.install_dir
   execute "cd #{new_resource.download_dir}/#{new_resource.base_name}#{new_resource.version} && make #{install_prefix} install"
   new_resource.updated_by_last_action(true)
@@ -72,7 +72,7 @@ def redis_exists?
   bin_path = node['redisio']['bin_path']
   bin_path = ::File.join(node['redisio']['install_dir'], 'bin') if node['redisio']['install_dir']
   redis_server = ::File.join(bin_path, 'redis-server')
-  ::File.exists?(redis_server)
+  ::File.exist?(redis_server)
 end
 
 def version
@@ -82,9 +82,9 @@ def version
     redis_server = ::File.join(bin_path, 'redis-server')
     redis_version = Mixlib::ShellOut.new("#{redis_server} -v")
     redis_version.run_command
-    version = redis_version.stdout[/version (\d*.\d*.\d*)/,1] || redis_version.stdout[/v=(\d*.\d*.\d*)/,1]
+    version = redis_version.stdout[/version (\d*.\d*.\d*)/, 1] || redis_version.stdout[/v=(\d*.\d*.\d*)/, 1]
     Chef::Log.info("The Redis server version is: #{version}")
-    return version.gsub("\n",'')
+    return version.gsub("\n", '')
   end
   nil
 end
