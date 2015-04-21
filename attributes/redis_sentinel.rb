@@ -19,12 +19,12 @@
 default['redisio']['sentinel_defaults'] = {
   'user'                    => 'redis',
   'configdir'               => '/etc/redis',
-  'sentinel_port'           => 26379,
+  'sentinel_port'           => 26_379,
   'monitor'                 => nil,
-  'down-after-milliseconds' => 30000,
+  'down-after-milliseconds' => 30_000,
   'can-failover'            => 'yes',
   'parallel-syncs'          => 1,
-  'failover-timeout'        => 900000,
+  'failover-timeout'        => 900_000,
   'loglevel'                => 'notice',
   'logfile'                 => nil,
   'syslogenabled'           => 'yes',
@@ -33,7 +33,8 @@ default['redisio']['sentinel_defaults'] = {
 }
 
 # Manage Sentinel Config File
-## Will write out the base config one time then no longer manage the config allowing sentinel to take over
+## Will write out the base config one time then
+## no longer manage the config allowing sentinel to take over
 default['redisio']['sentinel']['manage_config'] = true
 
 default['redisio']['sentinels'] = nil

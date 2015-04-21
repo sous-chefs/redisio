@@ -23,40 +23,38 @@ include_recipe 'ulimit::default'
 redis = node['redisio']
 
 redis_instances = redis['servers']
-if redis_instances.nil?
-  redis_instances = [{'port' => '6379'}]
-end
+redis_instances = [{ 'port' => '6379' }] if redis_instances.nil?
 
-redisio_configure "redis-servers" do
+redisio_configure 'redis-servers' do
   version redis['version'] if redis['version']
   default_settings redis['default_settings']
   servers redis_instances
   base_piddir redis['base_piddir']
 end
 
-# Create a service resource for each redis instance, named for the port it runs on.
+# Create a service resource for each redis instance,
+# named for the port it runs on.
 redis_instances.each do |current_server|
   server_name = current_server['name'] || current_server['port']
   job_control = node['redisio']['job_control']
 
   if job_control == 'initd'
-  	service "redis#{server_name}" do
+    service "redis#{server_name}" do
       # don't supply start/stop/restart commands, Chef::Provider::Service::*
       # do a fine job on it's own, and support systemd correctly
-      supports :start => true, :stop => true, :restart => false, :status => true
-  	end
+      supports start: true, stop: true, restart: false, status: true
+    end
   elsif job_control == 'upstart'
-  	service "redis#{server_name}" do
-	  provider Chef::Provider::Service::Upstart
+    service "redis#{server_name}" do
+      provider Chef::Provider::Service::Upstart
       start_command "start redis#{server_name}"
       stop_command "stop redis#{server_name}"
       restart_command "restart redis#{server_name}"
-      supports :start => true, :stop => true, :restart => true, :status => false
-  	end
+      supports start: true, stop: true, restart: true, status: false
+    end
   else
-    Chef::Log.error("Unknown job control type, no service resource created!")
+    Chef::Log.error('Unknown job control type, no service resource created!')
   end
-
 end
 
 node.set['redisio']['servers'] = redis_instances

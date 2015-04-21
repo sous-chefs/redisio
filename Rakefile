@@ -41,19 +41,17 @@ end
 desc 'Destroy test kitchen instances'
 task :destroy do
   Kitchen.logger = Kitchen.default_file_logger
-  Kitchen::Config.new.instances.each do |instance|
-    instance.destroy
-  end
+  Kitchen::Config.new.instances.each(&:destroy)
 end
 
 require 'rspec/core/rake_task'
 desc 'Run ChefSpec unit tests'
-RSpec::Core::RakeTask.new(:spec) do |t, args|
+RSpec::Core::RakeTask.new(:spec) do |t, _args|
   t.rspec_opts = 'test/unit'
 end
 
 # The default rake task should just run it all
-task default: ['style', 'spec', 'integration']
+task default: %w(style spec integration)
 
 begin
   require 'kitchen/rake_tasks'
