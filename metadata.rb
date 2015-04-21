@@ -8,8 +8,8 @@ version          '2.3.0'
 %w[ debian ubuntu centos redhat fedora scientific suse amazon].each do |os|
   supports os
 end
-source_url      'https://github.com/brianbianco/redisio'
-issues_url       'https://github.com/brianbianco/redisio/issues'
+source_url      'https://github.com/brianbianco/redisio'	if respond_to?(:source_url)
+issues_url       'https://github.com/brianbianco/redisio/issues'	if respond_to?(:issues_url)
 
 recipe "redisio::default", "This recipe is used to install the prequisites for building and installing redis, as well as provides the LWRPs"
 recipe "redisio::install", "This recipe is used to install redis"
