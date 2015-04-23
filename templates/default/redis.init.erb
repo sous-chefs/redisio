@@ -14,15 +14,22 @@
 # Description: redis<%= @port %> init script
 ### END INIT INFO
 
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+<% unless node[:redisio][:package_install] -%>
+export PATH=<%= default[:redisio][:bin_path] %>:$PATH
+<% end %>
+
 REDISNAME=<%= @name %>
 REDISPORT=<%= @port %>
 <% case @platform %>
 <% when 'ubuntu','debian','fedora' %>
-EXEC="su -s /bin/sh -c '<%= File.join(@bin_path, 'redis-server') %> <%= @configdir %>/${REDISNAME}.conf' <%= @user %>"
+EXEC="su -s /bin/sh -c 'redis-server <%= @configdir %>/${REDISNAME}.conf' <%= @user %>"
 <% else %>
-EXEC="runuser <%= @user %> -c \"<%= File.join(@bin_path, 'redis-server') %> <%= @configdir %>/${REDISNAME}.conf\""
+EXEC="runuser <%= @user %> -c \"redis-server <%= @configdir %>/${REDISNAME}.conf\""
 <% end %>
-CLIEXEC=<%= File.join(@bin_path, 'redis-cli') %>
+CLIEXEC=redis-cli
 
 <% connection_string = String.new %>
 <% if @unixsocket.nil? %>
