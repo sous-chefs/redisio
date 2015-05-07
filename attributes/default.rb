@@ -49,7 +49,7 @@ if node['redisio']['package_install']
   default['redisio']['version'] = nil
 else
   # force version for tarball
-  default['redisio']['version'] = '2.8.17'
+  default['redisio']['version'] = '2.8.19'
 end
 
 # Custom installation directory
