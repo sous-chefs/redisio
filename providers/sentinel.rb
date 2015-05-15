@@ -118,7 +118,8 @@ def configure
           :logfile                => current['logfile'],
           :syslogenabled          => current['syslogenabled'],
           :syslogfacility         => current['syslogfacility'],
-          :quorum_count           => current['quorum_count']
+          :quorum_count           => current['quorum_count'],
+          :clientreconfigscript   => current['client-reconfig-script']
         })
       end
       #Setup init.d file
