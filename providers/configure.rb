@@ -212,7 +212,7 @@ def configure
           :save                       => computed_save,
           :stopwritesonbgsaveerror    => current['stopwritesonbgsaveerror'],
           :slaveof                    => current['slaveof'],
-	  :slavepriority              => current['slavepriority'],
+          :slavepriority              => current['slavepriority'],
           :masterauth                 => current['masterauth'],
           :slaveservestaledata        => current['slaveservestaledata'],
           :replpingslaveperiod        => current['replpingslaveperiod'],
