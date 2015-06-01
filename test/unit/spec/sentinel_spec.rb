@@ -9,7 +9,13 @@ describe 'sentinel recipes' do
   # pick an arbitrary OS; just for fauxhai to provide some values
   it 'creates a default sentinel instance' do
     chef_run = ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.04').converge(*recipes) # *splat operator for array to vararg
-    expect(chef_run).to run_redisio_sentinel('redis-sentinels').with(sentinels: [{"port"=>"26379", "name"=>"mycluster", "master_ip"=>"127.0.0.1", "master_port"=>6379}])
+    expect(chef_run).to run_redisio_sentinel('redis-sentinels').with(
+      sentinels: [{
+        "sentinel_port"=>"26379",
+        "name"=>"mycluster",
+        "masters" => [{"master_name"=>"mycluster_master", "master_ip"=>"127.0.0.1", "master_port"=>"6379"}]
+        }]
+    )
   end
 
   it 'creates a specified sentinel instance' do

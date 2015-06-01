@@ -1,6 +1,7 @@
-shared_examples_for 'sentinel on port' do |redis_port, args|
+shared_examples_for 'sentinel on port' do |redis_port, redis_instance_name, args|
   it 'enables the redis-sentinel service' do
-    expect(service 'redis_sentinel_mycluster').to be_enabled
+    name = redis_instance_name || 'redis_sentinel_mycluster'
+    expect(service name).to be_enabled
   end
 
   context 'starts the redis-setinel service' do

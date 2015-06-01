@@ -359,6 +359,18 @@ The sentinel recipe's use their own attribute file.
 
 * `redisio['redisio']['sentinels']` - Array of sentinels to configure on the node. These settings will override the options in 'sentinel_defaults', if it is left `nil` it will default to `[{'port' => '26379', 'name' => 'mycluster', 'master_ip' => '127.0.0.1', 'master_port' => 6379}]`. If set to `[]` (empty array), no instances will be created.
 
+You may also pass an array of masters to monitor like so:
+```
+[{
+  'sentinel_port' => '26379',
+  'name' => 'mycluster_sentinel',
+  'masters' => [
+    { master_name = 'master6379', master_ip' => '127.0.0.1', 'master_port' => 6379 },
+    { master_name = 'master6380', master_ip' => '127.0.0.1', 'master_port' => 6380 }
+  ]
+
+}]
+```
 
 Resources/Providers
 ===================
