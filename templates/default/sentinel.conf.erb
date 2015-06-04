@@ -23,8 +23,10 @@ port <%=@sentinel_port%>
 # Note: master name should not include special characters or spaces.
 # The valid charset is A-z 0-9 and the three characters ".-_".
 # sentinel monitor mymaster 127.0.0.1 6379 2
-sentinel monitor <%=@name%> <%=@masterip%> <%=@masterport%> <%= @quorum_count %>
-
+<% @masters.each do |current| %>
+<% calc_name = current['master_name'].to_s || @name.to_s %>
+sentinel monitor <%=calc_name%> <%=current['master_ip']%> <%=current['master_port']%> <%= current['quorum_count'] %>
+<% end %>
 # sentinel auth-pass <master-name> <password>
 #
 # Set the password to use to authenticate with the master and slaves.
@@ -43,8 +45,10 @@ sentinel monitor <%=@name%> <%=@masterip%> <%=@masterport%> <%= @quorum_count %>
 # Example:
 #
 # sentinel auth-pass mymaster MySUPER--secret-0123passw0rd
-<%= "sentinel auth-pass #{@name} #{@authpass}" unless @authpass.nil? %>
-
+<% @masters.each do |current| %>
+<% calc_name = current['master_name'].to_s || @name.to_s %>
+<%= "sentinel auth-pass #{calc_name} #{current['auth-pass']}" unless current['auth-pass'].nil? %>
+<% end %>
 # sentinel down-after-milliseconds <master-name> <milliseconds>
 #
 # Number of milliseconds the master (or any attached slave or sentinel) should
@@ -53,16 +57,20 @@ sentinel monitor <%=@name%> <%=@masterip%> <%=@masterport%> <%= @quorum_count %>
 # Down).
 #
 # Default is 30 seconds.
-sentinel down-after-milliseconds <%=@name%> <%=@downaftermil%>
-
+<% @masters.each do |current| %>
+<% calc_name = current['master_name'].to_s || @name.to_s %>
+sentinel down-after-milliseconds <%=calc_name%> <%=current['down-after-milliseconds']%>
+<% end %>
 # sentinel parallel-syncs <master-name> <numslaves>
 #
 # How many slaves we can reconfigure to point to the new slave simultaneously
 # during the failover. Use a low number if you use the slaves to serve query
 # to avoid that all the slaves will be unreachable at about the same
 # time while performing the synchronization with the master.
-sentinel parallel-syncs <%=@name%> <%=@parallelsyncs%>
-
+<% @masters.each do |current| %>
+<% calc_name = current['master_name'].to_s || @name.to_s %>
+sentinel parallel-syncs <%=calc_name%> <%=current['parallel-syncs']%>
+<% end %>
 # sentinel failover-timeout <master-name> <milliseconds>
 #
 # Specifies the failover timeout in milliseconds. When this time has elapsed
@@ -77,8 +85,10 @@ sentinel parallel-syncs <%=@name%> <%=@parallelsyncs%>
 # "takeover".
 #
 # Default is 15 minutes.
-sentinel failover-timeout <%=@name%> <%=@failovertimeout%>
-
+<% @masters.each do |current| %>
+<% calc_name = current['master_name'].to_s || @name.to_s %>
+sentinel failover-timeout <%=calc_name%> <%=current['failover-timeout']%>
+<% end %>
 # SCRIPTS EXECUTION
 #
 # sentinel notification-script and sentinel reconfig-script are used in order

@@ -71,28 +71,60 @@ def configure
         recursive true
         action :create
       end
-     
-    unless current['logfile'].nil?
-      #Create the log directory if syslog is not being used
-      directory ::File.dirname(current['logfile']) do
-        owner current['user']
-        group current['group']
-        mode '0755'
-        recursive true
-        action :create
-        only_if { current['syslogenabled'] != 'yes' && current['logfile'] && current['logfile'] != 'stdout' }
+
+      unless current['logfile'].nil?
+        #Create the log directory if syslog is not being used
+        directory ::File.dirname(current['logfile']) do
+          owner current['user']
+          group current['group']
+          mode '0755'
+          recursive true
+          action :create
+          only_if { current['syslogenabled'] != 'yes' && current['logfile'] && current['logfile'] != 'stdout' }
+        end
+
+       #Create the log file is syslog is not being used
+        file current['logfile'] do
+          owner current['user']
+          group current['group']
+          mode '0644'
+          backup false
+          action :touch
+          only_if { current['logfile'] && current['logfile'] != 'stdout' }
+        end
       end
-    
-     #Create the log file is syslog is not being used
-      file current['logfile'] do
-        owner current['user']
-        group current['group']
-        mode '0644'
-        backup false
-        action :touch
-        only_if { current['logfile'] && current['logfile'] != 'stdout' }
+
+      # <%=@name%> <%=@masterip%> <%=@masterport%> <%= @quorum_count %>
+      # <%= "sentinel auth-pass #{@name} #{@authpass}" unless @authpass.nil? %>
+      # sentinel down-after-milliseconds <%=@name%> <%=@downaftermil%>
+      # sentinel parallel-syncs <%=@name%> <%=@parallelsyncs%>
+      # sentinel failover-timeout <%=@name%> <%=@failovertimeout%>
+
+
+      # convert from old format (preserve compat)
+      if !current['masters'] && current['master_ip']
+        Chef::Log.warn('You are using a deprecated sentinel format. This will be removed in future versions.')
+        masters = [{
+            :mastername             => current['master_name'],
+            :masterip               => current['master_ip'],
+            :masterport             => current['master_port'],
+            :quorum_count           => current['quorum_count'],
+            :authpass               => current['auth-pass'],
+            :downaftermil           => current['down-after-milliseconds'],
+            :parallelsyncs          => current['parallel-syncs'],
+            :failovertimeout        => current['failover-timeout']
+          }]
+      else
+        masters = [current['masters']].flatten
       end
-    end
+
+      # merge in default values to each sentinel hash
+      masters_with_defaults = []
+      masters.each do |current_sentinel_master|
+        default_sentinel_master = new_resource.sentinel_defaults.to_hash
+        sentinel_master = default_sentinel_master.merge(current_sentinel_master)
+        masters_with_defaults << sentinel_master
+      end
 
       #Lay down the configuration files for the current instance
       template "#{current['configdir']}/#{sentinel_name}.conf" do
@@ -103,24 +135,18 @@ def configure
         mode '0644'
         action config_action
         variables({
+          :name                   => current['name'],
           :piddir                 => piddir,
-          :name                   => sentinel_name,
           :job_control            => node['redisio']['job_control'],
           :sentinel_port          => current['sentinel_port'],
-          :masterip               => current['master_ip'],
-          :masterport             => current['master_port'],
-          :authpass               => current['auth-pass'],
-          :downaftermil           => current['down-after-milliseconds'],
-          :canfailover            => current['can-failover'],
-          :parallelsyncs          => current['parallel-syncs'],
-          :failovertimeout        => current['failover-timeout'],
           :loglevel               => current['loglevel'],
           :logfile                => current['logfile'],
           :syslogenabled          => current['syslogenabled'],
           :syslogfacility         => current['syslogfacility'],
-          :quorum_count           => current['quorum_count']
+          :masters                => masters_with_defaults
         })
       end
+
       #Setup init.d file
       bin_path = node['redisio']['bin_path']
       bin_path = ::File.join(node['redisio']['install_dir'], 'bin') if node['redisio']['install_dir']
@@ -141,6 +167,7 @@ def configure
           })
         only_if { node['redisio']['job_control'] == 'initd' }
       end
+
       template "/etc/init/redis_#{sentinel_name}.conf" do
         source 'sentinel.upstart.conf.erb'
         cookbook 'redisio'
