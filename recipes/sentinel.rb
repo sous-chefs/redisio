@@ -27,6 +27,7 @@ sentinel_instances = redis['sentinels']
 if sentinel_instances.nil?
   sentinel_instances = [{
     'sentinel_port' => '26379',
+    'sentinel_address' => nil,
     'name' => 'mycluster',
     'masters' => [{
       'master_name' => 'mycluster_master',

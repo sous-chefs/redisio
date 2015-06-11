@@ -12,6 +12,7 @@ describe 'sentinel recipes' do
     expect(chef_run).to run_redisio_sentinel('redis-sentinels').with(
       sentinels: [{
         "sentinel_port"=>"26379",
+        "sentinel_address"=>nil,
         "name"=>"mycluster",
         "masters" => [{"master_name"=>"mycluster_master", "master_ip"=>"127.0.0.1", "master_port"=>"6379"}]
         }]
@@ -22,12 +23,13 @@ describe 'sentinel recipes' do
     chef_run = ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.04') do |node|
       node.set['redisio']['sentinels'] = [{
           "sentinel_port"=>"1234",
+          "sentinel_address"=>"127.0.0.1",
           "name"=>"sentinel-test-params",
           "master_ip"=>"5.6.7.8",
           "master_port"=>9123
       }]
     end.converge(*recipes) # *splat operator for array to vararg
-    expect(chef_run).to run_redisio_sentinel('redis-sentinels').with(sentinels: [{"sentinel_port"=>"1234", "name"=>"sentinel-test-params", "master_ip"=>"5.6.7.8", "master_port"=>9123}])
+    expect(chef_run).to run_redisio_sentinel('redis-sentinels').with(sentinels: [{"sentinel_port"=>"1234", "sentinel_address"=>"127.0.0.1","name"=>"sentinel-test-params", "master_ip"=>"5.6.7.8", "master_port"=>9123}])
   end
 
   it 'should not create a sentinel instance' do
