@@ -104,15 +104,17 @@ def configure
       # convert from old format (preserve compat)
       if !current['masters'] && current['master_ip']
         Chef::Log.warn('You are using a deprecated sentinel format. This will be removed in future versions.')
+
+        # use old key names if newer key names aren't present (e.g. 'foo' || :foo)
         masters = [{
-            :mastername             => current['master_name'],
-            :masterip               => current['master_ip'],
-            :masterport             => current['master_port'],
-            :quorum_count           => current['quorum_count'],
-            :authpass               => current['auth-pass'],
-            :downaftermil           => current['down-after-milliseconds'],
-            :parallelsyncs          => current['parallel-syncs'],
-            :failovertimeout        => current['failover-timeout']
+            'master_name'             => current['master_name'] || current[:mastername],
+            'master_ip'               => current['master_ip'] || current[:masterip],
+            'master_port'             => current['master_port'] || current[:masterport],
+            'quorum_count'            => current['quorum_count'] || current[:quorum_count],
+            'auth-pass'               => current['auth-pass'] || current[:authpass],
+            'down-after-milliseconds' => current['down-after-milliseconds'] || current[:downaftermil],
+            'parallel-syncs'          => current['parallel-syncs'] || current[:parallelsyncs],
+            'failover-timeout'        => current['failover-timeout'] || current[:failovertimeout]
           }]
       else
         masters = [current['masters']].flatten
@@ -124,6 +126,14 @@ def configure
         default_sentinel_master = new_resource.sentinel_defaults.to_hash
         sentinel_master = default_sentinel_master.merge(current_sentinel_master)
         masters_with_defaults << sentinel_master
+      end
+
+      # Don't render a template if we're missing these from any sentinel,
+      # as these are the minimal settings required to be passed in
+      masters_with_defaults.each do |sentinel_instance|
+        %w(master_ip master_port quorum_count).each do |param|
+          fail "Missing required sentinel parameter #{param} for #{sentinel_instance}" unless param
+        end
       end
 
       #Lay down the configuration files for the current instance
