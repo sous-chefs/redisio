@@ -24,8 +24,8 @@ port <%=@sentinel_port%>
 # The valid charset is A-z 0-9 and the three characters ".-_".
 # sentinel monitor mymaster 127.0.0.1 6379 2
 <% @masters.each do |current| %>
-<% calc_name = current['master_name'].to_s || @name.to_s %>
-sentinel monitor <%=calc_name%> <%=current['master_ip']%> <%=current['master_port']%> <%= current['quorum_count'] %>
+<% calc_name = (current[:mastername] || @name).to_s %>
+sentinel monitor <%=calc_name%> <%=current[:masterip]%> <%=current[:masterport]%> <%= current[:quorum_count] %>
 <% end %>
 # sentinel auth-pass <master-name> <password>
 #
@@ -46,8 +46,8 @@ sentinel monitor <%=calc_name%> <%=current['master_ip']%> <%=current['master_por
 #
 # sentinel auth-pass mymaster MySUPER--secret-0123passw0rd
 <% @masters.each do |current| %>
-<% calc_name = current['master_name'].to_s || @name.to_s %>
-<%= "sentinel auth-pass #{calc_name} #{current['auth-pass']}" unless current['auth-pass'].nil? %>
+<% calc_name = (current[:mastername] || @name).to_s %>
+<%= "sentinel auth-pass #{calc_name} #{current[:authpass]}" unless current[:authpass].nil? %>
 <% end %>
 # sentinel down-after-milliseconds <master-name> <milliseconds>
 #
@@ -58,8 +58,8 @@ sentinel monitor <%=calc_name%> <%=current['master_ip']%> <%=current['master_por
 #
 # Default is 30 seconds.
 <% @masters.each do |current| %>
-<% calc_name = current['master_name'].to_s || @name.to_s %>
-sentinel down-after-milliseconds <%=calc_name%> <%=current['down-after-milliseconds']%>
+<% calc_name = (current[:mastername] || @name).to_s %>
+sentinel down-after-milliseconds <%=calc_name%> <%=current[:downaftermil]%>
 <% end %>
 # sentinel parallel-syncs <master-name> <numslaves>
 #
@@ -68,8 +68,8 @@ sentinel down-after-milliseconds <%=calc_name%> <%=current['down-after-milliseco
 # to avoid that all the slaves will be unreachable at about the same
 # time while performing the synchronization with the master.
 <% @masters.each do |current| %>
-<% calc_name = current['master_name'].to_s || @name.to_s %>
-sentinel parallel-syncs <%=calc_name%> <%=current['parallel-syncs']%>
+<% calc_name = (current[:mastername] || @name).to_s %>
+sentinel parallel-syncs <%=calc_name%> <%=current[:parallelsyncs]%>
 <% end %>
 # sentinel failover-timeout <master-name> <milliseconds>
 #
@@ -86,8 +86,8 @@ sentinel parallel-syncs <%=calc_name%> <%=current['parallel-syncs']%>
 #
 # Default is 15 minutes.
 <% @masters.each do |current| %>
-<% calc_name = current['master_name'].to_s || @name.to_s %>
-sentinel failover-timeout <%=calc_name%> <%=current['failover-timeout']%>
+<% calc_name = (current[:mastername] || @name).to_s %>
+sentinel failover-timeout <%=calc_name%> <%=current[:failovertimeout]%>
 <% end %>
 # SCRIPTS EXECUTION
 #
