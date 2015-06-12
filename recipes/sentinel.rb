@@ -54,11 +54,11 @@ sentinel_instances.each do |current_sentinel|
 
   case node['redisio']['job_control']
   when 'initd'
-  	service "redis_sentinel_#{sentinel_name}" do
+    service "redis_sentinel_#{sentinel_name}" do
       # don't supply start/stop/restart commands, Chef::Provider::Service::*
       # do a fine job on it's own, and support systemd correctly
       supports :start => true, :stop => true, :restart => true, :status => false
-  	end
+    end
   when 'upstart'
     service "redis_sentinel_#{sentinel_name}" do
       provider Chef::Provider::Service::Upstart
@@ -68,10 +68,10 @@ sentinel_instances.each do |current_sentinel|
       supports :start => true, :stop => true, :restart => true, :status => false
     end
   when 'systemd'
-  	service "redis-sentinel@#{sentinel_name}" do
+    service "redis-sentinel@#{sentinel_name}" do
       provider Chef::Provider::Service::Systemd
       supports :start => true, :stop => true, :restart => true, :status => true 
-  	end
+    end
   else
     Chef::Log.error("Unknown job control type, no service resource created!")
   end
