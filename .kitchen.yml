@@ -15,6 +15,9 @@ platforms:
     run_list:
       - recipe[yum-epel::default]
       - recipe[yum-remi::default]
+  - name: centos-7.1
+    run_list:
+      - recipe[yum-epel::default]
   - name: fedora-20
 
 suites:

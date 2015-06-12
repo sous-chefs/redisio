@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'Redis-Sentinel' do
-  it_behaves_like 'sentinel on port', 26379, 'redis_sentinel_cluster'
+  it_behaves_like 'sentinel on port', 26379, 'cluster'
 end
 
 describe file('/etc/redis/sentinel_cluster.conf') do
@@ -19,15 +19,17 @@ describe file('/etc/redis/sentinel_cluster.conf') do
   end
 end
 
-describe file('/etc/init.d/redis_sentinel_cluster') do
-  [
-    %r{SENTINELNAME=sentinel_cluster},
-    %r{EXEC="su -s /bin/sh -c '/usr/local/bin/redis-server /etc/redis/\$\{SENTINELNAME\}.conf --sentinel' redis"},
-    %r{PIDFILE=/var/run/redis/sentinel_cluster/\$\{SENTINELNAME\}.pid},
-    %r{mkdir -p /var/run/redis/sentinel_cluster},
-    %r{chown redis  /var/run/redis/sentinel_cluster}
-  ].each do |pattern|
-    its(:content) { should match(pattern) }
+unless os[:family] == 'redhat' and os[:release][0] == '7'
+  describe file('/etc/init.d/redis_sentinel_cluster') do
+    [
+      %r{SENTINELNAME=sentinel_cluster},
+      %r{EXEC="(su -s /bin/sh)|(runuser redis) -c \\?["']/usr/local/bin/redis-server /etc/redis/\$\{SENTINELNAME\}.conf --sentinel\\?["']( redis)?"},
+      %r{PIDFILE=/var/run/redis/sentinel_cluster/\$\{SENTINELNAME\}.pid},
+      %r{mkdir -p /var/run/redis/sentinel_cluster},
+      %r{chown redis  /var/run/redis/sentinel_cluster}
+    ].each do |pattern|
+      its(:content) { should match(pattern) }
+    end
   end
 end
 

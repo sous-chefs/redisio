@@ -1,6 +1,11 @@
 shared_examples_for 'redis on port' do |redis_port, args|
   it 'enables the redis service' do
-    expect(service "redis#{redis_port}").to be_enabled
+    service_name = if os[:family] == 'redhat' and os[:release][0] == '7'
+                     "redis@#{redis_port}"
+                   else
+                     "redis#{redis_port}"
+                   end
+    expect(service service_name).to be_enabled
   end
 
   context 'starts the redis service' do

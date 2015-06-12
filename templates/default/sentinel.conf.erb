@@ -1,7 +1,7 @@
 # Example sentinel.conf
 
 # redisio Cookbook additions
-<% unless @job_control == 'upstart' %>
+<% if @job_control == 'initd' %>
 daemonize yes
 <% end %>
 pidfile <%= @piddir %>/sentinel_<%=@name%>.pid

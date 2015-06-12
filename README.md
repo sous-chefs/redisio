@@ -36,7 +36,8 @@ Tested on:
 * Ubuntu 12.04
 * Debian 6.0.8
 * Fedora 20
-* Centos 6.4
+* Centos 6.6
+* Centos 7.1
 
 Usage
 =====
