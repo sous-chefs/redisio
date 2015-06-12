@@ -55,8 +55,12 @@ end
 # Custom installation directory
 default['redisio']['install_dir'] = nil
 
-# Job control related options (initd or upstart)
-default['redisio']['job_control'] = 'initd'
+# Job control related options (initd, upstart, or systemd)
+if node['platform_family'] == 'rhel' && Gem::Version.new(node['platform_version']) > Gem::Version.new('7.0.0')
+  default['redisio']['job_control'] = 'systemd'
+else
+  default['redisio']['job_control'] = 'initd'
+end
 
 # Init.d script related options
 default['redisio']['init.d']['required_start'] = []
