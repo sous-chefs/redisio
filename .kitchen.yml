@@ -9,6 +9,7 @@ provisioner:
 
 platforms:
   - name: ubuntu-12.04
+  - name: ubuntu-14.04
   - name: debian-6.0.8
   - name: centos-6.6
     run_list:
