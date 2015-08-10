@@ -132,7 +132,7 @@ def configure
       # as these are the minimal settings required to be passed in
       masters_with_defaults.each do |sentinel_instance|
         %w(master_ip master_port quorum_count).each do |param|
-          fail "Missing required sentinel parameter #{param} for #{sentinel_instance}" unless param
+          fail "Missing required sentinel parameter #{param} for #{sentinel_instance}" unless sentinel_instance[param]
         end
       end
 
