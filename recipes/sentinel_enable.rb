@@ -43,7 +43,7 @@ sentinel_instances.each do |current_sentinel|
   if node['redisio']['job_control'] != 'systemd'
     resource.action << :enable
   else
-    link "/etc/systemd/system/multi-user.target.wants/redis@#{sentinel_name}.service" do
+    link "/etc/systemd/system/multi-user.target.wants/redis-sentinel@#{sentinel_name}.service" do
       to '/usr/lib/systemd/system/redis-sentinel@.service'
       notifies :run, 'execute[reload-systemd]', :immediately
     end
