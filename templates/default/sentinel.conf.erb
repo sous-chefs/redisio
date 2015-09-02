@@ -4,7 +4,7 @@
 <% if @job_control == 'initd' %>
 daemonize yes
 <% end %>
-pidfile <%= @piddir %>/sentinel_<%=@name%>.pid
+pidfile <%= @piddir %>/<%=@name%>.pid
 loglevel <%=@loglevel%>
 syslog-enabled <%= @syslogenabled %>
 syslog-ident redis-<%= @name %>
