@@ -298,6 +298,7 @@ Available options and their defaults
 'replpingslaveperiod'     => '10',
 'repltimeout'             => '60',
 'requirepass'             => nil,
+'rename_commands'         => nil, or a hash where each key is a redis command and the value is the command's new name.
 'maxclients'              => 10000,
 'maxmemory'               => nil,
 'maxmemorypolicy'         => nil,
