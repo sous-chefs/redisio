@@ -154,7 +154,9 @@ def configure
           :logfile                => current['logfile'],
           :syslogenabled          => current['syslogenabled'],
           :syslogfacility         => current['syslogfacility'],
-          :masters                => masters_with_defaults
+          :masters                => masters_with_defaults,
+          :announce_ip            => current['announce-ip'],
+          :announce_port          => current['announce-port']
         })
         not_if do ::File.exists?("#{current['configdir']}/#{sentinel_name}.conf.breadcrumb") end
       end
