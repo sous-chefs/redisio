@@ -44,7 +44,10 @@ end
 
 template '/usr/lib/systemd/system/redis-sentinel@.service' do
   source    'redis-sentinel@.service'
-  variables({ :bin_path => node['redisio']['bin_path'] })
+  variables({
+    :bin_path => node['redisio']['bin_path'],
+    :limit_nofile => redis['default_settings']['maxclients'] + 32
+  })
   only_if   { node['redisio']['job_control'] == 'systemd' }
 end
 
@@ -70,7 +73,7 @@ sentinel_instances.each do |current_sentinel|
   when 'systemd'
     service "redis-sentinel@#{sentinel_name}" do
       provider Chef::Provider::Service::Systemd
-      supports :start => true, :stop => true, :restart => true, :status => true 
+      supports :start => true, :stop => true, :restart => true, :status => true
     end
   else
     Chef::Log.error("Unknown job control type, no service resource created!")
