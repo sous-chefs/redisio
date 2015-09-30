@@ -14,7 +14,7 @@
 
 # By default Redis does not run as a daemon. Use 'yes' if you need it.
 # Note that Redis will write a pid file in /var/run/redis.pid when daemonized.
-<% unless @job_control == 'upstart' %>
+<% if @job_control == 'initd' %>
 daemonize yes
 <% end %>
 
@@ -122,7 +122,7 @@ databases <%=@databases%>
     save 300 10
     save 60 10000
   <% else %>
-    <% @save.each_line do |save_option| %>
+    <% @save.each do |save_option| %>
       <%= "save #{save_option}" %>
     <% end %>
   <% end %>
@@ -239,6 +239,12 @@ repl-timeout <%=@repltimeout%>
 # an empty string:
 #
 # rename-command CONFIG ""
+<% if !@rename_commands.nil? %>
+  <% @rename_commands.each do |k, v| %>
+    <% v = '""' if v.empty? || v.nil? %>
+    <%= "rename-command #{k} #{v}" %>
+  <% end %>
+<% end %>
 
 ################################### LIMITS ####################################
 

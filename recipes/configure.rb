@@ -34,25 +34,37 @@ redisio_configure "redis-servers" do
   base_piddir redis['base_piddir']
 end
 
+template '/usr/lib/systemd/system/redis@.service' do
+  source    'redis@.service.erb'
+  variables({ :bin_path => node['redisio']['bin_path'] })
+  only_if   { node['redisio']['job_control'] == 'systemd' }
+end
+
 # Create a service resource for each redis instance, named for the port it runs on.
 redis_instances.each do |current_server|
   server_name = current_server['name'] || current_server['port']
   job_control = node['redisio']['job_control']
 
-  if job_control == 'initd'
-  	service "redis#{server_name}" do
+  case node['redisio']['job_control']
+  when 'initd'
+    service "redis#{server_name}" do
       # don't supply start/stop/restart commands, Chef::Provider::Service::*
       # do a fine job on it's own, and support systemd correctly
       supports :start => true, :stop => true, :restart => false, :status => true
-  	end
-  elsif job_control == 'upstart'
-  	service "redis#{server_name}" do
-	  provider Chef::Provider::Service::Upstart
+    end
+  when 'upstart'
+    service "redis#{server_name}" do
+      provider Chef::Provider::Service::Upstart
       start_command "start redis#{server_name}"
       stop_command "stop redis#{server_name}"
       restart_command "restart redis#{server_name}"
       supports :start => true, :stop => true, :restart => true, :status => false
-  	end
+    end
+  when 'systemd'
+    service "redis@#{server_name}" do
+      provider Chef::Provider::Service::Systemd
+      supports :start => true, :stop => true, :restart => true, :status => true
+    end
   else
     Chef::Log.error("Unknown job control type, no service resource created!")
   end

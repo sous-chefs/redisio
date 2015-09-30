@@ -22,7 +22,7 @@ EXEC="runuser <%= @user %> -c \"<%= File.join(@bin_path, 'redis-server') %> <%= 
 CLIEXEC=<%= File.join(@bin_path, 'redis-cli') %>
 
 
-PIDFILE=<%= @piddir %>/sentinel_${SENTINELNAME}.pid
+PIDFILE=<%= @piddir %>/${SENTINELNAME}.pid
 
 if [ ! -d <%= @piddir %> ]; then
     mkdir -p <%= @piddir %>

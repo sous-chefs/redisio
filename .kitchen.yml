@@ -9,11 +9,15 @@ provisioner:
 
 platforms:
   - name: ubuntu-12.04
+  - name: ubuntu-14.04
   - name: debian-6.0.8
   - name: centos-6.6
     run_list:
       - recipe[yum-epel::default]
       - recipe[yum-remi::default]
+  - name: centos-7.1
+    run_list:
+      - recipe[yum-epel::default]
   - name: fedora-20
 
 suites:
@@ -23,24 +27,21 @@ suites:
       - recipe[redisio::enable]
     attributes:
      redisio:
-        servers: [
-              {
-                port: 6379,
-              }
-            ]
+        servers:
+          - port: 6379
+          - port: 16379
+            name: 'savetest'
+            save: "a\nb\nc"
   - name: redis-package
     run_list:
       - recipe[redisio::default]
       - recipe[redisio::enable]
     attributes:
      redisio:
-        servers: [
-              {
-                port: 6379,
-              }
-            ]
+        servers:
+          - port: 6379,
         package_install: true
-        version: 
+        version:
     excludes:
       - ubuntu-12.04
       - debian-6.0.8
@@ -53,8 +54,31 @@ suites:
       - recipe[redisio::sentinel_enable]
     attributes:
      redisio:
-        servers: [
-              {
-                port: 6379,
-              }
-            ]
+        servers:
+          - port: 6379
+  - name: multisentinel
+    run_list:
+      - recipe[redisio::default]
+      - recipe[redisio::enable]
+      - recipe[redisio::sentinel]
+      - recipe[redisio::sentinel_enable]
+    attributes:
+     redisio:
+        servers:
+          - port: 6379
+          - port: 6380
+        sentinels:
+          -
+            name: 'cluster'
+            sentinel_port: 26379
+            masters:
+              -
+                name: 'sentinel6379'
+                master_name: 'master6379'
+                master_ip: '127.0.0.1'
+                master_port: 6379
+              -
+                name: 'sentinel6380'
+                master_name: 'master6380'
+                master_ip: '127.0.0.1'
+                master_port: 6380

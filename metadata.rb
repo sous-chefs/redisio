@@ -4,10 +4,12 @@ maintainer_email 'brian.bianco@gmail.com'
 license          'Apache 2.0'
 description      'Installs/Configures redis'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '2.2.4'
+version          '2.4.0'
 %w[ debian ubuntu centos redhat fedora scientific suse amazon].each do |os|
   supports os
 end
+source_url      'https://github.com/brianbianco/redisio'	if respond_to?(:source_url)
+issues_url       'https://github.com/brianbianco/redisio/issues'	if respond_to?(:issues_url)
 
 recipe "redisio::default", "This recipe is used to install the prequisites for building and installing redis, as well as provides the LWRPs"
 recipe "redisio::install", "This recipe is used to install redis"

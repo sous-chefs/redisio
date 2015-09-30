@@ -171,11 +171,19 @@ def configure
         only_if { ::File.exists?(rdb_file) }
       end
       #Setup the redis users descriptor limits
-      user_ulimit current['user'] do
-        filehandle_limit descriptors
-        only_if { current['ulimit'] }
+      if current['ulimit']
+        user_ulimit current['user'] do
+          filehandle_limit descriptors
+        end
       end
-      
+
+      computed_save = current['save']
+      if current['save'] && current['save'].respond_to?(:each_line)
+        computed_save = current['save'].each_line
+        Chef::Log.warn("#{server_name}: given a save argument as a string, instead of an array.")
+        Chef::Log.warn("#{server_name}: This will be deprecated in future versions of the redisio cookbook.")
+      end
+
       #Lay down the configuration files for the current instance
       template "#{current['configdir']}/#{server_name}.conf" do
         source 'redis.conf.erb'
@@ -202,7 +210,7 @@ def configure
           :logfile                    => current['logfile'],
           :syslogenabled              => current['syslogenabled'],
           :syslogfacility             => current['syslogfacility'],
-          :save                       => current['save'],
+          :save                       => computed_save,
           :stopwritesonbgsaveerror    => current['stopwritesonbgsaveerror'],
           :slaveof                    => current['slaveof'],
           :masterauth                 => current['masterauth'],
@@ -210,6 +218,7 @@ def configure
           :replpingslaveperiod        => current['replpingslaveperiod'],
           :repltimeout                => current['repltimeout'],
           :requirepass                => current['requirepass'],
+          :rename_commands            => current['rename_commands'],
           :maxclients                 => current['maxclients'],
           :maxmemory                  => maxmemory,
           :maxmemorypolicy            => current['maxmemorypolicy'],

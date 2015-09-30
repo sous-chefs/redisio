@@ -1,6 +1,6 @@
 **Please read the changelog when upgrading from the 1.x series to the 2.x series**
 
-![cookbook version](http://img.shields.io/badge/cookbook%20version-2.2.4-blue.svg)
+![cookbook version](http://img.shields.io/badge/cookbook%20version-2.3.0-blue.svg)
 Description
 ===========
 
@@ -36,7 +36,8 @@ Tested on:
 * Ubuntu 12.04
 * Debian 6.0.8
 * Fedora 20
-* Centos 6.4
+* Centos 6.6
+* Centos 7.1
 
 Usage
 =====
@@ -240,9 +241,9 @@ Using the sentinel resources:
 
 ```ruby
 redisio_sentinel "redis-sentinels" do
-  sentinel_defaults redis['sentinel_defaults']
+  sentinel_defaults node['redisio']['sentinel_defaults']
   sentinels sentinel_instances
-  base_piddir redis['base_piddir']
+  base_piddir node['redisio']['base_piddir']
 end
 ```
 
@@ -297,6 +298,7 @@ Available options and their defaults
 'replpingslaveperiod'     => '10',
 'repltimeout'             => '60',
 'requirepass'             => nil,
+'rename_commands'         => nil, or a hash where each key is a redis command and the value is the command's new name.
 'maxclients'              => 10000,
 'maxmemory'               => nil,
 'maxmemorypolicy'         => nil,
@@ -359,6 +361,18 @@ The sentinel recipe's use their own attribute file.
 
 * `redisio['redisio']['sentinels']` - Array of sentinels to configure on the node. These settings will override the options in 'sentinel_defaults', if it is left `nil` it will default to `[{'port' => '26379', 'name' => 'mycluster', 'master_ip' => '127.0.0.1', 'master_port' => 6379}]`. If set to `[]` (empty array), no instances will be created.
 
+You may also pass an array of masters to monitor like so:
+```
+[{
+  'sentinel_port' => '26379',
+  'name' => 'mycluster_sentinel',
+  'masters' => [
+    { master_name = 'master6379', master_ip' => '127.0.0.1', 'master_port' => 6379 },
+    { master_name = 'master6380', master_ip' => '127.0.0.1', 'master_port' => 6380 }
+  ]
+
+}]
+```
 
 Resources/Providers
 ===================

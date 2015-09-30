@@ -20,21 +20,25 @@ case node['platform']
 when 'ubuntu','debian'
   shell = '/bin/false'
   homedir = '/var/lib/redis'
+  package_name = 'redis-server'
 when 'centos','redhat','scientific','amazon','suse'
   shell = '/bin/sh'
   homedir = '/var/lib/redis'
+  package_name = 'redis'
 when 'fedora'
   shell = '/bin/sh'
   homedir = '/home' #this is necessary because selinux by default prevents the homedir from being managed in /var/lib/
+  package_name = 'redis'
 else
   shell = '/bin/sh'
   homedir = '/redis'
+  package_name = 'redis'
 end
 
 # Install related attributes
 default['redisio']['safe_install'] = true
 default['redisio']['package_install'] = false
-default['redisio']['package_name'] = 'redis'
+default['redisio']['package_name'] = package_name
 default['redisio']['bypass_setup'] = false
 
 # Tarball and download related defaults
@@ -49,14 +53,18 @@ if node['redisio']['package_install']
   default['redisio']['version'] = nil
 else
   # force version for tarball
-  default['redisio']['version'] = '2.8.17'
+  default['redisio']['version'] = '2.8.20'
 end
 
 # Custom installation directory
 default['redisio']['install_dir'] = nil
 
-# Job control related options (initd or upstart)
-default['redisio']['job_control'] = 'initd'
+# Job control related options (initd, upstart, or systemd)
+if node['platform_family'] == 'rhel' && Gem::Version.new(node['platform_version']) > Gem::Version.new('7.0.0')
+  default['redisio']['job_control'] = 'systemd'
+else
+  default['redisio']['job_control'] = 'initd'
+end
 
 # Init.d script related options
 default['redisio']['init.d']['required_start'] = []
@@ -93,6 +101,7 @@ default['redisio']['default_settings'] = {
   'replpingslaveperiod'     => '10',
   'repltimeout'             => '60',
   'requirepass'             => nil,
+  'rename_commands'         => nil,
   'maxclients'              => 10000,
   'maxmemory'               => nil,
   'maxmemorypolicy'         => nil,
@@ -118,9 +127,9 @@ default['redisio']['default_settings'] = {
   ],
   'hz'                         => '10',
   'aofrewriteincrementalfsync' => 'yes',
-  'cluster-enabled'            => 'no',
-  'cluster-config-file'        => nil, # Defaults to redis instance name inside of template if cluster is enabled.
-  'cluster-node-timeout'       => 5,
+  'clusterenabled'            => 'no',
+  'clusterconfigfile'        => nil, # Defaults to redis instance name inside of template if cluster is enabled.
+  'clusternodetimeout'       => 5,
   'includes'                   => nil
 }
 

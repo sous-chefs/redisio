@@ -2,9 +2,23 @@ redisio CHANGE LOG
 ===
 2.next -
 ---
+  - ...
+
+2.3.0 -
+---
+  - Add support for installing by distribution package for CentOS (#180)
+  - Add conditionals to check for redis 3 that was released recently (#183)
+  - Prevent `usermod: user redis is currently logged in` (#176)
   - Use correct sentinel port in default sentinel instance (#157)
-  - Sentinel instances attribute (`node['redisio']['sentinels']`) should behave like Redis instances attribute (#158)
+  - Sentinel instances attribute (`node['redisio']['sentinels']`) should behave like Redis instances attribute (#160)
   - Add Rakefile and unit tests for verifying issues fixed are actually resolved (#158)
+  - Fix serverspec tests to properly use sysv-init scripts on systemd distributions (#185)
+  - Update documentation to reflect correct current redis version used for source installs (#151)
+  - Update documentation to indicate that ulimit and build-essential are both dependencies (#165)
+  - Update documentation to reflect that uninstall recipe is no longer available
+  - Update documentation to reflect correct mirror in README.md, change was from 2.1.0 (#175)
+  - Update documentation to reflect that cookbook uses `node['redisio']`, not `node['redis']` (#174)
+  - Markdown formatting improvements in the README.md (#168, #172)
 
 2.2.4 -
 ---
