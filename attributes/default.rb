@@ -96,6 +96,7 @@ default['redisio']['default_settings'] = {
   'save'                    => nil, # Defaults to ['900 1','300 10','60 10000'] inside of template.  Needed due to lack of hash subtraction
   'stopwritesonbgsaveerror' => 'yes',
   'slaveof'                 => nil,
+  'slavepriority'           => '100',
   'masterauth'              => nil,
   'slaveservestaledata'     => 'yes',
   'replpingslaveperiod'     => '10',
