@@ -218,6 +218,7 @@ def configure
           :replpingslaveperiod        => current['replpingslaveperiod'],
           :repltimeout                => current['repltimeout'],
           :requirepass                => current['requirepass'],
+          :rename_commands            => current['rename_commands'],
           :maxclients                 => current['maxclients'],
           :maxmemory                  => maxmemory,
           :maxmemorypolicy            => current['maxmemorypolicy'],

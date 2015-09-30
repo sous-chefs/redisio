@@ -101,6 +101,7 @@ default['redisio']['default_settings'] = {
   'replpingslaveperiod'     => '10',
   'repltimeout'             => '60',
   'requirepass'             => nil,
+  'rename_commands'         => nil,
   'maxclients'              => 10000,
   'maxmemory'               => nil,
   'maxmemorypolicy'         => nil,
