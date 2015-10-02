@@ -20,17 +20,16 @@
 include_recipe 'redisio::default'
 include_recipe 'ulimit::default'
 
-redis = node['redisio']
-
-redis_instances = redis['servers']
-if redis_instances.nil?
-  redis_instances = [{'port' => '6379'}]
+if node['redisio']['servers'].nil?
+  node.default['redisio']['servers'] = [{'port' => '6379'}]
 end
+
+redis = node['redisio']
 
 redisio_configure "redis-servers" do
   version redis['version'] if redis['version']
   default_settings redis['default_settings']
-  servers redis_instances
+  servers redis['servers']
   base_piddir redis['base_piddir']
 end
 
@@ -41,7 +40,7 @@ template '/usr/lib/systemd/system/redis@.service' do
 end
 
 # Create a service resource for each redis instance, named for the port it runs on.
-redis_instances.each do |current_server|
+redis['servers'].each do |current_server|
   server_name = current_server['name'] || current_server['port']
   job_control = node['redisio']['job_control']
 
@@ -70,5 +69,3 @@ redis_instances.each do |current_server|
   end
 
 end
-
-node.default['redisio']['servers'] = redis_instances
