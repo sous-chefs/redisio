@@ -295,6 +295,9 @@ Available options and their defaults
 'slaveof'                 => nil,
 'masterauth'              => nil,
 'slaveservestaledata'     => 'yes',
+'slavereadonly'           => 'yes', # Requires redis 2.6+
+'repldisklesssync'        => 'no', # Requires redis 2.8.18+
+'repldisklesssyncdelay'   => '5', # Requires redis 2.8.18+
 'replpingslaveperiod'     => '10',
 'repltimeout'             => '60',
 'requirepass'             => nil,
