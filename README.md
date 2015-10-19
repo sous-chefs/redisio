@@ -343,6 +343,8 @@ Available options and their defaults
 'masterauth'              => nil,
 'slaveservestaledata'     => 'yes',
 'slavereadonly'           => 'yes',
+'repldisklesssync'        => 'no', # Requires redis 2.8.18+
+'repldisklesssyncdelay'   => '5', # Requires redis 2.8.18+
 'replpingslaveperiod'     => '10',
 'repltimeout'             => '60',
 'repldisabletcpnodelay    => 'no',

@@ -294,7 +294,9 @@ def configure
           clusternodetimeout:         current['clusternodetimeout'],
           includes:                   current['includes'],
           minslavestowrite:           current['minslavestowrite'],
-          minslavesmaxlag:            current['minslavesmaxlag']
+          minslavesmaxlag:            current['minslavesmaxlag'],
+          repldisklesssync:           current['repldisklesssync'],
+          repldisklesssyncdelay:      current['repldisklesssyncdelay']
         )
         not_if { ::File.exist?("#{current['configdir']}/#{server_name}.conf.breadcrumb") }
       end
