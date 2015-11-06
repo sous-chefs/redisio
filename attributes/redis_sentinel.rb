@@ -34,6 +34,6 @@ default['redisio']['sentinel_defaults'] = {
 
 # Manage Sentinel Config File
 ## Will write out the base config one time then no longer manage the config allowing sentinel to take over
-default['redisio']['sentinel']['manage_config'] = true
+default['redisio']['sentinel']['manage_config'] = true #deprecated
 
 default['redisio']['sentinels'] = nil
