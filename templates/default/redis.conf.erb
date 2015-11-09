@@ -26,6 +26,17 @@ pidfile <%= @piddir %>/redis_<%=@name%>.pid
 # If port 0 is specified Redis will not listen on a TCP socket.
 port <%=@port%>
 
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 8 || @version[:major].to_i == 3 %>
+# TCP listen() backlog.
+
+# In high requests-per-second environments you need an high backlog in order
+# to avoid slow clients connections issues. Note that the Linux kernel
+# will silently truncate it to the value of /proc/sys/net/core/somaxconn so
+# make sure to raise both the value of somaxconn and tcp_max_syn_backlog
+# in order to get the desired effect.
+tcp-backlog <%= @tcpbacklog %> 
+<% end %>
+
 # If you want you can bind a single interface, if the bind option is not
 # specified all the interfaces will listen for incoming connections.
 #
@@ -146,10 +157,26 @@ stop-writes-on-bgsave-error <%= @stopwritesonbgsaveerror %>
 # For default that's set to 'yes' as it's almost always a win.
 # If you want to save some CPU in the saving child set it to 'no' but
 # the dataset will likely be bigger if you have compressible values or keys.
-rdbcompression yes
+rdbcompression <%= @rdbcompression %> 
+
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 6 || @version[:major].to_i == 3 %>
+# Since version 5 of RDB a CRC64 checksum is placed at the end of the file.
+# This makes the format more resistant to corruption but there is a performance
+# hit to pay (around 10%) when saving and loading RDB files, so you can disable it
+# for maximum performances.
+#
+# RDB files created with checksum disabled have a checksum of zero that will
+# tell the loading code to skip the check.
+rdbchecksum <%= @rdbchecksum %>
+<% end %>
 
 # The filename where to dump the DB
+<% if @dbfilename %>
+dbfilename <%= @dbfilename %>
+<% else %>
 dbfilename dump-<%=@name%>.rdb
+<% end %>
+
 <%end%>
 
 # The working directory.
@@ -193,6 +220,24 @@ dir <%=@datadir%>
 #
 slave-serve-stale-data <%=@slaveservestaledata%>
 
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 6 || @version[:major].to_i == 3 %>
+# You can configure a slave instance to accept writes or not. Writing against
+# a slave instance may be useful to store some ephemeral data (because data
+# written on a slave will be easily deleted after resync with the master) but
+# may also cause problems if clients are writing to it because of a
+# misconfiguration.
+#
+# Since Redis 2.6 by default slaves are read-only.
+#
+# Note: read only slaves are not designed to be exposed to untrusted clients
+# on the internet. It's just a protection layer against misuse of the instance.
+# Still a read only slave exports by default all the administrative commands
+# such as CONFIG, DEBUG, and so forth. To a limited extent you can improve
+# security of read only slaves using 'rename-command' to shadow all the
+# administrative / dangerous commands.
+slave-read-only <%= @slavereadonly %> 
+<% end %>
+
 # Slaves send PINGs to server in a predefined interval. It's possible to change
 # this interval with the repl_ping_slave_period option. The default value is 10
 # seconds.
@@ -207,6 +252,38 @@ repl-ping-slave-period <%=@replpingslaveperiod%>
 # every time there is low traffic between the master and the slave.
 #
 repl-timeout <%=@repltimeout%>
+
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 6 || @version[:major].to_i == 3 %>
+# Disable TCP_NODELAY on the slave socket after SYNC?
+#
+# If you select "yes" Redis will use a smaller number of TCP packets and
+# less bandwidth to send data to slaves. But this can add a delay for
+# the data to appear on the slave side, up to 40 milliseconds with
+# Linux kernels using a default configuration.
+#
+# If you select "no" the delay for data to appear on the slave side will
+# be reduced but more bandwidth will be used for replication.
+#
+# By default we optimize for low latency, but in very high traffic conditions
+# or when the master and slaves are many hops away, turning this to "yes" may
+# be a good idea.
+repl-disable-tcp-nodelay <%= @repldisabletcpnodelay %> 
+<% end %>
+
+# The slave priority is an integer number published by Redis in the INFO output.
+# It is used by Redis Sentinel in order to select a slave to promote into a
+# master if the master is no longer working correctly.
+#
+# A slave with a low priority number is considered better for promotion, so
+# for instance if there are three slaves with priority 10, 100, 25 Sentinel will
+# pick the one wtih priority 10, that is the lowest.
+#
+# However a special priority of 0 marks the slave as not able to perform the
+# role of master, so a slave with priority of 0 will never be selected by
+# Redis Sentinel for promotion.
+#
+# By default the priority is 100.
+slave-priority <%= @slavepriority %> 
 
 ################################## SECURITY ###################################
 
@@ -339,7 +416,11 @@ appendonly yes
 appendonly no
 <%end%>
 # The name of the append only file (default: "appendonly.aof")
+<% if @appendfilename %>
+appendfilename <%= @appendfilename %>
+<% else %>
 appendfilename appendonly-<%=@name%>.aof
+<% end %>
 
 # The fsync() call tells the Operating System to actually write data on disk
 # instead to wait for more data in the output buffer. Some OS will really flush
@@ -442,11 +523,11 @@ lua-time-limit <%= @luatimelimit %>
 # The following time is expressed in microseconds, so 1000000 is equivalent
 # to one second. Note that a negative number disables the slow log, while
 # a value of zero forces the logging of every command.
-slowlog-log-slower-than 10000
+slowlog-log-slower-than <%= @slowloglogslowerthan %> 
 
 # There is no limit to this length. Just be aware that it will consume memory.
 # You can reclaim memory used by the slow log with SLOWLOG RESET.
-slowlog-max-len 1024
+slowlog-max-len <%= @slowlogmaxlen %> 
 
 <% unless @version[:major].to_i == 2 && @version[:minor].to_i >= 5 || @version[:major].to_i == 3 %>
 ################################ VIRTUAL MEMORY ###############################
@@ -589,6 +670,12 @@ notify-keyspace-events "<%= @notifykeyspaceevents %>"
 hash-max-ziplist-entries <%= @hashmaxziplistentries %>
 hash-max-ziplist-value <%= @hashmaxziplistvalue %>
 
+# Similarly to hashes, small lists are also encoded in a special way in order
+# # to save a lot of space. The special representation is only used when
+# # you are under the following limits:
+list-max-ziplist-entries <%= @listmaxziplistentries %> 
+list-max-ziplist-value <%= @listmaxziplistvalue %>
+
 # Sets have a special encoding in just one case: when a set is composed
 # of just strings that happens to be integers in radix 10 in the range
 # of 64 bit signed integers.
@@ -601,6 +688,22 @@ set-max-intset-entries <%= @setmaxintsetentries %>
 # elements of a sorted set are below the following limits:
 zset-max-ziplist-entries <%= @zsetmaxziplistentries %>
 zset-max-ziplist-value <%= @zsetmaxziplistvalue %>
+
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 8 || @version[:major].to_i == 3 %>
+# HyperLogLog sparse representation bytes limit. The limit includes the
+# 16 bytes header. When an HyperLogLog using the sparse representation crosses
+# this limit, it is converted into the dense representation.
+#
+# A value greater than 16000 is totally useless, since at that point the
+# dense representation is more memory efficient.
+#
+# The suggested value is ~ 3000 in order to have the benefits of
+# the space efficient encoding without slowing down too much PFADD,
+# which is O(N) with the sparse encoding. The value can be raised to
+# ~ 10000 when CPU is not a concern, but space is, and the data set is
+# composed of many HyperLogLogs with cardinality in the 0 - 15000 range.
+hll-sparse-max-bytes <%= @hllsparsemaxbytes %> 
+<% end %>
 
 # Active rehashing uses 1 millisecond every 100 milliseconds of CPU time in
 # order to help rehashing the main Redis hash table (the one mapping top-level

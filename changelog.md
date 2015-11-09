@@ -4,6 +4,14 @@ redisio CHANGE LOG
 ---
   - ...
 
+2.4.1 -
+---
+  - Update redis.conf template to honor slowlog-log-slower-than and slowlog-max-len attributes
+  - Add the following attributes and redis.conf template settings:
+    rdbcompression, dbfilename, appendfilename, list-max-ziplist-entries, list-max-ziplist-value,
+    tcp-backlog, slave-read-only, hll-sparse-max-bytes, rdbchecksum, repl-disable-tcp-nodelay,
+    slave-priority     
+
 2.3.0 -
 ---
   - Add support for installing by distribution package for CentOS (#180)
