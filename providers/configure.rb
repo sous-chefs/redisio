@@ -86,13 +86,6 @@ def configure
 
     descriptors = current['ulimit'] == 0 ? current['maxclients'] + 32 : current['maxclients']
 
-    #Manage Redisio Config?
-    if node['redisio']['sentinel']['manage_config'] == true
-      config_action = :create
-    else
-      config_action = :create_if_missing
-    end
-
     recipe_eval do
       server_name = current['name'] || current['port']
       piddir = "#{base_piddir}/#{server_name}"
@@ -191,7 +184,7 @@ def configure
         owner current['user']
         group current['group']
         mode '0644'
-        action config_action
+        action :create
         variables({
           :version                    => version_hash,
           :piddir                     => piddir,
@@ -256,7 +249,14 @@ def configure
           :clusternodetimeout         => current['clusternodetimeout'],
           :includes                   => current['includes']
         })
+        not_if do ::File.exists?("#{current['datadir']}/#{server_name}.conf.breadcrumb") end
       end
+
+      file "#{current['datadir']}/#{server_name}.conf.breadcrumb" do
+        content "This file prevents the chef cookbook from overwritting the redis config more than once"
+        action :create_if_missing
+      end
+
       #Setup init.d file
 
       bin_path = node['redisio']['bin_path']
