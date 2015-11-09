@@ -58,7 +58,7 @@ The disable recipe just stops redis and removes it from run levels.
 
 The cookbook also contains a recipe to allow for the installation of the redis ruby gem.
 
-Redis-sentinel will write configuration and state data back into its configuration file.  This creates obvious problems when that config is managed by chef.  There is an attribute set to true which controls if chef manages the redis-sentinel config.  By default chef will write out this config file and manage it.  If deploying sentinel it is recommended that you set the node[:redisio][:sentinel][:manage_config] to false allowing chef to write out the initial config and then allow redis-sentiniel to manage.  If running sentinel it is only advised to have node[:redisio][:sentinel][:manage_config] = true when you are pushing new changes to the config file as it will create a flapping state between chef and sentinel when sentinel writes out state to the file.
+Redis-sentinel will write configuration and state data back into its configuration file.  This creates obvious problems when that config is managed by chef. This cookbook will create the config file once, and then leave a breadcrumb that will guard against the file from being updated again.
 
 Recipes
 -------
@@ -277,6 +277,7 @@ Available options and their defaults
 'ulimit'                  => 0 - 0 is a special value causing the ulimit to be maxconnections +32.  Set to nil or false to disable setting ulimits
 'configdir'               => '/etc/redis' - configuration directory
 'name'                    => nil, Allows you to name the server with something other than port.  Useful if you want to use unix sockets
+'tcpbacklog'              => '511',
 'address'                 => nil, Can accept a single string or an array. When using an array, the FIRST value will be used by the init script for connecting to redis
 'databases'               => '16',
 'backuptype'              => 'rdb',
@@ -292,30 +293,40 @@ Available options and their defaults
 'shutdown_save'           => false,
 'save'                    => nil, # Defaults to ['900 1','300 10','60 10000'] inside of template.  Needed due to lack of hash subtraction
 'stopwritesonbgsaveerror' => 'yes',
+'rdbcompression'          => 'yes',
+'rdbchecksum'             => 'yes',
+'dbfilename'              => nil,
 'slaveof'                 => nil,
 'masterauth'              => nil,
 'slaveservestaledata'     => 'yes',
+'slavereadonly'           => 'yes',
 'replpingslaveperiod'     => '10',
 'repltimeout'             => '60',
+'repldisabletcpnodelay    => 'no',
+'slavepriority'           => '100',
 'requirepass'             => nil,
 'rename_commands'         => nil, or a hash where each key is a redis command and the value is the command's new name.
 'maxclients'              => 10000,
 'maxmemory'               => nil,
 'maxmemorypolicy'         => nil,
 'maxmemorysamples'        => nil,
+'appendfilename'          => nil,
 'appendfsync'             => 'everysec',
 'noappendfsynconrewrite'  => 'no',
 'aofrewritepercentage'    => '100',
 'aofrewriteminsize'       => '64mb',
 'luatimelimit'            => '5000',
 'slowloglogslowerthan'    => '10000',
-'slowlog-max-len'         => '1024',
+'slowlogmaxlen'           => '1024',
 'notifykeyspaceevents'    => '',
 'hashmaxziplistentries'   => '512',
 'hashmaxziplistvalue'     => '64',
+'listmaxziplistentries'   => '512',
+'listmaxziplistvalue'     => '64',
 'setmaxintsetentries'     => '512',
 'zsetmaxziplistentries'   => '128',
 'zsetmaxziplistvalue'     => '64',
+'hllsparsemaxbytes'       => '3000',
 'activerehasing'          => 'yes',
 'clientoutputbufferlimit' => [
   %w(normal 0 0 0),
