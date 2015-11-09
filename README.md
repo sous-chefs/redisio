@@ -310,6 +310,7 @@ Available options and their defaults
 'maxmemory'               => nil,
 'maxmemorypolicy'         => nil,
 'maxmemorysamples'        => nil,
+'appendfilename'          => nil,
 'appendfsync'             => 'everysec',
 'noappendfsynconrewrite'  => 'no',
 'aofrewritepercentage'    => '100',
