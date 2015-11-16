@@ -15,6 +15,7 @@ recipe "redisio::default", "This recipe is used to install the prequisites for b
 recipe "redisio::install", "This recipe is used to install redis"
 recipe "redisio::configure", "This recipe is used to configure redis by creating the configuration files and init scripts"
 recipe "redisio::sentinel", "This recipe is used to configure redis sentinels by creating the configuration files and init scripts"
+recipe "redisio::sentinel_enable", "This recipe is used enable sentinel init scripts"
 recipe "redisio::enable", "This recipe is used to start the redis instances and enable them in the default run levels"
 recipe "redisio::disable", "this recipe is used to stop the redis instances and disable them in the default run levels"
 recipe "redisio::redis_gem", "this recipe will install the redis ruby gem into the system ruby"
