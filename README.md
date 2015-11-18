@@ -326,7 +326,7 @@ Available options and their defaults
 'aofrewriteincrementalfsync' => 'yes',
 'cluster-enabled'            => 'no',
 'cluster-config-file'        => nil, # Defaults to redis instance name inside of template if cluster is enabled.
-'cluster-node-timeout'       => 5,
+'cluster-node-timeout'       => 5000,
 'includes'                   => nil
 ```
 

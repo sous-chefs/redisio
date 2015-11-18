@@ -129,7 +129,7 @@ default['redisio']['default_settings'] = {
   'aofrewriteincrementalfsync' => 'yes',
   'clusterenabled'            => 'no',
   'clusterconfigfile'        => nil, # Defaults to redis instance name inside of template if cluster is enabled.
-  'clusternodetimeout'       => 5,
+  'clusternodetimeout'       => 5000,
   'includes'                   => nil
 }
 
