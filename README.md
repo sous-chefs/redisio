@@ -281,7 +281,7 @@ Available options and their defaults
 'databases'               => '16',
 'backuptype'              => 'rdb',
 'datadir'                 => '/var/lib/redis',
-'unixoscket'              => nil - The location of the unix socket to use,
+'unixsocket'              => nil - The location of the unix socket to use,
 'unixsocketperm'          => nil - The permissions of the unix socket,
 'timeout'                 => '0',
 'keepalive'               => '0',
