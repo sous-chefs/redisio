@@ -149,10 +149,10 @@ def configure
           :syslogfacility         => current['syslogfacility'],
           :masters                => masters_with_defaults
         })
-        not_if do ::File.exists?("#{current['datadir']}/#{sentinel_name}.conf.breadcrumb") end
+        not_if do ::File.exists?("#{current['configdir']}/#{sentinel_name}.conf.breadcrumb") end
       end
 
-      file "#{current['datadir']}/#{sentinel_name}.conf.breadcrumb" do
+      file "#{current['configdir']}/#{sentinel_name}.conf.breadcrumb" do
         content "This file prevents the chef cookbook from overwritting the sentinel config more than once"
         action :create_if_missing
       end

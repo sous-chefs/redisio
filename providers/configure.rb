@@ -238,10 +238,10 @@ def configure
           :clusternodetimeout         => current['clusternodetimeout'],
           :includes                   => current['includes']
         })
-        not_if do ::File.exists?("#{current['datadir']}/#{server_name}.conf.breadcrumb") end
+        not_if do ::File.exists?("#{current['configdir']}/#{server_name}.conf.breadcrumb") end
       end
 
-      file "#{current['datadir']}/#{server_name}.conf.breadcrumb" do
+      file "#{current['configdir']}/#{server_name}.conf.breadcrumb" do
         content "This file prevents the chef cookbook from overwritting the redis config more than once"
         action :create_if_missing
       end
