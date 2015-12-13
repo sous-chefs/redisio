@@ -278,6 +278,7 @@ Available options and their defaults
 'configdir'               => '/etc/redis' - configuration directory
 'name'                    => nil, Allows you to name the server with something other than port.  Useful if you want to use unix sockets
 'address'                 => nil, Can accept a single string or an array. When using an array, the FIRST value will be used by the init script for connecting to redis
+'tcpbacklog'              => 511,
 'databases'               => '16',
 'backuptype'              => 'rdb',
 'datadir'                 => '/var/lib/redis',
@@ -293,6 +294,8 @@ Available options and their defaults
 'save'                    => nil, # Defaults to ['900 1','300 10','60 10000'] inside of template.  Needed due to lack of hash subtraction
 'stopwritesonbgsaveerror' => 'yes',
 'slaveof'                 => nil,
+'slavepriority'           => 100,
+'repldisabletcpnodelay'   => 'no',
 'masterauth'              => nil,
 'slaveservestaledata'     => 'yes',
 'replpingslaveperiod'     => '10',

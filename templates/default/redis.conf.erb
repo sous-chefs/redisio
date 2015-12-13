@@ -26,6 +26,15 @@ pidfile <%= @piddir %>/redis_<%=@name%>.pid
 # If port 0 is specified Redis will not listen on a TCP socket.
 port <%=@port%>
 
+# TCP listen() backlog.
+#
+# In high requests-per-second environments you need an high backlog in order
+# to avoid slow clients connections issues. Note that the Linux kernel
+# will silently truncate it to the value of /proc/sys/net/core/somaxconn so
+# make sure to raise both the value of somaxconn and tcp_max_syn_backlog
+# in order to get the desired effect.
+tcp-backlog <%=@tcpbacklog%>
+
 # If you want you can bind a single interface, if the bind option is not
 # specified all the interfaces will listen for incoming connections.
 #
@@ -207,6 +216,26 @@ repl-ping-slave-period <%=@replpingslaveperiod%>
 # every time there is low traffic between the master and the slave.
 #
 repl-timeout <%=@repltimeout%>
+
+# The slave priority is an integer number published by Redis in the INFO output.
+# It is used by Redis Sentinel in order to select a slave to promote into a
+# master if the master is no longer working correctly.
+#
+# A slave with a low priority number is considered better for promotion, so
+# for instance if there are three slaves with priority 10, 100, 25 Sentinel will
+# pick the one with priority 10, that is the lowest.
+#
+# However a special priority of 0 marks the slave as not able to perform the
+# role of master, so a slave with priority of 0 will never be selected by
+# Redis Sentinel for promotion.
+#
+# By default the priority is 100.
+slave-priority <%=@slavepriority%>
+
+# By default we optimize for low latency, but in very high traffic conditions
+# or when the master and slaves are many hops away, turning this to "yes" may
+# be a good idea.
+repl-disable-tcp-nodelay <%=@repldisabletcpnodelay%>
 
 ################################## SECURITY ###################################
 
