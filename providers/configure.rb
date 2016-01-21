@@ -89,8 +89,8 @@ def configure
     recipe_eval do
       server_name = current['name'] || current['port']
       piddir = "#{base_piddir}/#{server_name}"
-      aof_file = "#{current['datadir']}/appendonly-#{server_name}.aof"
-      rdb_file = "#{current['datadir']}/dump-#{server_name}.rdb"
+      aof_file = "#{current['appendfilename']}" || "#{current['datadir']}/appendonly-#{server_name}.aof"
+      rdb_file = "#{current['dbfilename']}" || "#{current['datadir']}/dump-#{server_name}.rdb"
 
       #Create the owner of the redis data directory
       user current['user'] do
@@ -191,6 +191,7 @@ def configure
           :name                       => server_name,
           :job_control                => node['redisio']['job_control'],
           :port                       => current['port'],
+          :tcpbacklog                 => current['tcpbacklog'],
           :address                    => current['address'],
           :databases                  => current['databases'],
           :backuptype                 => current['backuptype'],
@@ -205,17 +206,24 @@ def configure
           :syslogfacility             => current['syslogfacility'],
           :save                       => computed_save,
           :stopwritesonbgsaveerror    => current['stopwritesonbgsaveerror'],
+          :rdbcompression             => current['rdbcompression'],
+          :rdbchecksum                => current['rdbchecksum'],
+          :dbfilename                 => current['dbfilename'],
           :slaveof                    => current['slaveof'],
           :masterauth                 => current['masterauth'],
           :slaveservestaledata        => current['slaveservestaledata'],
+          :slavereadonly              => current['slavereadonly'],
           :replpingslaveperiod        => current['replpingslaveperiod'],
           :repltimeout                => current['repltimeout'],
+          :repldisabletcpnodelay      => current['repldisabletcpnodelay'],
+          :slavepriority              => current['slavepriority'],
           :requirepass                => current['requirepass'],
           :rename_commands            => current['rename_commands'],
           :maxclients                 => current['maxclients'],
           :maxmemory                  => maxmemory,
           :maxmemorypolicy            => current['maxmemorypolicy'],
           :maxmemorysamples           => current['maxmemorysamples'],
+          :appendfilename             => current['appendfilename'],
           :appendfsync                => current['appendfsync'],
           :noappendfsynconrewrite     => current['noappendfsynconrewrite'],
           :aofrewritepercentage       => current['aofrewritepercentage'] ,
@@ -226,9 +234,12 @@ def configure
           :notifykeyspaceevents       => current['notifykeyspaceevents'],
           :hashmaxziplistentries      => current['hashmaxziplistentries'],
           :hashmaxziplistvalue        => current['hashmaxziplistvalue'],
+          :listmaxziplistentries      => current['listmaxziplistentries'],
+          :listmaxziplistvalue        => current['listmaxziplistvalue'],
           :setmaxintsetentries        => current['setmaxintsetentries'],
           :zsetmaxziplistentries      => current['zsetmaxziplistentries'],
           :zsetmaxziplistvalue        => current['zsetmaxziplistvalue'],
+          :hllsparsemaxbytes          => current['hllsparsemaxbytes'],
           :activerehasing             => current['activerehasing'],
           :clientoutputbufferlimit    => current['clientoutputbufferlimit'],
           :hz                         => current['hz'],
