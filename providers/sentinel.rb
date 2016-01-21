@@ -48,6 +48,8 @@ def configure
         home current['homedir']
         shell current['shell']
         system current['systemuser']
+        uid current['uid'] unless current['uid'].nil?
+        not_if { node['etc']['passwd']["#{current['user']}"] }
       end
       #Create the redis configuration directory
       directory current['configdir'] do

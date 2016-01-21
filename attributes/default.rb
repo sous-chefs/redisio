@@ -77,6 +77,7 @@ default['redisio']['default_settings'] = {
   'homedir'                 => homedir,
   'shell'                   => shell,
   'systemuser'              => true,
+  'uid'                     => nil,
   'ulimit'                  => 0,
   'configdir'               => '/etc/redis',
   'name'                    => nil,
