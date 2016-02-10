@@ -26,7 +26,7 @@ pidfile <%= @piddir %>/redis_<%=@name%>.pid
 # If port 0 is specified Redis will not listen on a TCP socket.
 port <%=@port%>
 
-<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 8 || @version[:major].to_i == 3 %>
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 8 && @version[:patch].to_i >= 5 || @version[:major].to_i == 3 %>
 # TCP listen() backlog.
 
 # In high requests-per-second environments you need an high backlog in order
@@ -34,7 +34,7 @@ port <%=@port%>
 # will silently truncate it to the value of /proc/sys/net/core/somaxconn so
 # make sure to raise both the value of somaxconn and tcp_max_syn_backlog
 # in order to get the desired effect.
-tcp-backlog <%= @tcpbacklog %> 
+tcp-backlog <%= @tcpbacklog %>
 <% end %>
 
 # If you want you can bind a single interface, if the bind option is not
@@ -157,7 +157,7 @@ stop-writes-on-bgsave-error <%= @stopwritesonbgsaveerror %>
 # For default that's set to 'yes' as it's almost always a win.
 # If you want to save some CPU in the saving child set it to 'no' but
 # the dataset will likely be bigger if you have compressible values or keys.
-rdbcompression <%= @rdbcompression %> 
+rdbcompression <%= @rdbcompression %>
 
 <% if @version[:major].to_i == 2 && @version[:minor].to_i >= 6 || @version[:major].to_i == 3 %>
 # Since version 5 of RDB a CRC64 checksum is placed at the end of the file.
@@ -235,7 +235,7 @@ slave-serve-stale-data <%=@slaveservestaledata%>
 # such as CONFIG, DEBUG, and so forth. To a limited extent you can improve
 # security of read only slaves using 'rename-command' to shadow all the
 # administrative / dangerous commands.
-slave-read-only <%= @slavereadonly %> 
+slave-read-only <%= @slavereadonly %>
 <% end %>
 
 # Slaves send PINGs to server in a predefined interval. It's possible to change
@@ -267,7 +267,7 @@ repl-timeout <%=@repltimeout%>
 # By default we optimize for low latency, but in very high traffic conditions
 # or when the master and slaves are many hops away, turning this to "yes" may
 # be a good idea.
-repl-disable-tcp-nodelay <%= @repldisabletcpnodelay %> 
+repl-disable-tcp-nodelay <%= @repldisabletcpnodelay %>
 <% end %>
 
 # The slave priority is an integer number published by Redis in the INFO output.
@@ -283,7 +283,7 @@ repl-disable-tcp-nodelay <%= @repldisabletcpnodelay %>
 # Redis Sentinel for promotion.
 #
 # By default the priority is 100.
-slave-priority <%= @slavepriority %> 
+slave-priority <%= @slavepriority %>
 
 ################################## SECURITY ###################################
 
@@ -523,11 +523,11 @@ lua-time-limit <%= @luatimelimit %>
 # The following time is expressed in microseconds, so 1000000 is equivalent
 # to one second. Note that a negative number disables the slow log, while
 # a value of zero forces the logging of every command.
-slowlog-log-slower-than <%= @slowloglogslowerthan %> 
+slowlog-log-slower-than <%= @slowloglogslowerthan %>
 
 # There is no limit to this length. Just be aware that it will consume memory.
 # You can reclaim memory used by the slow log with SLOWLOG RESET.
-slowlog-max-len <%= @slowlogmaxlen %> 
+slowlog-max-len <%= @slowlogmaxlen %>
 
 <% unless @version[:major].to_i == 2 && @version[:minor].to_i >= 5 || @version[:major].to_i == 3 %>
 ################################ VIRTUAL MEMORY ###############################
@@ -673,7 +673,7 @@ hash-max-ziplist-value <%= @hashmaxziplistvalue %>
 # Similarly to hashes, small lists are also encoded in a special way in order
 # # to save a lot of space. The special representation is only used when
 # # you are under the following limits:
-list-max-ziplist-entries <%= @listmaxziplistentries %> 
+list-max-ziplist-entries <%= @listmaxziplistentries %>
 list-max-ziplist-value <%= @listmaxziplistvalue %>
 
 # Sets have a special encoding in just one case: when a set is composed
@@ -689,7 +689,7 @@ set-max-intset-entries <%= @setmaxintsetentries %>
 zset-max-ziplist-entries <%= @zsetmaxziplistentries %>
 zset-max-ziplist-value <%= @zsetmaxziplistvalue %>
 
-<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 8 || @version[:major].to_i == 3 %>
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 8 && @version[:patch].to_i >= 9 || @version[:major].to_i == 3 %>
 # HyperLogLog sparse representation bytes limit. The limit includes the
 # 16 bytes header. When an HyperLogLog using the sparse representation crosses
 # this limit, it is converted into the dense representation.
@@ -702,7 +702,7 @@ zset-max-ziplist-value <%= @zsetmaxziplistvalue %>
 # which is O(N) with the sparse encoding. The value can be raised to
 # ~ 10000 when CPU is not a concern, but space is, and the data set is
 # composed of many HyperLogLogs with cardinality in the 0 - 15000 range.
-hll-sparse-max-bytes <%= @hllsparsemaxbytes %> 
+hll-sparse-max-bytes <%= @hllsparsemaxbytes %>
 <% end %>
 
 # Active rehashing uses 1 millisecond every 100 milliseconds of CPU time in
