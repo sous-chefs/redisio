@@ -19,6 +19,7 @@
 if node['redisio']['package_install']
   package "redisio_package_name" do
     package_name node['redisio']['package_name']
+    version node['redisio']['version'] if node['redisio']['version']
     action :install
   end
 else
