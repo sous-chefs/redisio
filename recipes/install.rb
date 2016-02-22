@@ -30,9 +30,9 @@ else
   location = "#{redis['mirror']}/#{redis['base_name']}#{redis['version']}.#{redis['artifact_type']}"
 
   redisio_install "redis-installation" do
-    version redis['version'] if redis['version'] 
+    version redis['version'] if redis['version']
     download_url location
-    safe_install redis['safe_install'] if redies['safe_install']
+    safe_install redis['safe_install'] if redis['safe_install']
     install_dir redis['install_dir'] if redis['install_dir']
   end
 end
