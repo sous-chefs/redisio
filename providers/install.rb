@@ -20,12 +20,16 @@
 action :run do
   # Package install
   if node['redisio']['package_install']
-    package "redisio_package_name" do
+    package_resource = package 'redisio_package_name' do
       package_name node['redisio']['package_name']
       version node['redisio']['version']
-      action :install
+      action :nothing
     end
-  # Tarball install
+
+    package_resource.run_action(:install)
+    new_resource.updated_by_last_action(true) if package_resource.updated_by_last_action?
+
+    # Tarball install
   else
     @tarball = "#{new_resource.base_name}#{new_resource.version}.#{new_resource.artifact_type}"
 
@@ -35,9 +39,9 @@ action :run do
       unpack
       build
       install
+      new_resource.updated_by_last_action(true)
     end
   end
-  new_resource.updated_by_last_action(true)
 end
 
 def download
