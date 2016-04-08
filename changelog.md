@@ -1,6 +1,12 @@
 redisio CHANGE LOG
 ===
 
+2.4.2 -
+---
+  - Created a 2.4.1 tag but somehow the metadata file wasn't updated.  Instead
+    of deleting a pushed tag, creating a new tag and updating metdatafile. Aside
+    from the version number, this is an identical release to 2.4.1
+
 2.4.1 -
 ---
   - Increases default clusternodetimeout value from 5 to 5000
