@@ -34,6 +34,7 @@ This cookbook is tested with rspec/chefspec and test-kitchen/serverspec.  Run `b
 Tested on:
 
 * Ubuntu 12.04
+* Ubuntu 14.04
 * Debian 6.0.8
 * Fedora 20
 * Centos 6.6
