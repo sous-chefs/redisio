@@ -29,7 +29,9 @@ default['redisio']['sentinel_defaults'] = {
   'logfile'                 => nil,
   'syslogenabled'           => 'yes',
   'syslogfacility'          => 'local0',
-  'quorum_count'            => 2
+  'quorum_count'            => 2,
+  'notification-script'     => nil,
+  'client-reconfig-script'  => nil
 }
 
 # Manage Sentinel Config File

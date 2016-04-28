@@ -25,6 +25,14 @@ end
 def configure
   base_piddir = new_resource.base_piddir
 
+  if not new_resource.version
+    redis_output = %x[#{node['redisio']['bin_path']}/redis-server -v]
+    current_version = redis_output.gsub(/.*v=((\d+\.){2}\d+).*/, '\1')
+  else
+    current_version = new_resource.version
+  end
+  version_hash = RedisioHelper.version_to_hash(current_version)
+
   #Setup a configuration file and init script for each configuration provided
   new_resource.sentinels.each do |current_instance|
 
@@ -110,7 +118,9 @@ def configure
             'auth-pass'               => current['auth-pass'] || current[:authpass],
             'down-after-milliseconds' => current['down-after-milliseconds'] || current[:downaftermil],
             'parallel-syncs'          => current['parallel-syncs'] || current[:parallelsyncs],
-            'failover-timeout'        => current['failover-timeout'] || current[:failovertimeout]
+            'failover-timeout'        => current['failover-timeout'] || current[:failovertimeout],
+            'notification-script'     => current['notification-script'] || current[:notificationscript],
+            'client-reconfig-script'  => current['client-reconfig-script'] || current[:clientreconfigscript]
           }]
       else
         masters = [current['masters']].flatten
@@ -142,6 +152,7 @@ def configure
         action :create
         variables({
           :name                   => current['name'],
+          :version                => version_hash,
           :piddir                 => piddir,
           :job_control            => node['redisio']['job_control'],
           :sentinel_port          => current['sentinel_port'],
