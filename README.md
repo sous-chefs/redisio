@@ -65,7 +65,7 @@ The disable recipe just stops redis and removes it from run levels.
 
 The cookbook also contains a recipe to allow for the installation of the redis ruby gem.
 
-Redis-sentinel will write configuration and state data back into its configuration file.  This creates obvious problems when that config is managed by chef. This cookbook will create the config file once, and then leave a breadcrumb that will guard against the file from being updated again.
+Redis-sentinel will write configuration and state data back into its configuration file.  This creates obvious problems when that config is managed by chef. By default, this cookbook will create the config file once, and then leave a breadcrumb that will guard against the file from being updated again.
 
 ### Recipes
 
@@ -230,6 +230,21 @@ run_list *%w[
 ]
 ```
 
+#### Install redis and setup two instances, on the same server, on different ports, the second instance configuration file will be overwriten by chef
+
+```ruby
+run_list *%w[
+  recipe[redisio]
+  recipe[redisio::enable]
+]
+
+default_attributes({
+  'redisio' => {
+    'servers' => [{'port' => '6379'}, {'port' => '6380', 'breadcrumb' => false}]
+  }
+})
+```
+
 
 ## LWRP Examples
 
@@ -366,7 +381,9 @@ Available options and their defaults
 'cluster-enabled'            => 'no',
 'cluster-config-file'        => nil, # Defaults to redis instance name inside of template if cluster is enabled.
 'cluster-node-timeout'       => 5000,
-'includes'                   => nil
+'includes'                   => nil,
+'breadcrumb'                 => true # Defaults to create breadcrumb lock-file.
+
 ```
 
 * `redisio['servers']` - An array where each item is a set of key value pairs for redis instance specific settings.  The only required option is 'port'.  These settings will override the options in 'default_settings', if it is left `nil` it will default to `[{'port' => '6379'}]`. If set to `[]` (empty array), no instances will be created.
