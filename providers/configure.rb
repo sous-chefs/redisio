@@ -256,6 +256,7 @@ def configure
       file "#{current['configdir']}/#{server_name}.conf.breadcrumb" do
         content "This file prevents the chef cookbook from overwritting the redis config more than once"
         action :create_if_missing
+        only_if { current['breadcrumb'] == true }
       end
 
       #Setup init.d file
