@@ -145,6 +145,7 @@ def configure
           :piddir                 => piddir,
           :job_control            => node['redisio']['job_control'],
           :sentinel_port          => current['sentinel_port'],
+          :sentinel_address       => current['sentinel_address'],
           :loglevel               => current['loglevel'],
           :logfile                => current['logfile'],
           :syslogenabled          => current['syslogenabled'],
