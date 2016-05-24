@@ -18,6 +18,7 @@
 
 default['redisio']['sentinel_defaults'] = {
   'user'                    => 'redis',
+  'group'                   => 'redis',
   'configdir'               => '/etc/redis',
   'sentinel_port'           => 26379,
   'monitor'                 => nil,
