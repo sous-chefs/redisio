@@ -27,7 +27,7 @@ CLIEXEC=<%= File.join(@bin_path, 'redis-cli') %>
 <% connection_string = String.new %>
 <% if @unixsocket.nil? %>
   <% connection_string << " -p #{@port}" %>
-  <% connection_string << " -h #{@address.respond_to?(:first) ? @address.first : @address }" if @address %>
+  <% connection_string << " -h #{@address.is_a?(Array) ? @address.first : @address }" if @address %>
 <% else %>
   <% connection_string << " -s #{@unixsocket}" %>
 <% end %>
