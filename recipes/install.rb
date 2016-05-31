@@ -22,6 +22,11 @@ if node['redisio']['package_install']
     version node['redisio']['version'] if node['redisio']['version']
     action :install
   end
+
+  service 'redis-server' do
+    action [ :stop, :disable ]
+  end
+
 else
   include_recipe 'redisio::_install_prereqs'
   include_recipe 'build-essential::default'
