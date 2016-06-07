@@ -223,6 +223,7 @@ def configure
           rdbchecksum:                current['rdbchecksum'],
           dbfilename:                 current['dbfilename'],
           slaveof:                    current['slaveof'],
+          protected_mode:             current['protected_mode'],
           masterauth:                 current['masterauth'],
           slaveservestaledata:        current['slaveservestaledata'],
           slavereadonly:              current['slavereadonly'],
