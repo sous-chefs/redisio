@@ -23,9 +23,16 @@ if node['redisio']['package_install']
     action :install
   end
 
+case node['platform']
+when 'ubuntu','debian'
   service 'redis-server' do
     action [ :stop, :disable ]
   end
+when 'centos','redhat','scientific','amazon','suse','fedora'
+  service 'redis' do
+    action [ :stop, :disable ]
+  end
+end  
 
 else
   include_recipe 'redisio::_install_prereqs'
