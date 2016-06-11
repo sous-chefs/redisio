@@ -29,6 +29,8 @@ if [ ! -d <%= @piddir %> ]; then
     chown <%= @user %>  <%= @piddir %>
 fi
 
+ulimit -n <%= @ulimit %>
+
 case "$1" in
     status)
         if [ -f $PIDFILE ]

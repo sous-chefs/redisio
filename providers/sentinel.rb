@@ -35,6 +35,7 @@ def configure
     #Merge the configuration defaults with the provided array of configurations provided
     current = current_defaults_hash.merge(current_instance_hash)
 
+    descriptors = current['ulimit'] == 0 ? current['maxclients'] + 32 : current['maxclients']
 
     recipe_eval do
       sentinel_name = current['name'] || current['port']
@@ -66,6 +67,11 @@ def configure
         mode '0755'
         recursive true
         action :create
+      end
+      #Setup the redis users descriptor limits
+      user_ulimit current['user'] do
+        filehandle_limit descriptors
+        only_if { current['ulimit'] }
       end
 
       unless current['logfile'].nil?
@@ -149,7 +155,8 @@ def configure
           :logfile                => current['logfile'],
           :syslogenabled          => current['syslogenabled'],
           :syslogfacility         => current['syslogfacility'],
-          :masters                => masters_with_defaults
+          :masters                => masters_with_defaults,
+          :maxclients             => current['maxclients']
         })
         not_if do ::File.exists?("#{current['configdir']}/#{sentinel_name}.conf.breadcrumb") end
       end
@@ -176,6 +183,7 @@ def configure
           :configdir => current['configdir'],
           :piddir => piddir,
           :platform => node['platform'],
+          :ulimit => descriptors,
           })
         only_if { node['redisio']['job_control'] == 'initd' }
       end
