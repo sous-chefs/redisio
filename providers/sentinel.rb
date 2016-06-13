@@ -54,7 +54,7 @@ def configure
       #Create the redis configuration directory
       directory current['configdir'] do
         owner 'root'
-        group 'root'
+        group node['platform_family'] == 'freebsd' ? 'wheel' : 'root'
         mode '0755'
         recursive true
         action :create
@@ -198,6 +198,25 @@ def configure
           })
         only_if { node['redisio']['job_control'] == 'upstart' }
       end
+      #TODO: fix for freebsd
+       template "/usr/local/etc/rc.d/redis_#{sentinel_name}" do
+          source 'sentinel.rcinit.erb'
+          cookbook 'redisio'
+          owner current['user']
+          group current['group']
+          mode '0755'
+          variables({
+            :name => sentinel_name,
+            :bin_path => bin_path,
+            :job_control => node['redisio']['job_control'],
+            :user => current['user'],
+            :group => current['group'],
+            :configdir => current['configdir'],
+            :piddir => piddir,
+            :platform => node['platform'],
+            })
+          only_if { node['redisio']['job_control'] == 'rcinit' }
+        end
     end
   end # servers each loop
 end

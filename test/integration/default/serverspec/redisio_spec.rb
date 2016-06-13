@@ -4,11 +4,22 @@ describe 'Redis' do
   it_behaves_like 'redis on port', 6379
 end
 
-describe file('/etc/redis/savetest.conf') do
-  it { should be_file }
+if os[:family] == 'freebsd'
+  describe file('/usr/local/etc/redis/savetest.conf') do
+    it { should be_file }
 
-  ['save a', 'save b', 'save c'].each do |m|
-    its(:content) { should match(m) }
+    ['save a', 'save b', 'save c'].each do |m|
+      its(:content) { should match(m) }
+    end
+
   end
+else
+  describe file('/usr/etc/redis/savetest.conf') do
+    it { should be_file }
 
+    ['save a', 'save b', 'save c'].each do |m|
+      its(:content) { should match(m) }
+    end
+
+  end
 end

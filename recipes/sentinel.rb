@@ -70,7 +70,12 @@ sentinel_instances.each do |current_sentinel|
   when 'systemd'
     service "redis-sentinel@#{sentinel_name}" do
       provider Chef::Provider::Service::Systemd
-      supports :start => true, :stop => true, :restart => true, :status => true 
+      supports :start => true, :stop => true, :restart => true, :status => true
+    end
+  when 'rcinit'
+    service "redis_sentinel_#{sentinel_name}" do
+      provider Chef::Provider::Service::Freebsd
+      supports :start => true, :stop => true, :restart => true, :status => true
     end
   else
     Chef::Log.error("Unknown job control type, no service resource created!")

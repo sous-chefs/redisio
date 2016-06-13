@@ -21,6 +21,7 @@ Platforms
 
 * Debian, Ubuntu
 * CentOS, Red Hat, Fedora, Scientific Linux
+* FreeBSD
 
 Testing
 -------
@@ -39,6 +40,7 @@ Tested on:
 * Fedora 20
 * Centos 6.6
 * Centos 7.1
+* FreeBSD 10.3
 
 Usage
 =====
@@ -46,6 +48,7 @@ Usage
 The redisio cookbook contains LWRP for installing, configuring and managing redis and redis_sentinel.
 
 The install recipe can build, compile and install redis from sources or install from packages. The configure recipe will configure redis and setup service resources.  These resources will be named for the port of the redis server, unless a "name" attribute was specified.  Example names would be: service["redis6379"] or service["redismaster"] if the name attribute was "master".
+_NOTE: currently installation from source is not supported for FreeBSD_
 
 The most common use case for the redisio cookbook is to use the default recipe, followed by the enable recipe.  
 
@@ -54,6 +57,7 @@ Another common use case is to use the default, and then call the service resourc
 It is important to note that changing the configuration options of redis does not make them take effect on the next chef run.  Due to how redis works, you cannot reload a configuration without restarting the redis service.  Redis does not offer a reload option, in order to have new options be used redis must be stopped and started.
 
 You should make sure to set the ulimit for the user you want to run redis as to be higher than the max connections you allow.
+_NOTE: setting ulimit is not supported on FreeBSD since the ulimit cookbook doesn't support FreeBSD_
 
 The disable recipe just stops redis and removes it from run levels.
 

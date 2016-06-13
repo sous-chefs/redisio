@@ -65,6 +65,11 @@ redis_instances.each do |current_server|
       provider Chef::Provider::Service::Systemd
       supports :start => true, :stop => true, :restart => true, :status => true
     end
+  when 'rcinit'
+    service "redis#{server_name}" do
+      provider Chef::Provider::Service::Freebsd
+      supports :start => true, :stop => true, :restart => true, :status => true
+    end
   else
     Chef::Log.error("Unknown job control type, no service resource created!")
   end

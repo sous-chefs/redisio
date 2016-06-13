@@ -16,6 +16,9 @@
 # limitations under the License.
 #
 
+package_bin_path = '/usr/bin'
+config_dir = '/etc/redis'
+
 case node['platform']
 when 'ubuntu','debian'
   shell = '/bin/false'
@@ -29,6 +32,12 @@ when 'fedora'
   shell = '/bin/sh'
   homedir = '/home' #this is necessary because selinux by default prevents the homedir from being managed in /var/lib/
   package_name = 'redis'
+when 'freebsd'
+  shell = '/bin/sh'
+  homedir = '/var/lib/redis'
+  package_name = 'redis'
+  package_bin_path = '/usr/local/bin'
+  config_dir = '/usr/local/etc/redis'
 else
   shell = '/bin/sh'
   homedir = '/redis'
@@ -62,6 +71,8 @@ default['redisio']['install_dir'] = nil
 # Job control related options (initd, upstart, or systemd)
 if node['platform_family'] == 'rhel' && Gem::Version.new(node['platform_version']) > Gem::Version.new('7.0.0')
   default['redisio']['job_control'] = 'systemd'
+elsif node['platform_family'] == 'freebsd'
+  default['redisio']['job_control'] = 'rcinit'
 else
   default['redisio']['job_control'] = 'initd'
 end
@@ -79,7 +90,7 @@ default['redisio']['default_settings'] = {
   'systemuser'              => true,
   'uid'                     => nil,
   'ulimit'                  => 0,
-  'configdir'               => '/etc/redis',
+  'configdir'               => config_dir,
   'name'                    => nil,
   'tcpbacklog'              => '511',
   'address'                 => nil,
@@ -150,7 +161,7 @@ default['redisio']['servers'] = nil
 
 # Define binary path
 if node['redisio']['package_install']
-  default['redisio']['bin_path'] = '/usr/bin'
+  default['redisio']['bin_path'] = package_bin_path
 else
   default['redisio']['bin_path'] = '/usr/local/bin'
 end

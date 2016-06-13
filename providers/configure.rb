@@ -46,8 +46,11 @@ def configure
 
     #Merge in the default maxmemory
     node_memory_kb = node["memory"]["total"]
-    node_memory_kb.slice! "kB"
-    node_memory_kb = node_memory_kb.to_i
+    #On BSD platforms Ohai reports total memory as a Fixnum
+    if node_memory_kb.is_a? String
+      node_memory_kb.slice! "kB"
+      node_memory_kb = node_memory_kb.to_i
+    end
 
     # Here we determine what the logfile is.  It has these possible states
     #
@@ -105,7 +108,7 @@ def configure
       #Create the redis configuration directory
       directory current['configdir'] do
         owner 'root'
-        group 'root'
+        group node['platform_family'] == 'freebsd' ? 'wheel' : 'root'
         mode '0755'
         recursive true
         action :create
@@ -164,10 +167,12 @@ def configure
         only_if { current['backuptype'] == 'rdb' || current['backuptype'] == 'both' }
         only_if { ::File.exists?(rdb_file) }
       end
+
       #Setup the redis users descriptor limits
-      if current['ulimit']
+      #TODO: ulimit cookbook v0.1.2 doesn't work with freeBSD
+      if current['ulimit'] && node['platform_family'] != 'freebsd'
         user_ulimit current['user'] do
-          filehandle_limit descriptors
+             filehandle_limit descriptors
         end
       end
 
@@ -312,6 +317,31 @@ def configure
         })
         only_if { node['redisio']['job_control'] == 'upstart' }
       end
+       template "/usr/local/etc/rc.d/redis#{server_name}" do
+         source 'redis.rcinit.erb'
+         cookbook 'redisio'
+         owner current['user']
+         group current['group']
+         mode '0755'
+         variables({
+           :name => server_name,
+           :bin_path => bin_path,
+           :job_control => node['redisio']['job_control'],
+           :port => current['port'],
+           :address => current['address'],
+           :user => current['user'],
+           :group => current['group'],
+           :maxclients => current['maxclients'],
+           :requirepass => current['requirepass'],
+           :shutdown_save => current['shutdown_save'],
+           :save => current['save'],
+           :configdir => current['configdir'],
+           :piddir => piddir,
+           :platform => node['platform'],
+           :unixsocket => current['unixsocket']
+         })
+         only_if { node['redisio']['job_control'] == 'rcinit' }
+       end
     end
   end # servers each loop
 end

@@ -19,6 +19,10 @@ platforms:
     run_list:
       - recipe[yum-epel::default]
   - name: fedora-20
+  - name: freebsd-10.3
+    attributes:
+      redisio:
+         package_install: true
 
 suites:
   - name: default
@@ -39,7 +43,7 @@ suites:
     attributes:
      redisio:
         servers:
-          - port: 6379,
+          - port: 6379
         package_install: true
         version:
     excludes:
