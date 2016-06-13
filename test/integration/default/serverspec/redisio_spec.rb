@@ -14,7 +14,7 @@ if os[:family] == 'freebsd'
 
   end
 else
-  describe file('/usr/etc/redis/savetest.conf') do
+  describe file('/etc/redis/savetest.conf') do
     it { should be_file }
 
     ['save a', 'save b', 'save c'].each do |m|
