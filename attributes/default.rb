@@ -18,6 +18,7 @@
 
 package_bin_path = '/usr/bin'
 config_dir = '/etc/redis'
+default_package_install = false
 
 case node['platform']
 when 'ubuntu','debian'
@@ -38,6 +39,7 @@ when 'freebsd'
   package_name = 'redis'
   package_bin_path = '/usr/local/bin'
   config_dir = '/usr/local/etc/redis'
+  default_package_install = true
 else
   shell = '/bin/sh'
   homedir = '/redis'
@@ -46,8 +48,8 @@ end
 
 # Install related attributes
 default['redisio']['safe_install'] = true
-default['redisio']['package_install'] = false
-default['redisio']['package_name'] = package_name
+default['redisio']['package_install'] = default_package_install
+default['redisio']['package_name'] =  package_name
 default['redisio']['bypass_setup'] = false
 
 # Tarball and download related defaults

@@ -20,9 +20,6 @@ platforms:
       - recipe[yum-epel::default]
   - name: fedora-20
   - name: freebsd-10.3
-    attributes:
-      redisio:
-         package_install: true
 
 suites:
   - name: default
