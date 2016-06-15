@@ -35,8 +35,12 @@ redisio_configure "redis-servers" do
 end
 
 template '/usr/lib/systemd/system/redis@.service' do
+  cookbook 'redisio'
   source    'redis@.service.erb'
-  variables({ :bin_path => node['redisio']['bin_path'] })
+  variables({
+    :bin_path => node['redisio']['bin_path'],
+    :nofiles => node['redsio']['default']['maxclients'] + 32
+  })
   only_if   { node['redisio']['job_control'] == 'systemd' }
 end
 
