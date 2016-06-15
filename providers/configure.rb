@@ -312,6 +312,15 @@ def configure
         })
         only_if { node['redisio']['job_control'] == 'upstart' }
       end
+      template "/usr/lib/systemd/system/redis@#{server_name}.service" do
+        cookbook 'redisio'
+        source    'redis@.service.erb'
+        variables({
+          :bin_path => bin_path,
+          :nofiles => descriptors 
+        })
+        only_if   { node['redisio']['job_control'] == 'systemd' }
+      end
     end
   end # servers each loop
 end
