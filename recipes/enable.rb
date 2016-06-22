@@ -36,12 +36,5 @@ redis['servers'].each do |current_server|
   resource = resources(resource_name)
   resource.action Array(resource.action)
   resource.action << :start
-  if node['redisio']['job_control'] != 'systemd'
-    resource.action << :enable
-  else
-    link "/etc/systemd/system/multi-user.target.wants/redis@#{server_name}.service" do
-      to '/usr/lib/systemd/system/redis@.service'
-      notifies :run, 'execute[reload-systemd]', :immediately
-    end
-  end
+  resource.action << :enable
 end
