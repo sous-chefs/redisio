@@ -316,8 +316,8 @@ def configure
         cookbook 'redisio'
         source 'redis@.service.erb'
         variables(
-          bin_path: bin_path,
-          nofiles: descriptors
+          :bin_path => bin_path,
+          :nofiles => descriptors
         )
         only_if { node['redisio']['job_control'] == 'systemd' }
       end
