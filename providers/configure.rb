@@ -252,9 +252,9 @@ def configure
           :clientoutputbufferlimit    => current['clientoutputbufferlimit'],
           :hz                         => current['hz'],
           :aofrewriteincrementalfsync => current['aofrewriteincrementalfsync'],
-          :clusterenabled             => current['clusterenabled'],
-          :clusterconfigfile          => current['clusterconfigfile'],
-          :clusternodetimeout         => current['clusternodetimeout'],
+          :clusterenabled             => current['cluster-enabled'],
+          :clusterconfigfile          => current['cluster-config-file'],
+          :clusternodetimeout         => current['cluster-node-timeout'],
           :includes                   => current['includes']
         })
         not_if do ::File.exists?("#{current['configdir']}/#{server_name}.conf.breadcrumb") end
