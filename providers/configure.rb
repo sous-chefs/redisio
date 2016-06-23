@@ -178,6 +178,13 @@ def configure
         Chef::Log.warn("#{server_name}: This will be deprecated in future versions of the redisio cookbook.")
       end
 
+      #Load password for use with requirepass from data bag if needed
+      if current['data_bag_name'] && current['data_bag_item'] && current['data_bag_key']
+        bag = Chef::EncryptedDataBagItem.load(current['data_bag_name'], current['data_bag_item'])
+        current['requirepass'] = bag[current['data_bag_key']]
+        current['masterauth'] = bag[current['data_bag_key']]
+      end
+
       #Lay down the configuration files for the current instance
       template "#{current['configdir']}/#{server_name}.conf" do
         source 'redis.conf.erb'

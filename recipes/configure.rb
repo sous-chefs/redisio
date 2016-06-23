@@ -36,7 +36,10 @@ end
 
 template '/usr/lib/systemd/system/redis@.service' do
   source    'redis@.service.erb'
-  variables({ :bin_path => node['redisio']['bin_path'] })
+  variables({
+    :bin_path => node['redisio']['bin_path'],
+    :limit_nofile => redis['default_settings']['maxclients'] + 32
+  })
   only_if   { node['redisio']['job_control'] == 'systemd' }
 end
 

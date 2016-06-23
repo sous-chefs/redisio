@@ -29,7 +29,12 @@ default['redisio']['sentinel_defaults'] = {
   'logfile'                 => nil,
   'syslogenabled'           => 'yes',
   'syslogfacility'          => 'local0',
-  'quorum_count'            => 2
+  'quorum_count'            => 2,
+  'data_bag_name'           => nil,
+  'data_bag_item'           => nil,
+  'data_bag_key'            => nil,
+  'announce-ip'             => nil,
+  'announce-port'           => nil
 }
 
 # Manage Sentinel Config File

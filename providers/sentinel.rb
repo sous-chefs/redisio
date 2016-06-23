@@ -96,7 +96,6 @@ def configure
       # sentinel parallel-syncs <%=@name%> <%=@parallelsyncs%>
       # sentinel failover-timeout <%=@name%> <%=@failovertimeout%>
 
-
       # convert from old format (preserve compat)
       if !current['masters'] && current['master_ip']
         Chef::Log.warn('You are using a deprecated sentinel format. This will be removed in future versions.')
@@ -114,6 +113,14 @@ def configure
           }]
       else
         masters = [current['masters']].flatten
+      end
+
+      #Load password for use with requirepass from data bag if needed
+      if current['data_bag_name'] && current['data_bag_item'] && current['data_bag_key']
+        bag = Chef::EncryptedDataBagItem.load(current['data_bag_name'], current['data_bag_item'])
+        masters.each do |master|
+          master['auth-pass'] = bag[current['data_bag_key']]
+        end
       end
 
       # merge in default values to each sentinel hash
@@ -149,7 +156,9 @@ def configure
           :logfile                => current['logfile'],
           :syslogenabled          => current['syslogenabled'],
           :syslogfacility         => current['syslogfacility'],
-          :masters                => masters_with_defaults
+          :masters                => masters_with_defaults,
+          :announce_ip            => current['announce-ip'],
+          :announce_port          => current['announce-port']
         })
         not_if do ::File.exists?("#{current['configdir']}/#{sentinel_name}.conf.breadcrumb") end
       end

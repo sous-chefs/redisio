@@ -142,7 +142,10 @@ default['redisio']['default_settings'] = {
   'clusterenabled'            => 'no',
   'clusterconfigfile'        => nil, # Defaults to redis instance name inside of template if cluster is enabled.
   'clusternodetimeout'       => 5000,
-  'includes'                   => nil
+  'includes'                 => nil,
+  'data_bag_name'            => nil,
+  'data_bag_item'            => nil,
+  'data_bag_key'             => nil
 }
 
 # The default for this is set inside of the "install" recipe. This is due to the way deep merge handles arrays
