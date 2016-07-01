@@ -10,7 +10,11 @@ provisioner:
 platforms:
   - name: ubuntu-12.04
   - name: ubuntu-14.04
+  - name: ubuntu-16.04
   - name: debian-6.0.8
+  - name: debian-6.0.8
+  - name: debian-7.10
+  - name: debian-8.4
   - name: centos-6.6
     run_list:
       - recipe[yum-epel::default]

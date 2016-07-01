@@ -4,7 +4,7 @@ maintainer_email 'brian.bianco@gmail.com'
 license          'Apache 2.0'
 description      'Installs/Configures redis'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '2.4.2'
+version          '2.4.3'
 %w[ debian ubuntu centos redhat fedora scientific suse amazon].each do |os|
   supports os
 end
