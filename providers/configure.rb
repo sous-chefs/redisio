@@ -26,9 +26,11 @@ end
 def configure
   base_piddir = new_resource.base_piddir
 
-  if not new_resource.version
-    redis_output = %x[#{node['redisio']['bin_path']}/redis-server -v]
-    current_version = redis_output.gsub(/.*v=((\d+\.){2}\d+).*/, '\1')
+  if !new_resource.version
+    redis_output = Mixlib::ShellOut.new("#{node['redisio']['bin_path']}/redis-server -v")
+    redis_output.run_command
+    redis_output.error!
+    current_version = redis_output.stdout.gsub(/.*v=((\d+\.){2}\d+).*/, '\1').chomp
   else
     current_version = new_resource.version
   end
@@ -89,8 +91,8 @@ def configure
     recipe_eval do
       server_name = current['name'] || current['port']
       piddir = "#{base_piddir}/#{server_name}"
-      aof_file = "#{current['appendfilename']}" || "#{current['datadir']}/appendonly-#{server_name}.aof"
-      rdb_file = "#{current['dbfilename']}" || "#{current['datadir']}/dump-#{server_name}.rdb"
+      aof_file = current['appendfilename'] || "#{current['datadir']}/appendonly-#{server_name}.aof"
+      rdb_file = current['dbfilename'] || "#{current['datadir']}/dump-#{server_name}.rdb"
 
       #Create the owner of the redis data directory
       user current['user'] do
@@ -100,7 +102,7 @@ def configure
         shell current['shell']
         system current['systemuser']
         uid current['uid'] unless current['uid'].nil?
-        not_if { node['etc']['passwd']["#{current['user']}"] }
+        not_if { node['etc']['passwd'][current['user']] }
       end
       #Create the redis configuration directory
       directory current['configdir'] do
@@ -164,8 +166,10 @@ def configure
         only_if { current['backuptype'] == 'rdb' || current['backuptype'] == 'both' }
         only_if { ::File.exists?(rdb_file) }
       end
-      #Setup the redis users descriptor limits
-      if current['ulimit']
+
+      # Setup the redis users descriptor limits
+      # Pending response on https://github.com/brianbianco/redisio/commit/4ee9aad3b53029cc3b6c6cf741f5126755e712cd#diff-8ae42a59a6f4e8dc5b4e6dd2d6a34eab
+      if current['ulimit'] # ~FC023
         user_ulimit current['user'] do
           filehandle_limit descriptors
         end
@@ -278,7 +282,6 @@ def configure
         variables({
           :name => server_name,
           :bin_path => bin_path,
-          :job_control => node['redisio']['job_control'],
           :port => current['port'],
           :address => current['address'],
           :user => current['user'],
@@ -303,19 +306,11 @@ def configure
         variables({
           :name => server_name,
           :bin_path => bin_path,
-          :job_control => node['redisio']['job_control'],
           :port => current['port'],
-          :address => current['address'],
           :user => current['user'],
           :group => current['group'],
-          :maxclients => current['maxclients'],
-          :requirepass => current['requirepass'],
-          :shutdown_save => current['shutdown_save'],
-          :save => current['save'],
           :configdir => current['configdir'],
-          :piddir => piddir,
-          :platform => node['platform'],
-          :unixsocket => current['unixsocket']
+          :piddir => piddir
         })
         only_if { node['redisio']['job_control'] == 'upstart' }
       end

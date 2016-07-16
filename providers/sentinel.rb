@@ -49,7 +49,7 @@ def configure
         shell current['shell']
         system current['systemuser']
         uid current['uid'] unless current['uid'].nil?
-        not_if { node['etc']['passwd']["#{current['user']}"] }
+        not_if { node['etc']['passwd'][current['user']] }
       end
       #Create the redis configuration directory
       directory current['configdir'] do
@@ -180,7 +180,6 @@ def configure
         variables({
           :name => sentinel_name,
           :bin_path => bin_path,
-          :uob_control => node['redisio']['job_control'],
           :user => current['user'],
           :configdir => current['configdir'],
           :piddir => piddir,
@@ -198,12 +197,10 @@ def configure
         variables({
           :name => sentinel_name,
           :bin_path => bin_path,
-          :job_control => node['redisio']['job_control'],
           :user => current['user'],
           :group => current['group'],
           :configdir => current['configdir'],
-          :piddir => piddir,
-          :platform => node['platform'],
+          :piddir => piddir
           })
         only_if { node['redisio']['job_control'] == 'upstart' }
       end
