@@ -10,5 +10,4 @@ describe file('/etc/redis/savetest.conf') do
   ['save a', 'save b', 'save c'].each do |m|
     its(:content) { should match(m) }
   end
-
 end
