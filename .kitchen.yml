@@ -10,15 +10,15 @@ provisioner:
 platforms:
   - name: ubuntu-12.04
   - name: ubuntu-14.04
-  - name: debian-6.0.8
-  - name: centos-6.6
+  - name: debian-6.0.10
+  - name: centos-6.8
     run_list:
       - recipe[yum-epel::default]
       - recipe[yum-remi::default]
   - name: centos-7.1
     run_list:
       - recipe[yum-epel::default]
-  - name: fedora-20
+  - name: fedora-21
 
 suites:
   - name: default
@@ -44,8 +44,7 @@ suites:
         version:
     excludes:
       - ubuntu-12.04
-      - debian-6.0.8
-      - fedora-20
+      - debian-6.0.10
   - name: sentinel
     run_list:
       - recipe[redisio::default]
