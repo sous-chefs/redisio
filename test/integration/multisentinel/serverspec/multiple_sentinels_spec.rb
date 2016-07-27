@@ -19,7 +19,7 @@ describe file('/etc/redis/sentinel_cluster.conf') do
   end
 end
 
-unless os[:family] == 'redhat' and os[:release][0] == '7'
+unless os[:family] == 'redhat' && os[:release][0] == '7'
   describe file('/etc/init.d/redis_sentinel_cluster') do
     [
       %r{SENTINELNAME=sentinel_cluster},

@@ -17,17 +17,13 @@
 #
 
 case node['platform']
-when 'ubuntu','debian'
+when 'ubuntu', 'debian'
   shell = '/bin/false'
   homedir = '/var/lib/redis'
   package_name = 'redis-server'
-when 'centos','redhat','scientific','amazon','suse'
+when 'centos', 'redhat', 'scientific', 'amazon', 'suse', 'fedora'
   shell = '/bin/sh'
   homedir = '/var/lib/redis'
-  package_name = 'redis'
-when 'fedora'
-  shell = '/bin/sh'
-  homedir = '/home' #this is necessary because selinux by default prevents the homedir from being managed in /var/lib/
   package_name = 'redis'
 else
   shell = '/bin/sh'
@@ -42,19 +38,19 @@ default['redisio']['package_name'] = package_name
 default['redisio']['bypass_setup'] = false
 
 # Tarball and download related defaults
-default['redisio']['mirror'] = "http://download.redis.io/releases/"
+default['redisio']['mirror'] = 'http://download.redis.io/releases/'
 default['redisio']['base_name'] = 'redis-'
 default['redisio']['artifact_type'] = 'tar.gz'
 default['redisio']['base_piddir'] = '/var/run/redis'
 
 # Version
-if node['redisio']['package_install']
-  # latest version (only for package install)
-  default['redisio']['version'] = nil
-else
-  # force version for tarball
-  default['redisio']['version'] = '2.8.20'
-end
+default['redisio']['version'] = if node['redisio']['package_install']
+                                  # latest version (only for package install)
+                                  nil
+                                else
+                                  # force version for tarball
+                                  '2.8.20'
+                                end
 
 # Custom installation directory
 default['redisio']['install_dir'] = nil
@@ -152,8 +148,8 @@ default['redisio']['default_settings'] = {
 default['redisio']['servers'] = nil
 
 # Define binary path
-if node['redisio']['package_install']
-  default['redisio']['bin_path'] = '/usr/bin'
-else
-  default['redisio']['bin_path'] = '/usr/local/bin'
-end
+default['redisio']['bin_path'] = if node['redisio']['package_install']
+                                   '/usr/bin'
+                                 else
+                                   '/usr/local/bin'
+                                 end
