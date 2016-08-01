@@ -50,9 +50,9 @@ The redisio cookbook contains LWRP for installing, configuring and managing redi
 The install recipe can build, compile and install redis from sources or install from packages. The configure recipe will configure redis and setup service resources.  These resources will be named for the port of the redis server, unless a "name" attribute was specified.  Example names would be: service["redis6379"] or service["redismaster"] if the name attribute was "master".
 _NOTE: currently installation from source is not supported for FreeBSD_
 
-The most common use case for the redisio cookbook is to use the default recipe, followed by the enable recipe.  
+The most common use case for the redisio cookbook is to use the default recipe, followed by the enable recipe.
 
-Another common use case is to use the default, and then call the service resources created by it from another cookbook.  
+Another common use case is to use the default, and then call the service resources created by it from another cookbook.
 
 It is important to note that changing the configuration options of redis does not make them take effect on the next chef run.  Due to how redis works, you cannot reload a configuration without restarting the redis service.  Redis does not offer a reload option, in order to have new options be used redis must be stopped and started.
 
@@ -121,6 +121,32 @@ default_attributes({
     ]
   }
 })
+```
+
+#### Install redis and pull the password from an encrypted data bag #
+
+```ruby
+run_list *%w[
+  recipe[redisio]
+  recipe[redisio::enable]
+]
+
+default_attributes({
+  'redisio' => {
+    'servers' => [
+      {'data_bag_name' => 'redis', 'data_bag_item' => 'auth', 'data_bag_key' => 'password'},
+    ]
+  }
+})
+```
+
+##### Data Bag #
+
+```
+{
+    "id": "auth",
+    "password": "abcdefghijklmnopqrstuvwxyz"
+}
 ```
 
 #### Install redis and setup two instances on the same server, on different ports, with one slaved to the other through a role file #
@@ -350,7 +376,7 @@ Available options and their defaults
 
 The redis_gem recipe  will also allow you to install the redis ruby gem, these are attributes related to that, and are in the redis_gem attributes file.
 
-* `redisio['gem']['name']` - the name of the gem to install, defaults to 'redis'  
+* `redisio['gem']['name']` - the name of the gem to install, defaults to 'redis'
 * `redisio['gem']['version']` -  the version of the gem to install.  if it is nil, the latest available version will be installed.
 
 The sentinel recipe's use their own attribute file.
@@ -467,10 +493,10 @@ end
 License and Author
 ==================
 
-Author:: [Brian Bianco](<brian.bianco@gmail.com>)  
-Author\_Website:: http://www.brianbianco.com  
-Twitter:: [@brianwbianco ](http://twitter.com/brianwbianco)  
-IRC:: geekbri on freenode  
+Author:: [Brian Bianco](<brian.bianco@gmail.com>)
+Author\_Website:: http://www.brianbianco.com
+Twitter:: [@brianwbianco ](http://twitter.com/brianwbianco)
+IRC:: geekbri on freenode
 
 Copyright 2013, Brian Bianco
 

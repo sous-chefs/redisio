@@ -35,11 +35,16 @@ default['redisio']['sentinel_defaults'] = {
   'logfile'                 => nil,
   'syslogenabled'           => 'yes',
   'syslogfacility'          => 'local0',
-  'quorum_count'            => 2
+  'quorum_count'            => 2,
+  'data_bag_name'           => nil,
+  'data_bag_item'           => nil,
+  'data_bag_key'            => nil,
+  'announce-ip'             => nil,
+  'announce-port'           => nil
 }
 
 # Manage Sentinel Config File
 ## Will write out the base config one time then no longer manage the config allowing sentinel to take over
-default['redisio']['sentinel']['manage_config'] = true #deprecated
+default['redisio']['sentinel']['manage_config'] = true # Deprecated
 
 default['redisio']['sentinels'] = nil

@@ -1,6 +1,6 @@
-shared_examples_for 'redis on port' do |redis_port, args|
-  it 'enables and starts the redis service' do
-    service_name = if os[:family] == 'redhat' and os[:release][0] == '7'
+shared_examples_for 'redis on port' do |redis_port, _args|
+  it 'enables the redis service' do
+    service_name = if os[:family] == 'redhat' && os[:release][0] == '7'
                      "redis@#{redis_port}"
                    else
                      "redis#{redis_port}"

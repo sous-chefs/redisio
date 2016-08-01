@@ -36,7 +36,7 @@ else
   end
 end
 
-unless (os[:family] == 'redhat' and os[:release][0] == '7') or os[:family] == 'freebsd'
+unless (os[:family] == 'redhat' && os[:release][0] == '7') || os[:family] == 'freebsd'
   describe file('/etc/init.d/redis_sentinel_cluster') do
     [
       %r{SENTINELNAME=sentinel_cluster},

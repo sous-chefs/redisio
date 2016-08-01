@@ -1,7 +1,7 @@
-shared_examples_for 'sentinel on port' do |redis_port, redis_cluster_name, args|
-  it 'enables and starts the redis-sentinel service' do
+shared_examples_for 'sentinel on port' do |redis_port, redis_cluster_name, _args|
+  it 'enables the redis-sentinel service' do
     redis_cluster_name ||= 'mycluster'
-    name = if os[:family] == 'redhat' and os[:release][0] == '7'
+    name = if os[:family] == 'redhat' && os[:release][0] == '7'
              "redis-sentinel@#{redis_cluster_name}"
            else
              "redis_sentinel_#{redis_cluster_name}"
