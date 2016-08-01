@@ -19,6 +19,7 @@ platforms:
     ubuntu-12.04
     ubuntu-14.04
     debian-6.0.10
+    freebsd-10.3
   )
 
   # RHEL OS's
@@ -43,7 +44,6 @@ platforms:
     run_list:
       - recipe[yum-epel::default]
       - recipe[yum-remi::default]
-<% end %>
 
 suites:
   - name: default
@@ -64,7 +64,7 @@ suites:
     attributes:
      redisio:
         servers:
-          - port: 6379,
+          - port: 6379
         package_install: true
         version:
     excludes:

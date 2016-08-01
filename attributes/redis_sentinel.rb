@@ -16,9 +16,15 @@
 # limitations under the License.
 #
 
+config_dir = '/etc/redis'
+
+if node['platform_family'] == 'freebsd'
+  config_dir = '/usr/local/etc/redis'
+end
+
 default['redisio']['sentinel_defaults'] = {
   'user'                    => 'redis',
-  'configdir'               => '/etc/redis',
+  'configdir'               => config_dir,
   'sentinel_port'           => 26379,
   'monitor'                 => nil,
   'down-after-milliseconds' => 30000,
