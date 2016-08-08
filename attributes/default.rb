@@ -110,6 +110,7 @@ default['redisio']['default_settings'] = {
   'rdbchecksum'             => 'yes',
   'dbfilename'              => nil,
   'slaveof'                 => nil,
+  'protected_mode'          => false,
   'masterauth'              => nil,
   'slaveservestaledata'     => 'yes',
   'slavereadonly'           => 'yes',
