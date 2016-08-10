@@ -409,8 +409,8 @@ You may also pass an array of masters to monitor like so:
   'sentinel_port' => '26379',
   'name' => 'mycluster_sentinel',
   'masters' => [
-    { master_name = 'master6379', master_ip' => '127.0.0.1', 'master_port' => 6379 },
-    { master_name = 'master6380', master_ip' => '127.0.0.1', 'master_port' => 6380 }
+    { 'master_name' => 'master6379', 'master_ip' => '127.0.0.1', 'master_port' => 6379 },
+    { 'master_name' => 'master6380', 'master_ip' => '127.0.0.1', 'master_port' => 6380 }
   ]
 
 }]
