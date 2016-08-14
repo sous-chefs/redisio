@@ -26,6 +26,8 @@ packages_to_install = case node['platform']
                         %w(
                           tar
                         )
+                      else
+                        %w()
                       end
 
 packages_to_install.each do |pkg|
