@@ -62,8 +62,8 @@ tcp-backlog <%= @tcpbacklog %>
 # you are sure you want clients from other hosts to connect to Redis
 # even if no authentication is configured, nor a specific set of interfaces
 # are explicitly listed using the "bind" directive.
-<% if @protected_mode %>
-protected-mode yes
+<% unless @protected_mode.nil? %>
+protected-mode <%= @protected_mode %>
 <% end %>
 
 # Specify the path for the Unix socket that will be used to listen for
