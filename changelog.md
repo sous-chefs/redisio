@@ -1,6 +1,21 @@
 redisio CHANGE LOG
 ===
 
+2.5.0 -
+---
+  - Ubuntu 14 added as tested platform. (#264)
+  - FreeBSD-10.3 support added. (#279)
+    - installation from source is not supported
+    - setting ulimits is not supported
+  - Encrypted databag support added. (#228)
+  - Systemd nofile limit fixed. (#228)
+  - Announce-ip and announce-port directives for sentinel added. (#228)
+  - Disabling safe_install in the install recipe allowed. (#284)
+  - Protected-mode added as optional (#275, #289)
+  - Fixes nil exception when installing sentinel on non-debian and non-rhel platforms (#288)
+
+
+
 2.4.2 -
 ---
   - Created a 2.4.1 tag but somehow the metadata file wasn't updated.  Instead
