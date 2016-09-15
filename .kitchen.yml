@@ -44,6 +44,7 @@ platforms:
     run_list:
       - recipe[yum-epel::default]
       - recipe[yum-remi::default]
+<% end %>
 
 suites:
   - name: default
