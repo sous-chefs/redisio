@@ -37,9 +37,14 @@ port <%=@port%>
 tcp-backlog <%= @tcpbacklog %>
 <% end %>
 
-# If you want you can bind a single interface, if the bind option is not
-# specified all the interfaces will listen for incoming connections.
+# By default Redis listens for connections from all the network interfaces
+# available on the server. It is possible to listen to just one or multiple
+# interfaces using the "bind" configuration directive, followed by one or
+# more IP addresses.
 #
+# Examples:
+#
+# bind 192.168.1.100 10.0.0.1
 # bind 127.0.0.1
 <% unless @address.nil? %>
   <%= "bind #{@address.respond_to?(:join) ? @address.join(" ") : @address }" %>
