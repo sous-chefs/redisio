@@ -49,6 +49,9 @@ tcp-backlog <%= @tcpbacklog %>
 <% unless @address.nil? %>
   <%= "bind #{@address.respond_to?(:join) ? @address.join(" ") : @address }" %>
 <% end %>
+<% unless @protected_mode.nil? %>
+protected-mode <%= @protected_mode %>
+<% end %>
 
 # Protected mode is a layer of security protection, in order to avoid that
 # Redis instances left open on the internet are accessed and exploited.
