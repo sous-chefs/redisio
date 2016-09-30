@@ -14,6 +14,7 @@ end script
 # If the job exits, restart it. Give up with more than 10 restarts in 30 seconds.
 respawn
 respawn limit 10 30
+expect fork
 
 exec su -s /bin/sh -c 'exec "$0" "$@"' <%= @user %> <%= File.join(@bin_path, 'redis-server') %> <%= @configdir %>/<%= @name %>.conf
 
