@@ -6,6 +6,7 @@ After=network.target
 ExecStart=<%= @bin_path %>/redis-server /etc/redis/sentinel_%i.conf --sentinel --daemonize no
 User=redis
 Group=redis
+LimitNOFILE=<%= @limit_nofile %>
 
 [Install]
 WantedBy=multi-user.target

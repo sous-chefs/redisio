@@ -4,22 +4,39 @@ describe 'Redis-Sentinel' do
   it_behaves_like 'sentinel on port', 26379, 'cluster'
 end
 
-describe file('/etc/redis/sentinel_cluster.conf') do
-  [
-    %r{sentinel monitor master6379 127.0.0.1 6379 2},
-    %r{sentinel down-after-milliseconds master6379 30000},
-    %r{sentinel parallel-syncs master6379 1},
-    %r{sentinel failover-timeout master6379 900000},
-    %r{sentinel monitor master6380 127.0.0.1 6380 2},
-    %r{sentinel down-after-milliseconds master6380 30000},
-    %r{sentinel parallel-syncs master6380 1},
-    %r{sentinel failover-timeout master6380 900000}
-  ].each do |pattern|
-    its(:content) { should match(pattern) }
+if os[:family] == 'freebsd'
+  describe file('/usr/local/etc/redis/sentinel_cluster.conf') do
+    [
+      %r{sentinel monitor master6379 127.0.0.1 6379 2},
+      %r{sentinel down-after-milliseconds master6379 30000},
+      %r{sentinel parallel-syncs master6379 1},
+      %r{sentinel failover-timeout master6379 900000},
+      %r{sentinel monitor master6380 127.0.0.1 6380 2},
+      %r{sentinel down-after-milliseconds master6380 30000},
+      %r{sentinel parallel-syncs master6380 1},
+      %r{sentinel failover-timeout master6380 900000}
+    ].each do |pattern|
+      its(:content) { should match(pattern) }
+    end
+  end
+else
+  describe file('/etc/redis/sentinel_cluster.conf') do
+    [
+      %r{sentinel monitor master6379 127.0.0.1 6379 2},
+      %r{sentinel down-after-milliseconds master6379 30000},
+      %r{sentinel parallel-syncs master6379 1},
+      %r{sentinel failover-timeout master6379 900000},
+      %r{sentinel monitor master6380 127.0.0.1 6380 2},
+      %r{sentinel down-after-milliseconds master6380 30000},
+      %r{sentinel parallel-syncs master6380 1},
+      %r{sentinel failover-timeout master6380 900000}
+    ].each do |pattern|
+      its(:content) { should match(pattern) }
+    end
   end
 end
 
-unless os[:family] == 'redhat' and os[:release][0] == '7'
+unless (os[:family] == 'redhat' && os[:release][0] == '7') || os[:family] == 'freebsd'
   describe file('/etc/init.d/redis_sentinel_cluster') do
     [
       %r{SENTINELNAME=sentinel_cluster},

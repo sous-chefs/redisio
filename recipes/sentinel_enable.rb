@@ -21,12 +21,19 @@
 sentinel_instances = node['redisio']['sentinels']
 
 if sentinel_instances.nil?
-  sentinel_instances = [{'sentinel_port' => '26379', 'name' => 'mycluster', 'master_ip' => '127.0.0.1', 'master_port' => '6379'}]
+  sentinel_instances = [
+    {
+      'sentinel_port' => '26379',
+      'name' => 'mycluster',
+      'master_ip' => '127.0.0.1',
+      'master_port' => '6379'
+    }
+  ]
 end
 
 execute 'reload-systemd' do
   command '/usr/bin/systemctl daemon-reload'
-  only_if { node['redisio']['job_control'] == 'systemd'}
+  only_if { node['redisio']['job_control'] == 'systemd' }
   action :nothing
 end
 

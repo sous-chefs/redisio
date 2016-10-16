@@ -25,27 +25,34 @@ redis = node['redisio']
 
 sentinel_instances = redis['sentinels']
 if sentinel_instances.nil?
-  sentinel_instances = [{
-    'sentinel_port' => '26379',
-    'name' => 'mycluster',
-    'masters' => [{
-      'master_name' => 'mycluster_master',
-      'master_ip' => '127.0.0.1',
-      'master_port' => '6379'
-    }]
-    }]
+  sentinel_instances = [
+    {
+      'sentinel_port' => '26379',
+      'name' => 'mycluster',
+      'masters' => [
+        {
+          'master_name' => 'mycluster_master',
+          'master_ip' => '127.0.0.1',
+          'master_port' => '6379'
+        }
+      ]
+    }
+  ]
 end
 
-redisio_sentinel "redis-sentinels" do
+redisio_sentinel 'redis-sentinels' do
   sentinel_defaults redis['sentinel_defaults']
   sentinels sentinel_instances
   base_piddir redis['base_piddir']
 end
 
 template '/usr/lib/systemd/system/redis-sentinel@.service' do
-  source    'redis-sentinel@.service'
-  variables({ :bin_path => node['redisio']['bin_path'] })
-  only_if   { node['redisio']['job_control'] == 'systemd' }
+  source 'redis-sentinel@.service'
+  variables(
+    bin_path: node['redisio']['bin_path'],
+    limit_nofile: redis['default_settings']['maxclients'] + 32
+  )
+  only_if { node['redisio']['job_control'] == 'systemd' }
 end
 
 # Create a service resource for each sentinel instance, named for the port it runs on.
@@ -57,7 +64,7 @@ sentinel_instances.each do |current_sentinel|
     service "redis_sentinel_#{sentinel_name}" do
       # don't supply start/stop/restart commands, Chef::Provider::Service::*
       # do a fine job on it's own, and support systemd correctly
-      supports :start => true, :stop => true, :restart => true, :status => false
+      supports start: true, stop: true, restart: true, status: false
     end
   when 'upstart'
     service "redis_sentinel_#{sentinel_name}" do
@@ -65,15 +72,19 @@ sentinel_instances.each do |current_sentinel|
       start_command "start redis_sentinel_#{sentinel_name}"
       stop_command "stop redis_sentinel_#{sentinel_name}"
       restart_command "restart redis_sentinel_#{sentinel_name}"
-      supports :start => true, :stop => true, :restart => true, :status => false
+      supports start: true, stop: true, restart: true, status: false
     end
   when 'systemd'
     service "redis-sentinel@#{sentinel_name}" do
       provider Chef::Provider::Service::Systemd
-      supports :start => true, :stop => true, :restart => true, :status => true 
+      supports start: true, stop: true, restart: true, status: true
+    end
+  when 'rcinit'
+    service "redis_sentinel_#{sentinel_name}" do
+      provider Chef::Provider::Service::Freebsd
+      supports start: true, stop: true, restart: true, status: true
     end
   else
-    Chef::Log.error("Unknown job control type, no service resource created!")
+    Chef::Log.error('Unknown job control type, no service resource created!')
   end
-
 end

@@ -1,6 +1,6 @@
 **Please read the changelog when upgrading from the 1.x series to the 2.x series**
 
-![cookbook version](http://img.shields.io/badge/cookbook%20version-2.3.0-blue.svg)
+![cookbook version](http://img.shields.io/badge/cookbook%20version-2.5.0-blue.svg)
 Description
 ===========
 
@@ -21,6 +21,7 @@ Platforms
 
 * Debian, Ubuntu
 * CentOS, Red Hat, Fedora, Scientific Linux
+* FreeBSD
 
 Testing
 -------
@@ -34,10 +35,12 @@ This cookbook is tested with rspec/chefspec and test-kitchen/serverspec.  Run `b
 Tested on:
 
 * Ubuntu 12.04
+* Ubuntu 14.04
 * Debian 6.0.8
 * Fedora 20
 * Centos 6.6
 * Centos 7.1
+* FreeBSD 10.3
 
 Usage
 =====
@@ -45,20 +48,22 @@ Usage
 The redisio cookbook contains LWRP for installing, configuring and managing redis and redis_sentinel.
 
 The install recipe can build, compile and install redis from sources or install from packages. The configure recipe will configure redis and setup service resources.  These resources will be named for the port of the redis server, unless a "name" attribute was specified.  Example names would be: service["redis6379"] or service["redismaster"] if the name attribute was "master".
+_NOTE: currently installation from source is not supported for FreeBSD_
 
-The most common use case for the redisio cookbook is to use the default recipe, followed by the enable recipe.  
+The most common use case for the redisio cookbook is to use the default recipe, followed by the enable recipe.
 
-Another common use case is to use the default, and then call the service resources created by it from another cookbook.  
+Another common use case is to use the default, and then call the service resources created by it from another cookbook.
 
 It is important to note that changing the configuration options of redis does not make them take effect on the next chef run.  Due to how redis works, you cannot reload a configuration without restarting the redis service.  Redis does not offer a reload option, in order to have new options be used redis must be stopped and started.
 
 You should make sure to set the ulimit for the user you want to run redis as to be higher than the max connections you allow.
+_NOTE: setting ulimit is not supported on FreeBSD since the ulimit cookbook doesn't support FreeBSD_
 
 The disable recipe just stops redis and removes it from run levels.
 
 The cookbook also contains a recipe to allow for the installation of the redis ruby gem.
 
-Redis-sentinel will write configuration and state data back into its configuration file.  This creates obvious problems when that config is managed by chef.  There is an attribute set to true which controls if chef manages the redis-sentinel config.  By default chef will write out this config file and manage it.  If deploying sentinel it is recommended that you set the node[:redisio][:sentinel][:manage_config] to false allowing chef to write out the initial config and then allow redis-sentiniel to manage.  If running sentinel it is only advised to have node[:redisio][:sentinel][:manage_config] = true when you are pushing new changes to the config file as it will create a flapping state between chef and sentinel when sentinel writes out state to the file.
+Redis-sentinel will write configuration and state data back into its configuration file.  This creates obvious problems when that config is managed by chef. This cookbook will create the config file once, and then leave a breadcrumb that will guard against the file from being updated again.
 
 Recipes
 -------
@@ -116,6 +121,32 @@ default_attributes({
     ]
   }
 })
+```
+
+#### Install redis and pull the password from an encrypted data bag #
+
+```ruby
+run_list *%w[
+  recipe[redisio]
+  recipe[redisio::enable]
+]
+
+default_attributes({
+  'redisio' => {
+    'servers' => [
+      {'data_bag_name' => 'redis', 'data_bag_item' => 'auth', 'data_bag_key' => 'password'},
+    ]
+  }
+})
+```
+
+##### Data Bag #
+
+```
+{
+    "id": "auth",
+    "password": "abcdefghijklmnopqrstuvwxyz"
+}
 ```
 
 #### Install redis and setup two instances on the same server, on different ports, with one slaved to the other through a role file #
@@ -277,11 +308,12 @@ Available options and their defaults
 'ulimit'                  => 0 - 0 is a special value causing the ulimit to be maxconnections +32.  Set to nil or false to disable setting ulimits
 'configdir'               => '/etc/redis' - configuration directory
 'name'                    => nil, Allows you to name the server with something other than port.  Useful if you want to use unix sockets
+'tcpbacklog'              => '511',
 'address'                 => nil, Can accept a single string or an array. When using an array, the FIRST value will be used by the init script for connecting to redis
 'databases'               => '16',
 'backuptype'              => 'rdb',
 'datadir'                 => '/var/lib/redis',
-'unixoscket'              => nil - The location of the unix socket to use,
+'unixsocket'              => nil - The location of the unix socket to use,
 'unixsocketperm'          => nil - The permissions of the unix socket,
 'timeout'                 => '0',
 'keepalive'               => '0',
@@ -292,30 +324,40 @@ Available options and their defaults
 'shutdown_save'           => false,
 'save'                    => nil, # Defaults to ['900 1','300 10','60 10000'] inside of template.  Needed due to lack of hash subtraction
 'stopwritesonbgsaveerror' => 'yes',
+'rdbcompression'          => 'yes',
+'rdbchecksum'             => 'yes',
+'dbfilename'              => nil,
 'slaveof'                 => nil,
 'masterauth'              => nil,
 'slaveservestaledata'     => 'yes',
+'slavereadonly'           => 'yes',
 'replpingslaveperiod'     => '10',
 'repltimeout'             => '60',
+'repldisabletcpnodelay    => 'no',
+'slavepriority'           => '100',
 'requirepass'             => nil,
 'rename_commands'         => nil, or a hash where each key is a redis command and the value is the command's new name.
 'maxclients'              => 10000,
 'maxmemory'               => nil,
 'maxmemorypolicy'         => nil,
 'maxmemorysamples'        => nil,
+'appendfilename'          => nil,
 'appendfsync'             => 'everysec',
 'noappendfsynconrewrite'  => 'no',
 'aofrewritepercentage'    => '100',
 'aofrewriteminsize'       => '64mb',
 'luatimelimit'            => '5000',
 'slowloglogslowerthan'    => '10000',
-'slowlog-max-len'         => '1024',
+'slowlogmaxlen'           => '1024',
 'notifykeyspaceevents'    => '',
 'hashmaxziplistentries'   => '512',
 'hashmaxziplistvalue'     => '64',
+'listmaxziplistentries'   => '512',
+'listmaxziplistvalue'     => '64',
 'setmaxintsetentries'     => '512',
 'zsetmaxziplistentries'   => '128',
 'zsetmaxziplistvalue'     => '64',
+'hllsparsemaxbytes'       => '3000',
 'activerehasing'          => 'yes',
 'clientoutputbufferlimit' => [
   %w(normal 0 0 0),
@@ -326,7 +368,7 @@ Available options and their defaults
 'aofrewriteincrementalfsync' => 'yes',
 'cluster-enabled'            => 'no',
 'cluster-config-file'        => nil, # Defaults to redis instance name inside of template if cluster is enabled.
-'cluster-node-timeout'       => 5,
+'cluster-node-timeout'       => 5000,
 'includes'                   => nil
 ```
 
@@ -334,7 +376,7 @@ Available options and their defaults
 
 The redis_gem recipe  will also allow you to install the redis ruby gem, these are attributes related to that, and are in the redis_gem attributes file.
 
-* `redisio['gem']['name']` - the name of the gem to install, defaults to 'redis'  
+* `redisio['gem']['name']` - the name of the gem to install, defaults to 'redis'
 * `redisio['gem']['version']` -  the version of the gem to install.  if it is nil, the latest available version will be installed.
 
 The sentinel recipe's use their own attribute file.
@@ -367,8 +409,8 @@ You may also pass an array of masters to monitor like so:
   'sentinel_port' => '26379',
   'name' => 'mycluster_sentinel',
   'masters' => [
-    { master_name = 'master6379', master_ip' => '127.0.0.1', 'master_port' => 6379 },
-    { master_name = 'master6380', master_ip' => '127.0.0.1', 'master_port' => 6380 }
+    { 'master_name' => 'master6379', 'master_ip' => '127.0.0.1', 'master_port' => 6379 },
+    { 'master_name' => 'master6380', 'master_ip' => '127.0.0.1', 'master_port' => 6380 }
   ]
 
 }]
@@ -451,10 +493,10 @@ end
 License and Author
 ==================
 
-Author:: [Brian Bianco](<brian.bianco@gmail.com>)  
-Author\_Website:: http://www.brianbianco.com  
-Twitter:: [@brianwbianco ](http://twitter.com/brianwbianco)  
-IRC:: geekbri on freenode  
+Author:: [Brian Bianco](<brian.bianco@gmail.com>)
+Author\_Website:: http://www.brianbianco.com
+Twitter:: [@brianwbianco ](http://twitter.com/brianwbianco)
+IRC:: geekbri on freenode
 
 Copyright 2013, Brian Bianco
 

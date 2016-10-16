@@ -8,17 +8,43 @@ provisioner:
   name: chef_solo
 
 platforms:
-  - name: ubuntu-12.04
-  - name: ubuntu-14.04
-  - name: debian-6.0.8
-  - name: centos-6.6
+<%
+  chef_versions = %w(
+    11.0.0
+    latest
+  )
+
+  # non RHEL OS's
+  test_platforms = %w(
+    ubuntu-12.04
+    ubuntu-14.04
+    debian-6.0.10
+    freebsd-10.3
+  )
+
+  # RHEL OS's
+  test_platforms_rhel = %w(
+      centos-6.8
+      centos-7.1
+  )
+%>
+
+<% test_platforms.product(chef_versions).each do |platform_version, chef_version| %>
+  - name: <%= platform_version %>-<%= chef_version %>
+    driver_config:
+      box: bento/<%= platform_version %>
+      require_chef_omnibus: <%= chef_version %>
+<% end %>
+
+<% test_platforms_rhel.product(chef_versions).each do |platform_version, chef_version| %>
+  - name: <%= platform_version %>-<%= chef_version %>
+    driver_config:
+      box: bento/<%= platform_version %>
+      require_chef_omnibus: <%= chef_version %>
     run_list:
       - recipe[yum-epel::default]
       - recipe[yum-remi::default]
-  - name: centos-7.1
-    run_list:
-      - recipe[yum-epel::default]
-  - name: fedora-20
+<% end %>
 
 suites:
   - name: default
@@ -39,13 +65,20 @@ suites:
     attributes:
      redisio:
         servers:
-          - port: 6379,
+          - port: 6379
         package_install: true
         version:
     excludes:
-      - ubuntu-12.04
-      - debian-6.0.8
-      - fedora-20
+    <% # OS's to exclude
+      test_platforms = %w(
+          ubuntu-12.04
+          debian-6.0.10
+        )
+
+      test_platforms.product(chef_versions).each do |platform_version, chef_version|
+    %>
+      - <%= platform_version %>-<%= chef_version %>
+    <% end %>
   - name: sentinel
     run_list:
       - recipe[redisio::default]

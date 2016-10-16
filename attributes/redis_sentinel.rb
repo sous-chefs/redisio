@@ -16,9 +16,15 @@
 # limitations under the License.
 #
 
+config_dir = '/etc/redis'
+
+if node['platform_family'] == 'freebsd'
+  config_dir = '/usr/local/etc/redis'
+end
+
 default['redisio']['sentinel_defaults'] = {
   'user'                    => 'redis',
-  'configdir'               => '/etc/redis',
+  'configdir'               => config_dir,
   'sentinel_port'           => 26379,
   'monitor'                 => nil,
   'down-after-milliseconds' => 30000,
@@ -29,11 +35,16 @@ default['redisio']['sentinel_defaults'] = {
   'logfile'                 => nil,
   'syslogenabled'           => 'yes',
   'syslogfacility'          => 'local0',
-  'quorum_count'            => 2
+  'quorum_count'            => 2,
+  'data_bag_name'           => nil,
+  'data_bag_item'           => nil,
+  'data_bag_key'            => nil,
+  'announce-ip'             => nil,
+  'announce-port'           => nil
 }
 
 # Manage Sentinel Config File
 ## Will write out the base config one time then no longer manage the config allowing sentinel to take over
-default['redisio']['sentinel']['manage_config'] = true
+default['redisio']['sentinel']['manage_config'] = true # Deprecated
 
 default['redisio']['sentinels'] = nil
