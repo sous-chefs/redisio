@@ -86,7 +86,13 @@ def configure
       maxmemory = (node_memory_kb * 1024 * percent_factor / new_resource.servers.length).round.to_s
     end
 
-    descriptors = current['ulimit'] == 0 ? current['maxclients'] + 32 : current['maxclients']
+    if current['ulimit'] == 0
+      descriptors = current['maxclients'] + 32
+    elsif current['ulimit'] > current['maxclients']
+      descriptors = current['ulimit']
+    else
+      descriptors = current['maxclients']
+    end
 
     recipe_eval do
       server_name = current['name'] || current['port']
