@@ -30,6 +30,7 @@ recipe 'redisio::sentinel_enable', 'This recipe is used enable sentinel init scr
 recipe 'redisio::enable', 'This recipe is used to start the redis instances and enable them in the default run levels'
 recipe 'redisio::disable', 'this recipe is used to stop the redis instances and disable them in the default run levels'
 recipe 'redisio::redis_gem', 'this recipe will install the redis ruby gem into the system ruby'
+recipe 'redisio::disable_os_default', 'This recipe is used to disable the default OS redis init script'
 
 depends 'ulimit', '>= 0.1.2'
 depends 'build-essential'
