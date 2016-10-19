@@ -76,6 +76,7 @@ Recipes
 * redis_gem - This recipe can be used to install the redis ruby gem
 * sentinel - This recipe can be used to install and configure sentinel
 * sentinel_enable - This recipe can be used to enable the sentinel service(s)
+* disable_os_default - This recipe can be used to disable the default OS redis init script
 
 Role File Examples
 ------------------
