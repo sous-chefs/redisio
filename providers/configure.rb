@@ -334,19 +334,9 @@ def configure
          variables({
            :name => server_name,
            :bin_path => bin_path,
-           :job_control => node['redisio']['job_control'],
-           :port => current['port'],
-           :address => current['address'],
            :user => current['user'],
-           :group => current['group'],
-           :maxclients => current['maxclients'],
-           :requirepass => current['requirepass'],
-           :shutdown_save => current['shutdown_save'],
-           :save => current['save'],
            :configdir => current['configdir'],
-           :piddir => piddir,
-           :platform => node['platform'],
-           :unixsocket => current['unixsocket']
+           :piddir => piddir
          })
          only_if { node['redisio']['job_control'] == 'rcinit' }
        end

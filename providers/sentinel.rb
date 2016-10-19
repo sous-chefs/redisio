@@ -217,12 +217,9 @@ def configure
           variables({
             :name => sentinel_name,
             :bin_path => bin_path,
-            :job_control => node['redisio']['job_control'],
             :user => current['user'],
-            :group => current['group'],
             :configdir => current['configdir'],
-            :piddir => piddir,
-            :platform => node['platform'],
+            :piddir => piddir
             })
           only_if { node['redisio']['job_control'] == 'rcinit' }
         end
