@@ -1,5 +1,7 @@
 AllCops:
   DisplayCopNames: true
+  Exclude:
+    - '.bundle/**/*'
   TargetRubyVersion: 2.1
 
 Lint/PercentStringArray:
