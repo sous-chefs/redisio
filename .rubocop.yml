@@ -2,12 +2,15 @@ AllCops:
   DisplayCopNames: true
   Exclude:
     - '.bundle/**/*'
-  TargetRubyVersion: 2.1
+  TargetRubyVersion: 2.3
 
 Lint/PercentStringArray:
   Enabled: false
 
 Metrics/AbcSize:
+  Enabled: false
+
+Metrics/BlockLength:
   Enabled: false
 
 Metrics/CyclomaticComplexity:
@@ -30,6 +33,9 @@ Metrics/PerceivedComplexity:
   Enabled: false
 
 Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
   Enabled: false
 
 Style/LeadingCommentSpace:

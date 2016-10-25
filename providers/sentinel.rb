@@ -105,10 +105,10 @@ def configure
             master_ip:                    current['master_ip'] || current[:masterip],
             master_port:                  current['master_port'] || current[:masterport],
             quorum_count:                 current['quorum_count'] || current[:quorum_count],
-            :'auth-pass' =>               current['auth-pass'] || current[:authpass],
-            :'down-after-milliseconds' => current['down-after-milliseconds'] || current[:downaftermil],
-            :'parallel-syncs' =>          current['parallel-syncs'] || current[:parallelsyncs],
-            :'failover-timeout' =>        current['failover-timeout'] || current[:failovertimeout]
+            auth_pass:                    current['auth-pass'] || current[:authpass],
+            down_after_milliseconds:      current['down-after-milliseconds'] || current[:downaftermil],
+            parallel_syncs:               current['parallel-syncs'] || current[:parallelsyncs],
+            failover_timeout:             current['failover-timeout'] || current[:failovertimeout]
           }
         ]
       else
@@ -119,7 +119,7 @@ def configure
       if current['data_bag_name'] && current['data_bag_item'] && current['data_bag_key']
         bag = Chef::EncryptedDataBagItem.load(current['data_bag_name'], current['data_bag_item'])
         masters.each do |master|
-          master['auth-pass'] = bag[current['data_bag_key']]
+          master['auth_pass'] = bag[current['data_bag_key']]
         end
       end
 

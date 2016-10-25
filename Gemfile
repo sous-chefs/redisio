@@ -13,6 +13,7 @@ source 'https://rubygems.org'
 # end
 
 group :testing do
+  gem 'berkshelf'
   gem 'chefspec'
   gem 'foodcritic'
   gem 'rake'
@@ -20,7 +21,6 @@ group :testing do
 end
 
 group :integration do
-  gem 'berkshelf'
   gem 'busser-serverspec'
   gem 'kitchen-vagrant'
   gem 'serverspec'
