@@ -6,4 +6,7 @@ sudo: false
 branches:
   only:
     - master
-bundler_args: --without=integration
+bundler_args: --without=integration --path=.bundle
+script:
+  - bundle exec rake style
+  - bundle exec rake spec
