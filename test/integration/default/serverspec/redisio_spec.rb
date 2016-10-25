@@ -11,7 +11,6 @@ if os[:family] == 'freebsd'
     ['save a', 'save b', 'save c'].each do |m|
       its(:content) { should match(m) }
     end
-
   end
 else
   describe file('/etc/redis/savetest.conf') do
@@ -20,6 +19,5 @@ else
     ['save a', 'save b', 'save c'].each do |m|
       its(:content) { should match(m) }
     end
-
   end
 end

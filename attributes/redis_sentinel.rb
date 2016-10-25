@@ -16,11 +16,11 @@
 # limitations under the License.
 #
 
-config_dir = '/etc/redis'
-
-if node['platform_family'] == 'freebsd'
-  config_dir = '/usr/local/etc/redis'
-end
+config_dir = if node['platform_family'] == 'freebsd'
+               '/usr/local/etc/redis'
+             else
+               '/etc/redis'
+             end
 
 default['redisio']['sentinel_defaults'] = {
   'user'                    => 'redis',

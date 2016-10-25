@@ -29,9 +29,9 @@ action :run do
     package_resource.run_action(:install)
     new_resource.updated_by_last_action(true) if package_resource.updated_by_last_action?
 
-# freeBSD does not support from source since ports does not support versioning (without a lot of hassle)
-elsif node.platform_family == 'freebsd'
-    fail 'Source install not supported for freebsd'
+  # freeBSD does not support from source since ports does not support versioning (without a lot of hassle)
+  elsif node['platform_family'] == 'freebsd'
+    raise 'Source install not supported for freebsd'
   # Tarball install
   else
     @tarball = "#{new_resource.base_name}#{new_resource.version}.#{new_resource.artifact_type}"

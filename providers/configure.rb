@@ -45,11 +45,11 @@ def configure
     # Merge the configuration defaults with the provided array of configurations provided
     current = current_defaults_hash.merge(current_instance_hash)
 
-    #Merge in the default maxmemory
-    node_memory_kb = node["memory"]["total"]
-    #On BSD platforms Ohai reports total memory as a Fixnum
+    # Merge in the default maxmemory
+    node_memory_kb = node['memory']['total']
+    # On BSD platforms Ohai reports total memory as a Fixnum
     if node_memory_kb.is_a? String
-      node_memory_kb.slice! "kB"
+      node_memory_kb.slice! 'kB'
       node_memory_kb = node_memory_kb.to_i
     end
 
@@ -86,13 +86,13 @@ def configure
       maxmemory = (node_memory_kb * 1024 * percent_factor / new_resource.servers.length).round.to_s
     end
 
-    if current['ulimit'] == 0
-      descriptors = current['maxclients'] + 32
-    elsif current['ulimit'] > current['maxclients']
-      descriptors = current['ulimit']
-    else
-      descriptors = current['maxclients']
-    end
+    descriptors = if current['ulimit'] == 0
+                    current['maxclients'] + 32
+                  elsif current['ulimit'] > current['maxclients']
+                    current['ulimit']
+                  else
+                    current['maxclients']
+                  end
 
     recipe_eval do
       server_name = current['name'] || current['port']
@@ -175,10 +175,10 @@ def configure
 
       # Setup the redis users descriptor limits
       # Pending response on https://github.com/brianbianco/redisio/commit/4ee9aad3b53029cc3b6c6cf741f5126755e712cd#diff-8ae42a59a6f4e8dc5b4e6dd2d6a34eab
-      #TODO: ulimit cookbook v0.1.2 doesn't work with freeBSD
+      # TODO: ulimit cookbook v0.1.2 doesn't work with freeBSD
       if current['ulimit'] && node['platform_family'] != 'freebsd' # ~FC023
         user_ulimit current['user'] do
-             filehandle_limit descriptors
+          filehandle_limit descriptors
         end
       end
 
@@ -325,31 +325,21 @@ def configure
         )
         only_if { node['redisio']['job_control'] == 'upstart' }
       end
-       template "/usr/local/etc/rc.d/redis#{server_name}" do
-         source 'redis.rcinit.erb'
-         cookbook 'redisio'
-         owner current['user']
-         group current['group']
-         mode '0755'
-         variables({
-           :name => server_name,
-           :bin_path => bin_path,
-           :job_control => node['redisio']['job_control'],
-           :port => current['port'],
-           :address => current['address'],
-           :user => current['user'],
-           :group => current['group'],
-           :maxclients => current['maxclients'],
-           :requirepass => current['requirepass'],
-           :shutdown_save => current['shutdown_save'],
-           :save => current['save'],
-           :configdir => current['configdir'],
-           :piddir => piddir,
-           :platform => node['platform'],
-           :unixsocket => current['unixsocket']
-         })
-         only_if { node['redisio']['job_control'] == 'rcinit' }
-       end
+      template "/usr/local/etc/rc.d/redis#{server_name}" do
+        source 'redis.rcinit.erb'
+        cookbook 'redisio'
+        owner current['user']
+        group current['group']
+        mode '0755'
+        variables(
+          name: server_name,
+          bin_path: bin_path,
+          user: current['user'],
+          configdir: current['configdir'],
+          piddir: piddir
+        )
+        only_if { node['redisio']['job_control'] == 'rcinit' }
+      end
     end
   end # servers each loop
 end

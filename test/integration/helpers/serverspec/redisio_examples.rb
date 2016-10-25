@@ -6,12 +6,12 @@ shared_examples_for 'redis on port' do |redis_port, _args|
                      "redis#{redis_port}"
                    end
     expect(service service_name).to be_enabled
-    expect(service service_name).to be_running, :if => os[:family] != 'fedora'
+    expect(service service_name).to be_running, if: os[:family] != 'fedora'
   end
 
   # We use grep and commands here, since serverspec only checks systemd on fedora 20
   # instead of also being able to check sysv style init systems.
-  describe command("ps aux | grep -v grep | grep 'redis-server' | grep '*:#{redis_port}'"), :if => os[:family] == 'fedora' do
+  describe command("ps aux | grep -v grep | grep 'redis-server' | grep '*:#{redis_port}'"), if: os[:family] == 'fedora' do
     its(:exit_status) { should eq(0) }
   end
 
