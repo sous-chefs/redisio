@@ -20,7 +20,7 @@
 
 redis = node['redisio']
 
-execute 'reload-systemd' do
+execute 'reload-systemd-enable' do
   command '/usr/bin/systemctl daemon-reload'
   only_if { node['redisio']['job_control'] == 'systemd' }
   action :nothing
@@ -41,7 +41,7 @@ redis['servers'].each do |current_server|
   else
     link "/etc/systemd/system/multi-user.target.wants/redis@#{server_name}.service" do
       to '/usr/lib/systemd/system/redis@.service'
-      notifies :run, 'execute[reload-systemd]', :immediately
+      notifies :run, 'execute[reload-systemd-enable]', :immediately
     end
   end
 end
