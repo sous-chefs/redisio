@@ -67,13 +67,13 @@ default['redisio']['version'] = if node['redisio']['package_install']
 default['redisio']['install_dir'] = nil
 
 # Job control related options (initd, upstart, or systemd)
-if node['platform_family'] == 'rhel' && Gem::Version.new(node['platform_version']) > Gem::Version.new('7.0.0')
-  default['redisio']['job_control'] = 'systemd'
-elsif node['platform_family'] == 'freebsd'
-  default['redisio']['job_control'] = 'rcinit'
-else
-  default['redisio']['job_control'] = 'initd'
-end
+default['redisio']['job_control'] = if node['init_package'] == 'systemd'
+                                      'systemd'
+                                    elsif node['platform_family'] == 'freebsd'
+                                      'rcinit'
+                                    else
+                                      'initd'
+                                    end
 
 # Init.d script related options
 default['redisio']['init.d']['required_start'] = []
