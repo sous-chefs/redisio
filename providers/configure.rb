@@ -289,61 +289,77 @@ def configure
                    node['redisio']['bin_path']
                  end
 
-      template "/etc/init.d/redis#{server_name}" do
-        source 'redis.init.erb'
-        cookbook 'redisio'
-        owner 'root'
-        group 'root'
-        mode '0755'
-        variables(
-          name: server_name,
-          bin_path: bin_path,
-          port: current['port'],
-          address: current['address'],
-          user: current['user'],
-          configdir: current['configdir'],
-          piddir: piddir,
-          requirepass: current['requirepass'],
-          shutdown_save: current['shutdown_save'],
-          platform: node['platform'],
-          unixsocket: current['unixsocket'],
-          ulimit: descriptors,
-          required_start: node['redisio']['init.d']['required_start'].join(' '),
-          required_stop: node['redisio']['init.d']['required_stop'].join(' ')
-        )
-        only_if { node['redisio']['job_control'] == 'initd' }
-      end
-      template "/etc/init/redis#{server_name}.conf" do
-        source 'redis.upstart.conf.erb'
-        cookbook 'redisio'
-        owner current['user']
-        group current['group']
-        mode '0644'
-        variables(
-          name: server_name,
-          bin_path: bin_path,
-          port: current['port'],
-          user: current['user'],
-          group: current['group'],
-          configdir: current['configdir'],
-          piddir: piddir
-        )
-        only_if { node['redisio']['job_control'] == 'upstart' }
-      end
-      template "/usr/local/etc/rc.d/redis#{server_name}" do
-        source 'redis.rcinit.erb'
-        cookbook 'redisio'
-        owner current['user']
-        group current['group']
-        mode '0755'
-        variables(
-          name: server_name,
-          bin_path: bin_path,
-          user: current['user'],
-          configdir: current['configdir'],
-          piddir: piddir
-        )
-        only_if { node['redisio']['job_control'] == 'rcinit' }
+      case node['redisio']['job_control']
+      when 'initd'
+        template "/etc/init.d/redis#{server_name}" do
+          source 'redis.init.erb'
+          cookbook 'redisio'
+          owner 'root'
+          group 'root'
+          mode '0755'
+          variables(
+            name: server_name,
+            bin_path: bin_path,
+            port: current['port'],
+            address: current['address'],
+            user: current['user'],
+            configdir: current['configdir'],
+            piddir: piddir,
+            requirepass: current['requirepass'],
+            shutdown_save: current['shutdown_save'],
+            platform: node['platform'],
+            unixsocket: current['unixsocket'],
+            ulimit: descriptors,
+            required_start: node['redisio']['init.d']['required_start'].join(' '),
+            required_stop: node['redisio']['init.d']['required_stop'].join(' ')
+          )
+        end
+      when 'upstart'
+        template "/etc/init/redis#{server_name}.conf" do
+          source 'redis.upstart.conf.erb'
+          cookbook 'redisio'
+          owner current['user']
+          group current['group']
+          mode '0644'
+          variables(
+            name: server_name,
+            bin_path: bin_path,
+            port: current['port'],
+            user: current['user'],
+            group: current['group'],
+            configdir: current['configdir'],
+            piddir: piddir
+          )
+        end
+      when 'rcinit'
+        template "/usr/local/etc/rc.d/redis#{server_name}" do
+          source 'redis.rcinit.erb'
+          cookbook 'redisio'
+          owner current['user']
+          group current['group']
+          mode '0755'
+          variables(
+            name: server_name,
+            bin_path: bin_path,
+            user: current['user'],
+            configdir: current['configdir'],
+            piddir: piddir
+          )
+        end
+      when 'systemd'
+        template "/lib/systemd/system/redis@#{server_name}.service" do
+          source 'redis@.service.erb'
+          cookbook 'redisio'
+          owner 'root'
+          group 'root'
+          mode '0644'
+          variables(
+            bin_path: bin_path,
+            user: current['user'],
+            group: current['group'],
+            limit_nofile: current['maxclients'] + 32
+          )
+        end
       end
     end
   end # servers each loop
