@@ -347,7 +347,15 @@ def configure
           )
         end
       when 'systemd'
-        template "/lib/systemd/system/redis@#{server_name}.service" do
+        service_name = "redis@#{server_name}"
+        reload_name = "#{service_name} systemd reload"
+
+        execute reload_name do
+          command 'systemctl daemon-reload'
+          action :nothing
+        end
+
+        template "/lib/systemd/system/#{service_name}.service" do
           source 'redis@.service.erb'
           cookbook 'redisio'
           owner 'root'
@@ -359,6 +367,7 @@ def configure
             group: current['group'],
             limit_nofile: current['maxclients'] + 32
           )
+          notifies :run, "execute[#{reload_name}]", :immediately
         end
       end
     end
