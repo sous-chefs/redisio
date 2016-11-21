@@ -13,3 +13,16 @@ describe file("#{prefix}/etc/redis/savetest.conf") do
     its(:content) { should match(m) }
   end
 end
+
+if system('command -v semanage &>/dev/null')
+  describe command('semanage fcontext --list --noheading | grep -F redis') do
+    [
+      %r{^/etc/redis\(/\.\*\)\?\s.*:redis_conf_t:},
+      %r{^/var/lib/redis\(/\.\*\)\?\s.*:redis_var_lib_t:},
+      %r{^/var/run/redis\(/\.\*\)\?\s.*:redis_var_run_t:},
+      %r{^/var/log/redis\(/\.\*\)\?\s.*:redis_log_t:}
+    ].each do |pattern|
+      its(:stdout) { should match(pattern) }
+    end
+  end
+end
