@@ -350,6 +350,13 @@ def configure
         service_name = "redis@#{server_name}"
         reload_name = "#{service_name} systemd reload"
 
+        file "/etc/tmpfiles.d/#{service_name}.conf" do
+          content "d #{piddir} 0755 #{current['user']} #{current['group']}\n"
+          owner 'root'
+          group 'root'
+          mode '0644'
+        end
+
         execute reload_name do
           command 'systemctl daemon-reload'
           action :nothing
