@@ -55,7 +55,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       chef.json = {
         'redisio' => {
           'sentinels' => [
-            {'sentinel_port' => 26379, 'name' => 'redisio', 'master_ip' => '192.168.50.5', 'master_port' => '6379'}
+            {'sentinel_bind' => '0.0.0.0', 'sentinel_port' => 26379, 'name' => 'redisio', 'master_ip' => '192.168.50.5', 'master_port' => '6379'}
           ]
         }
       }

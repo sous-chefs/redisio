@@ -11,6 +11,10 @@ syslog-ident redis-<%= @name %>
 syslog-facility <%= @syslogfacility %>
 <%= "logfile #{@logfile}" unless @logfile.nil? %>
 
+# bind sentinel IP
+<% if @sentinel_bind %>
+bind <%=@sentinel_bind%>
+<% end %>
 # port <sentinel-port>
 # The port that this sentinel instance will run on
 port <%=@sentinel_port%>

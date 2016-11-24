@@ -388,6 +388,7 @@ The sentinel recipe's use their own attribute file.
 ```
 'user'                    => 'redis',
 'configdir'               => '/etc/redis',
+'sentinel_bind'           => nil,
 'sentinel_port'           => 26379,
 'monitor'                 => nil,
 'down-after-milliseconds' => 30000,
