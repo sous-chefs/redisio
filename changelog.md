@@ -1,6 +1,16 @@
 redisio CHANGE LOG
 ===
 
+2.5.1 -
+---
+  - Add repl-backlog-size, repl-backlog-ttl, and aof-load-truncated options (#278)
+  - Add TravisCI integration (#299, #300)
+  - Fix test failures - FoodCritic and Rubocop (#298)
+  - Use the config's ulimits if set and is > max_clients (#234)
+  - Add disable_os_default recipe (#224)
+  - Update 'bind' config comments (#293)
+
+
 2.5.0 -
 ---
   - Ubuntu 14 added as tested platform. (#264)
@@ -63,8 +73,8 @@ redisio CHANGE LOG
     - Introduce a test-kitchen test for sentinel watching multiple masters.
     - Incidentally, fixes #193 as well, since it adds a master name attribute for each master.
   - Fixes path for pidfile in sentinel init script
-  - Additional error checking and backwards compatibility for sentinel attribute keys 
-  
+  - Additional error checking and backwards compatibility for sentinel attribute keys
+
 
 2.3.0 -
 ---
@@ -200,7 +210,7 @@ redisio CHANGE LOG
 1.3.0 - Released 2/20/2013
 ---
   - Adds upstart support.  This was a much requested feature.
-  - Fixes bug in uninstall resource that would have prevented it from uninstalling named servers.  
+  - Fixes bug in uninstall resource that would have prevented it from uninstalling named servers.
   - Reworks the init script to take into account the IP redis is listening on, and if it is listening on a socket.
   - Adds an attribute called "shutdown_save" which will explicitly call save on redis shutdown
   - Updates the README.md with a shorter and hopefully equally as useful usage section
@@ -242,7 +252,7 @@ redisio CHANGE LOG
 ---
 
   - Added changelog.md
-  - Added a bunch more configuration options that were left out (default values left as they were before):  
+  - Added a bunch more configuration options that were left out (default values left as they were before):
       - databases
       - slaveservestaledata
       - replpingslaveperiod
