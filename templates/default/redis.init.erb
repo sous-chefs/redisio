@@ -58,6 +58,14 @@ case "$1" in
         if [ -f $PIDFILE ]
         then
                 echo "$PIDFILE exists, process is already running or crashed"
+		PIDNUM=`cat $PIDFILE`
+		PROCESS_RUNNING=`ps --no-headers -q $PIDNUM | wc -l`
+		if [ ! $PROCESS_RUNNING -eq 1 ]
+		then
+			echo "The PID doesn't exists, restarting it."
+			rm $PIDFILE
+			eval $EXEC
+		fi
         else
                 echo "Starting Redis server..."
                 eval $EXEC
