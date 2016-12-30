@@ -19,3 +19,4 @@ recipe "redisio::redis_gem", "this recipe will install the redis ruby gem into t
 
 depends "ulimit", ">= 0.1.2"
 depends "build-essential"
+depends "sudo"

@@ -12,6 +12,14 @@ platforms:
   - name: debian-6.0.8
   - name: centos-6.4
   - name: fedora-20
+    run_list:
+      - recipe[sudo]
+    attributes:
+      authorization:
+        sudo:
+          users: [ "vagrant" ]
+          passwordless: true
+# Fedora 20 requires a tty, hence the additional scaffolding
 
 suites:
   - name: default
