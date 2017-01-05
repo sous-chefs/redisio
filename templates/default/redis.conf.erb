@@ -371,7 +371,7 @@ slave-priority <%= @slavepriority %>
 # rename-command CONFIG ""
 <% if !@rename_commands.nil? %>
   <% @rename_commands.each do |k, v| %>
-    <% v = '""' if v.empty? || v.nil? %>
+    <% v = '""' if v.nil? || v.empty? %>
     <%= "rename-command #{k} #{v}" %>
   <% end %>
 <% end %>
