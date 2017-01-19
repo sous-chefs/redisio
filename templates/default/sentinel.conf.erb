@@ -11,6 +11,14 @@ syslog-ident redis-<%= @name %>
 syslog-facility <%= @syslogfacility %>
 <%= "logfile #{@logfile}" unless @logfile.nil? %>
 
+<% unless @address.nil? %>
+  <%= "bind #{@address.respond_to?(:join) ? @address.join(" ") : @address }" %>
+<% end %>
+
+<% unless @protected_mode.nil? %>
+protected-mode <%= @protected_mode %>
+<% end %>
+
 # port <sentinel-port>
 # The port that this sentinel instance will run on
 port <%=@sentinel_port%>
