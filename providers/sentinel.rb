@@ -158,7 +158,9 @@ def configure
           syslogfacility:    current['syslogfacility'],
           masters:           masters_with_defaults,
           announce_ip:       current['announce-ip'],
-          announce_port:     current['announce-port']
+          announce_port:     current['announce-port'],
+          address:           current['address'],
+          protected_mode:    current['protected_mode'],
         )
         not_if { ::File.exist?("#{current['configdir']}/#{sentinel_name}.conf.breadcrumb") }
       end
