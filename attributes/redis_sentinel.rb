@@ -25,6 +25,7 @@ config_dir = if node['platform_family'] == 'freebsd'
 default['redisio']['sentinel_defaults'] = {
   'user'                    => 'redis',
   'configdir'               => config_dir,
+  'sentinel_bind'           => nil,
   'sentinel_port'           => 26379,
   'monitor'                 => nil,
   'down-after-milliseconds' => 30000,

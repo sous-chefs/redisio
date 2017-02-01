@@ -103,6 +103,7 @@ suites:
         sentinels:
           -
             name: 'cluster'
+            sentinel_bind: 0.0.0.0
             sentinel_port: 26379
             masters:
               -

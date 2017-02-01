@@ -36,6 +36,7 @@ describe 'sentinel recipes' do
     chef_run = ChefSpec::SoloRunner.new do |node|
       node.set['redisio']['sentinels'] = [
         {
+          'sentinel_bind' => '0.0.0.0',
           'sentinel_port' => '1234',
           'name' => 'sentinel-test-params',
           'master_ip' => '5.6.7.8',
@@ -46,6 +47,7 @@ describe 'sentinel recipes' do
     expect(chef_run).to run_redisio_sentinel('redis-sentinels').with(
       sentinels: [
         {
+          'sentinel_bind' => '0.0.0.0',
           'sentinel_port' => '1234',
           'name' => 'sentinel-test-params',
           'master_ip' => '5.6.7.8',

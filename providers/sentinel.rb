@@ -151,6 +151,7 @@ def configure
           name:              current['name'],
           piddir:            piddir,
           job_control:       node['redisio']['job_control'],
+          sentinel_bind:     current['sentinel_bind'],
           sentinel_port:     current['sentinel_port'],
           loglevel:          current['loglevel'],
           logfile:           current['logfile'],

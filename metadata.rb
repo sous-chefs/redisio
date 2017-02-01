@@ -4,7 +4,7 @@ maintainer_email 'brian.bianco@gmail.com'
 license          'Apache 2.0'
 description      'Installs/Configures redis'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '2.5.0'
+version          '2.5.1'
 
 %w(
   amazon
