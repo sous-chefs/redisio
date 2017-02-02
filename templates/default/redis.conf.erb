@@ -338,6 +338,7 @@ repl-backlog-ttl <%= @replbacklogttl %>
 # By default the priority is 100.
 slave-priority <%= @slavepriority %>
 
+<% if @version[:major].to_i >= 3 %>
 # It is possible for a master to stop accepting writes if there are less than
 # N slaves connected, having a lag less or equal than M seconds.
 #
@@ -361,7 +362,9 @@ slave-priority <%= @slavepriority %>
 # min-slaves-max-lag is set to 10.
 <%= "min-slaves-to-write #{@minslavestowrite}" unless @minslavestowrite.nil? %>
 <%= "min-slaves-max-lag #{@minslavesmaxlag}" unless @minslavesmaxlag.nil? %>
+<% end %>
 
+<% if @version[:major].to_i >= 4 %>
 # A Redis master is able to list the address and port of the attached
 # slaves in different ways. For example the "INFO replication" section
 # offers this information, which is used, among other tools, by
@@ -390,6 +393,7 @@ slave-priority <%= @slavepriority %>
 #
 # slave-announce-ip 5.5.5.5
 # slave-announce-port 1234
+<% end %>
 
 ################################## SECURITY ###################################
 
