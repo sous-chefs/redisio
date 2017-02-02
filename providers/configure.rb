@@ -270,7 +270,9 @@ def configure
           clusterenabled:             current['clusterenabled'],
           clusterconfigfile:          current['clusterconfigfile'],
           clusternodetimeout:         current['clusternodetimeout'],
-          includes:                   current['includes']
+          includes:                   current['includes'],
+          minslavestowrite:           current['minslavestowrite'],
+          minslavesmaxlag:            current['minslavesmaxlag']
         )
         not_if { ::File.exist?("#{current['configdir']}/#{server_name}.conf.breadcrumb") }
       end
