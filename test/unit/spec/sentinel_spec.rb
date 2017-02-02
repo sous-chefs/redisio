@@ -34,7 +34,7 @@ describe 'sentinel recipes' do
 
   it 'creates a specified sentinel instance' do
     chef_run = ChefSpec::SoloRunner.new do |node|
-      node.set['redisio']['sentinels'] = [
+      node.override['redisio']['sentinels'] = [
         {
           'sentinel_bind' => '0.0.0.0',
           'sentinel_port' => '1234',
@@ -59,7 +59,7 @@ describe 'sentinel recipes' do
 
   it 'should not create a sentinel instance' do
     chef_run = ChefSpec::SoloRunner.new do |node|
-      node.set['redisio']['sentinels'] = []
+      node.override['redisio']['sentinels'] = []
     end.converge(*recipes) # *splat operator for array to vararg
     expect(chef_run).to run_redisio_sentinel('redis-sentinels').with(
       sentinels: []

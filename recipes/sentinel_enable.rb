@@ -31,7 +31,7 @@ if sentinel_instances.nil?
   ]
 end
 
-execute 'reload-systemd' do
+execute 'reload-systemd-sentinel' do
   command '/usr/bin/systemctl daemon-reload'
   only_if { node['redisio']['job_control'] == 'systemd' }
   action :nothing
@@ -52,7 +52,7 @@ sentinel_instances.each do |current_sentinel|
   else
     link "/etc/systemd/system/multi-user.target.wants/redis-sentinel@#{sentinel_name}.service" do
       to '/usr/lib/systemd/system/redis-sentinel@.service'
-      notifies :run, 'execute[reload-systemd]', :immediately
+      notifies :run, 'execute[reload-systemd-sentinel]', :immediately
     end
   end
 end
