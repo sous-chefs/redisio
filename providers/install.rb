@@ -36,7 +36,7 @@ action :run do
   else
     @tarball = "#{new_resource.base_name}#{new_resource.version}.#{new_resource.artifact_type}"
 
-    unless current_resource.version == new_resource.version || (redis_exists? && new_resource.safe_install)
+    unless (redis_exists? && new_resource.safe_install)
       Chef::Log.info("Installing Redis #{new_resource.version} from source")
       download
       unpack
@@ -105,8 +105,3 @@ def version
   nil
 end
 
-def load_current_resource
-  @current_resource = Chef::Resource::RedisioInstall.new(new_resource.name)
-  @current_resource.version(version)
-  @current_resource
-end
