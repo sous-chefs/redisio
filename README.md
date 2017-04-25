@@ -1,7 +1,7 @@
 **Please read the changelog when upgrading from the 1.x series to the 2.x series**
 
 [![Build Status](https://travis-ci.org/brianbianco/redisio.svg)](https://travis-ci.org/brianbianco/redisio)
-![cookbook version](http://img.shields.io/badge/cookbook%20version-2.5.0-blue.svg)
+![cookbook version](http://img.shields.io/badge/cookbook%20version-2.5.1-blue.svg)
 Description
 ===========
 
