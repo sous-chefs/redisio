@@ -1,31 +1,32 @@
+# Redisio Cookbook
+
 **Please read the changelog when upgrading from the 1.x series to the 2.x series**
 
-[![Build Status](https://travis-ci.org/brianbianco/redisio.svg)](https://travis-ci.org/brianbianco/redisio)
-![cookbook version](http://img.shields.io/badge/cookbook%20version-2.5.0-blue.svg)
-Description
-===========
+[![Gitter chat](https://badges.gitter.im/brianbianco/redisio.svg)](https://gitter.im/brianbianco/redisio)
+[![Build Status](https://travis-ci.org/brianbianco/redisio.svg?branch=master)](https://travis-ci.org/brianbianco/redisio)
+[![Cookbook Version](https://img.shields.io/cookbook/v/redisio.svg)](https://supermarket.chef.io/cookbooks/redisio)
+
+## Description
 
 Website:: https://github.com/brianbianco/redisio
 
 Installs and configures Redis server instances
 
-Requirements
-============
+## Requirements
 
 This cookbook builds redis from source or install it from packages, so it should work on any architecture for the supported distributions.  Init scripts are installed into /etc/init.d/
 
 It depends on the ulimit cookbook: https://github.com/bmhatfield/chef-ulimit and the build-essentials cookbook: https://github.com/opscode-cookbooks/build-essential
 
 
-Platforms
----------
+### Platforms
 
 * Debian, Ubuntu
 * CentOS, Red Hat, Fedora, Scientific Linux
 * FreeBSD
 
-Testing
--------
+### Testing
+
 This cookbook is tested with rspec/chefspec and test-kitchen/serverspec.  Run `bundle install` to install required gems.
 
 * rake spec
@@ -43,8 +44,7 @@ Tested on:
 * Centos 7.1
 * FreeBSD 10.3
 
-Usage
-=====
+## Usage
 
 The redisio cookbook contains LWRP for installing, configuring and managing redis and redis_sentinel.
 
@@ -66,8 +66,7 @@ The cookbook also contains a recipe to allow for the installation of the redis r
 
 Redis-sentinel will write configuration and state data back into its configuration file.  This creates obvious problems when that config is managed by chef. This cookbook will create the config file once, and then leave a breadcrumb that will guard against the file from being updated again.
 
-Recipes
--------
+### Recipes
 
 * configure - This recipe is used to configure redis.
 * default - This is used to install the pre-requisites for building redis, and to make the LWRPs available
@@ -79,10 +78,9 @@ Recipes
 * sentinel_enable - This recipe can be used to enable the sentinel service(s)
 * disable_os_default - This recipe can be used to disable the default OS redis init script
 
-Role File Examples
-------------------
+### Role File Examples
 
-#### Install redis and setup an instance with default settings on default port, and start the service through a role file #
+##### Install redis and setup an instance with default settings on default port, and start the service through a role file
 
 ```ruby
 run_list *%w[
@@ -92,7 +90,8 @@ run_list *%w[
 
 default_attributes({})
 ```
-#### Install redis with packages and setup an instance with default settings on default port, and start the service through a role file #
+
+##### Install redis with packages and setup an instance with default settings on default port, and start the service through a role file
 
 ```ruby
 run_list *%w[
@@ -108,7 +107,7 @@ default_attributes({
 })
 ```
 
-#### Install redis, give the instance a name, and use a unix socket #
+##### Install redis, give the instance a name, and use a unix socket
 
 ```ruby
 run_list *%w[
@@ -125,7 +124,7 @@ default_attributes({
 })
 ```
 
-#### Install redis and pull the password from an encrypted data bag #
+##### Install redis and pull the password from an encrypted data bag
 
 ```ruby
 run_list *%w[
@@ -142,7 +141,7 @@ default_attributes({
 })
 ```
 
-##### Data Bag #
+###### Data Bag
 
 ```
 {
@@ -151,7 +150,7 @@ default_attributes({
 }
 ```
 
-#### Install redis and setup two instances on the same server, on different ports, with one slaved to the other through a role file #
+##### Install redis and setup two instances on the same server, on different ports, with one slaved to the other through a role file
 
 ```ruby
 run_list *%w[
@@ -169,7 +168,7 @@ default_attributes({
 })
 ```
 
-#### Install redis and setup two instances, on the same server, on different ports, with the default data directory changed to /mnt/redis, and the second instance named#
+##### Install redis and setup two instances, on the same server, on different ports, with the default data directory changed to /mnt/redis, and the second instance named
 
 ```ruby
 run_list *%w[
@@ -185,7 +184,7 @@ default_attributes({
 })
 ```
 
-#### Install redis and setup three instances on the same server, changing the default data directory to /mnt/redis, each instance will use a different backup type, and one instance will use a different data dir #
+##### Install redis and setup three instances on the same server, changing the default data directory to /mnt/redis, each instance will use a different backup type, and one instance will use a different data dir
 
 ```ruby
 run_list *%w[
@@ -205,7 +204,7 @@ default_attributes({
 })
 ```
 
-#### Install redis 2.4.11 (lower than the default version) and turn safe install off, for the event where redis is already installed.  This will use the default settings.  Keep in mind the redis version will not actually be updated until you restart the service (either through the LWRP or manually). #
+##### Install redis 2.4.11 (lower than the default version) and turn safe install off, for the event where redis is already installed.  This will use the default settings.  Keep in mind the redis version will not actually be updated until you restart the service (either through the LWRP or manually).
 
 ```ruby
 run_list *%w[
@@ -221,7 +220,7 @@ default_attributes({
 })
 ```
 
-#### Install a single redis-sentinel to listen for a master on localhost and default port number
+##### Install a single redis-sentinel to listen for a master on localhost and default port number
 
 ```ruby
 run_list *%w[
@@ -231,14 +230,12 @@ run_list *%w[
 ```
 
 
-LWRP Examples
--------------
+## LWRP Examples
 
 Instead of using my provided recipes, you can simply depend on the redisio cookbook in your metadata and use the LWRP's yourself.  I will show a few examples of ways to use the LWRPS, detailed breakdown of options are below
 in the resources/providers section
 
-install resource
-----------------
+### Install Resource
 
 It is important to note that this call has certain expectations for example, it expects the redis package to be in the format `redis-VERSION.tar.gz'.
 
@@ -251,8 +248,7 @@ redisio_install "redis-installation" do
 end
 ```
 
-configure resource
-------------------
+### Configure Resource
 
 The servers resource expects an array of hashes where each hash is required to contain at a key-value pair of 'port' => '<port numbers>'.
 
@@ -265,8 +261,7 @@ redisio_configure "redis-servers" do
 end
 ```
 
-sentinel resource
-----------------
+### Sentinel Resource
 
 The sentinel resource installs and configures all of your redis_sentinels defined in sentinel_instances
 
@@ -280,8 +275,7 @@ redisio_sentinel "redis-sentinels" do
 end
 ```
 
-Attributes
-==========
+## Attributes
 
 Configuration options, each option corresponds to the same-named configuration option in the redis configuration file;  default values listed
 
@@ -419,11 +413,9 @@ You may also pass an array of masters to monitor like so:
 }]
 ```
 
-Resources/Providers
-===================
+## Resources/Providers
 
-`service`
----------
+### `service`
 
 Actions:
 
@@ -441,8 +433,7 @@ service "redis<server_name>" do
 end
 ```
 
-`install`
---------
+### `install`
 
 Actions:
 
@@ -470,8 +461,7 @@ install "redis" do
 end
 ```
 
-`configure`
---------
+### `configure`
 
 Actions:
 
@@ -493,8 +483,7 @@ configure "redis" do
 end
 ```
 
-License and Author
-==================
+## License and Author
 
 Author:: [Brian Bianco](<brian.bianco@gmail.com>)
 Author\_Website:: http://www.brianbianco.com
