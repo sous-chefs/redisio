@@ -23,6 +23,7 @@ namespace :style do
       :chef_version => '11.6.0',
       :tags => %w(
         ~FC059
+        ~FC085
       )
     }
     # rubocop:enable Style/HashSyntax

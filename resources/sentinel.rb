@@ -18,9 +18,7 @@
 #
 actions :run
 
-# Uncomment this and remove the block in initialize
-# when ready to drop support for chef <= 0.10.8
-#default_action :run
+default_action :run
 
 # Configuration attributes
 attribute :base_piddir, kind_of: String, default: '/var/run/redis'
@@ -28,9 +26,3 @@ attribute :user, kind_of: String, default: 'redis'
 
 attribute :sentinel_defaults, kind_of: Hash
 attribute :sentinels, kind_of: Array
-
-def initialize(name, run_context = nil)
-  super
-  @action = :run
-  @tarball = nil
-end

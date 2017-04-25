@@ -49,6 +49,10 @@ Style/NestedParenthesizedCalls:
 Style/NumericLiterals:
   Enabled: false
 
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    '%w': '()'
+
 Style/RegexpLiteral:
   Enabled: false
 
@@ -56,3 +60,6 @@ Style/SpaceAroundOperators:
   Enabled: true
   Exclude:
     - attributes/default.rb
+
+Style/SymbolArray:
+  EnforcedStyle: brackets
