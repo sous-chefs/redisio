@@ -11,21 +11,23 @@ platforms:
 <%
   chef_versions = %w(
     11.0.0
+    12.19.36
     latest
   )
 
   # non RHEL OS's
   test_platforms = %w(
-    ubuntu-12.04
     ubuntu-14.04
-    debian-6.0.10
+    ubuntu-16.04
+    debian-7.11
+    debian-8.7
     freebsd-10.3
   )
 
   # RHEL OS's
   test_platforms_rhel = %w(
-      centos-6.8
-      centos-7.1
+      centos-6.9
+      centos-7.3
   )
 %>
 
@@ -68,17 +70,6 @@ suites:
           - port: 6379
         package_install: true
         version:
-    excludes:
-    <% # OS's to exclude
-      test_platforms = %w(
-          ubuntu-12.04
-          debian-6.0.10
-        )
-
-      test_platforms.product(chef_versions).each do |platform_version, chef_version|
-    %>
-      - <%= platform_version %>-<%= chef_version %>
-    <% end %>
   - name: sentinel
     run_list:
       - recipe[redisio::default]
