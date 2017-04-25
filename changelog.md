@@ -1,8 +1,6 @@
-redisio CHANGE LOG
-===
+# redisio CHANGE LOG
 
-2.5.0 -
----
+## 2.5.0 - Released 9/15/2016
   - Ubuntu 14 added as tested platform. (#264)
   - FreeBSD-10.3 support added. (#279)
     - installation from source is not supported
@@ -16,14 +14,12 @@ redisio CHANGE LOG
 
 
 
-2.4.2 -
----
+## 2.4.2 - Released 4/8/2016
   - Created a 2.4.1 tag but somehow the metadata file wasn't updated.  Instead
     of deleting a pushed tag, creating a new tag and updating metdatafile. Aside
     from the version number, this is an identical release to 2.4.1
 
-2.4.1 -
----
+## 2.4.1 -
   - Increases default clusternodetimeout value from 5 to 5000
   - Allows you to set version for package based install
   - Sets UID of redis data directory if it is present
@@ -42,8 +38,7 @@ redisio CHANGE LOG
 
 
 
-2.4.0 (unreleased on supermarket)  -
----
+## 2.4.0 (unreleased on supermarket)  -
   - Add CentOS 7 support with systemd configs
   - Fixes bug in ulimit resource guard
   - Fixes bug in sentinel required parameters sanity check
@@ -52,8 +47,7 @@ redisio CHANGE LOG
   - Adds option to stop chef from managing sentinel configs after writing once
   - Adds config option rename_commands
 
-2.3.1 (unreleased on supermarket) -
----
+## 2.3.1 (unreleased on supermarket) -
   - Allow instance 'save' to be string or array
   - Adds sources_url and issues_url with guards to be Chef 12 compatible
   - Bumps Redis source version to 2.8.20
@@ -63,11 +57,10 @@ redisio CHANGE LOG
     - Introduce a test-kitchen test for sentinel watching multiple masters.
     - Incidentally, fixes #193 as well, since it adds a master name attribute for each master.
   - Fixes path for pidfile in sentinel init script
-  - Additional error checking and backwards compatibility for sentinel attribute keys 
-  
+  - Additional error checking and backwards compatibility for sentinel attribute keys
 
-2.3.0 -
----
+
+## 2.3.0 - Released 4/8/2015
   - Add support for installing by distribution package for CentOS (#180)
   - Add conditionals to check for redis 3 that was released recently (#183)
   - Prevent `usermod: user redis is currently logged in` (#176)
@@ -82,17 +75,14 @@ redisio CHANGE LOG
   - Update documentation to reflect that cookbook uses `node['redisio']`, not `node['redis']` (#174)
   - Markdown formatting improvements in the README.md (#168, #172)
 
-2.2.4 -
----
+## 2.2.4 - Released 10/4/2014
   - Updates installed version of redis to the latest stable (2.8.17)
   - Fixes backwards compatability bug with older version of redis (namely 2.6.x series) related to keyspaces
 
-2.2.3 -
----
+## 2.2.3 - Released 8/25/2014
   - Bug Fix: Repackages the chef supermarket releaes with gnutar instead of BSD tar
 
-2.2.2 -
----
+## 2.2.2 - Released 8/22/2014
   - Please refer to changelog for 2.0.0.
       - If moving from 1.7.x this release has many breaking changes. You will likely need to update your wrapper cookbook or role.
   - Added test-kitchen and serverspec coverage for both redis and redis_sentinel
@@ -105,17 +95,13 @@ redisio CHANGE LOG
   - Added options for the following
       - tcp-keepalive
 
-2.2.1 -
----
+## 2.2.1 -
   - Allow sentinel to control both redis and redis-sentinel configs depending on attribute `redisio.sentinel.manage_config` state.
 
-2.2.0 -
----
+## 2.2.0 -
   - Adds behavior to allow the cookbook to NOT manage the redis config files as redis itself will write to them now if you are using sentinel
 
-2.1.0 -
----
-
+## 2.1.0 -
   - Adds options for the following
       - lua-time-limit
       - slowlog-logs-slower-than
@@ -144,8 +130,7 @@ redisio CHANGE LOG
   - Changes the job_control per instance attribute to a global one.
   - Adds a status command to the init.d script, uses this in the initd based service for checking status
 
-2.0.0 - Never officially released
----
+## 2.0.0 - Never officially released
   ! THIS RELEASE HAS MANY BREAKING CHANGES       !
   ! Your old role file will most likely not work !
 
@@ -153,62 +138,52 @@ redisio CHANGE LOG
   - Allows the user to specify required_start and required_start when using the init scripts
   - Warns a user if they have syslogenabled set to yes and also have logfile set
 
-1.7.1 - Released 2/10/2014
----
+## 1.7.1 - Released 2/10/2014
   - Bumps default version of redis to 2.6.17
   - Changes the redis download mirror to redis.io
   - Fixes #76 - Default settings save as empty string breaks install. [Thanks to astlock]
   - Fixes bug with nil file resource for logfile. [Thanks to chrismoos]
 
-1.7.0 - Released 7/25/2013
----
+## 1.7.0 - Released 7/25/2013
   - Adds support for address attribute as an array or string.  This is to support the feature that will be introduced in redis 2.8
 
-1.6.0 - Release 6/27/2013
----
+## 1.6.0 - Release 6/27/2013
   - Fixes a bug when using a percentage for max memory. [Thanks to organicveggie]
   - Allows installation of redis into custom directory.  [Thanks to organicveggie, rcleere]
   - Bumps the default installed version of redis to the new stable, 2.6.14
 
-1.5.0 - Released 3/30/2013
----
+## 1.5.0 - Released 3/30/2013
   - Forces maxmemory to a string inside of install provider so it will not explode if you pass in an int. [Thanks to sprack]
   - Strips leading directory from downloaded tarball, and extracts into a newly created directory.  This allows more versatility for where the package can be installed from (Github / BitBucket) [Thanks to dim]
   - Adds options for Redis Cluster [Thanks to jrallison]
   - Adds a call to ulimit into the init script, it was not honoring the limits set by the ulimit cookbook for some users.  [Thanks to mike-yesware]
 
-1.4.1 - Released 2/27/2013
----
+## 1.4.1 - Released 2/27/2013
   - Removes left over debugging statement
 
-1.4.0 - Released 2/27/2013
----
+## 1.4.0 - Released 2/27/2013
   - ACTUALLY fixes the use of upstart and redis.  Redis no longer daemonizes itself when using job_control type upstart and allows upstart to handle this
   - Adds dependency on the ulimit cookbook and allows you to set the ulimits for the redis instance users.
   - Adds associated node attribute for the ulimit.  It defaults to the special value 0, which causes the cookbook to use maxclients + 32.  32 is the number of file descriptors redis needs itself
   - You can disable the use of the ulimits by setting the node attribute for it to "false" or "nil"
   - Comments out the start on by default in the upstart script.  This will get uncommented by the upstart provider when the :enable action is called on it
 
-1.3.2 - Released 2/26/2013
----
+## 1.3.2 - Released 2/26/2013
   - Changes calls to Chef::ShellOut to Mixlib::ShellOut
 
-1.3.1 - Released 2/26/2013
----
+## 1.3.1 - Released 2/26/2013
   - Fixes bug in upstart script to create pid directory if it does not exist
 
-1.3.0 - Released 2/20/2013
----
+## 1.3.0 - Released 2/20/2013
   - Adds upstart support.  This was a much requested feature.
-  - Fixes bug in uninstall resource that would have prevented it from uninstalling named servers.  
+  - Fixes bug in uninstall resource that would have prevented it from uninstalling named servers.
   - Reworks the init script to take into account the IP redis is listening on, and if it is listening on a socket.
   - Adds an attribute called "shutdown_save" which will explicitly call save on redis shutdown
   - Updates the README.md with a shorter and hopefully equally as useful usage section
   - maxmemory attribute now allows the use of percentages.  You must include a % sign after the value.
   - Bumps default version of redis to install to the current stable, 2.6.10
 
-1.2.0 - Released 2/6/2013
----
+## 1.2.0 - Released 2/6/2013
   - Fixes bug related to where the template source resides when using the LWRP outside of the redisio cookbook
   - Fixes bug where the version method was not properly parsing version strings in redis 2.6.x, as the version string from redis-server -v changed
   - Fixes bug in default attributes for fedora default redis data directory
@@ -222,8 +197,7 @@ redisio CHANGE LOG
   - Adds a per server "name" attribute that allows a server to use that instead of the port for its configuration files, service resource, and init script.
   - Shifts the responsbility for handling the case of default redis instances into the install recipe due to the behavior of arrays and deep merge
 
-1.1.0 - Released 8/21/2012
----
+## 1.1.0 - Released 8/21/2012
   ! Warning breaking change !: The redis pidfile directory by default has changed, if you do not STOP redis before upgrading to the new version
                                of this cookbook, it will not be able to stop your instance properly via the redis service provider, or the init script.
                                If this happens to you, you can always log into the server and manually send a SIGTERM to redis
@@ -238,11 +212,9 @@ redisio CHANGE LOG
   - Added logic to replace hash-max-ziplist-entries, hash-max-ziplist-value with  hash-max-zipmap-entires, hash-max-zipmap-value when using 2.6 series
   - Added the ability to log to any file, not just syslog.  Please do make sure after you set your file with the logfile attribute you also set syslogenabled to 'no'
 
-1.0.3 - Released 5/2/2012
----
-
+## 1.0.3 - Released 5/2/2012
   - Added changelog.md
-  - Added a bunch more configuration options that were left out (default values left as they were before):  
+  - Added a bunch more configuration options that were left out (default values left as they were before):
       - databases
       - slaveservestaledata
       - replpingslaveperiod
@@ -255,20 +227,14 @@ redisio CHANGE LOG
       It is worth nothing that since there is a configurable option for conf include files, and the fact that redis uses the most recently read configuration option... even if a new option where to show up, or and old one was not included they could be added using that pattern.
 
 
-1.0.2 - Released 4/25/2012
----
-
+## 1.0.2 - Released 4/25/2012
  - Merged in pull request from meskyanichi which improved the README.md and added a .gitignore
  - Added a "safe_install" node attribute which will prevent redis from installing anything if it exists already.  Defaults to true.
  - Addedd a "redis_gem" recipe which will install the redis gem from ruby gems, added associated attributes.  See README for me
 
-1.0.1 - Released 4/8/2012
----
-
+## 1.0.1 - Released 4/8/2012
  - Added some prequisite checks for RHEL based distributions
  - Minor typos and formatting fixes in metadata.rb and README.md
 
-1.0.0 - Released 4/8/2012
----
-
+## 1.0.0 - Released 4/8/2012
  - Initial Release
