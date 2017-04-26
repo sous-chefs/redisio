@@ -1,5 +1,23 @@
 # redisio CHANGE LOG
 
+## Unreleased
+  - Update 'bind' config comments ([#293](https://github.com/brianbianco/redisio/pull/293))
+  - Add disable_os_default recipe ([#224](https://github.com/brianbianco/redisio/pull/224))
+  - Use the config's ulimits if set and is > max_clients ([#234](https://github.com/brianbianco/redisio/pull/234))
+  - Add Travis config ([#299](https://github.com/brianbianco/redisio/pull/299))
+  - Fix test failures (FoodCritic and Rubocop) ([#298](https://github.com/brianbianco/redisio/pull/298))
+  - Fix TravisCI builds ([#300](https://github.com/brianbianco/redisio/pull/300))
+  - Add repl-backlog-size, repl-backlog-ttl, and aof-load-truncated options ([#278](https://github.com/brianbianco/redisio/pull/278))
+  - Add sentinel_bind to bind sentinel to different IPs ([#306](https://github.com/brianbianco/redisio/pull/306))
+  - Cleanup deprecation warnings ([#301](https://github.com/brianbianco/redisio/pull/301))
+  - Fix version detection with epoch version numbers from deb/ubuntu ([#294](https://github.com/brianbianco/redisio/pull/294))
+  - Restrict VM redis config to <= 2.4 ([#322](https://github.com/brianbianco/redisio/pull/322))
+  - Rename_commands should be checked for nil before empty ([#311](https://github.com/brianbianco/redisio/pull/311))
+  - Fixup foodcritic, rubocop, and kitchen testing ([#324](https://github.com/brianbianco/redisio/pull/324))
+    - Note: this drops support for Chef < 11
+  - Add min-slaves redis options ([#313](https://github.com/brianbianco/redisio/pull/313))
+  - Allow /etc/init start after sigterm from system or user ([#310](https://github.com/brianbianco/redisio/pull/310))
+
 ## 2.5.0 - Released 9/15/2016
   - Ubuntu 14 added as tested platform. (#264)
   - FreeBSD-10.3 support added. (#279)
@@ -11,8 +29,6 @@
   - Disabling safe_install in the install recipe allowed. (#284)
   - Protected-mode added as optional (#275, #289)
   - Fixes nil exception when installing sentinel on non-debian and non-rhel platforms (#288)
-
-
 
 ## 2.4.2 - Released 4/8/2016
   - Created a 2.4.1 tag but somehow the metadata file wasn't updated.  Instead
