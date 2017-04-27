@@ -36,13 +36,14 @@ This cookbook is tested with rspec/chefspec and test-kitchen/serverspec.  Run `b
 
 Tested on:
 
-* Ubuntu 12.04
-* Ubuntu 14.04
-* Debian 6.0.8
-* Fedora 20
-* Centos 6.6
-* Centos 7.1
+* Centos 6.9
+* Centos 7.3
+* Debian 7.11
+* Debian 8.7
+* Fedora 25
 * FreeBSD 10.3
+* Ubuntu 14.04
+* Ubuntu 16.04
 
 ## Usage
 
