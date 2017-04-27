@@ -378,12 +378,11 @@ Available options and their defaults
 ],
 'hz'                         => '10',
 'aofrewriteincrementalfsync' => 'yes',
-'cluster-enabled'            => 'no',
-'cluster-config-file'        => nil, # Defaults to redis instance name inside of template if cluster is enabled.
-'cluster-node-timeout'       => 5000,
+'clusterenabled'             => 'no',
+'clusterconfigfile'          => nil, # Defaults to redis instance name inside of template if cluster is enabled.
+'clusternodetimeout'         => 5000,
 'includes'                   => nil,
 'breadcrumb'                 => true # Defaults to create breadcrumb lock-file.
-
 ```
 
 * `redisio['servers']` - An array where each item is a set of key value pairs for redis instance specific settings.  The only required option is 'port'.  These settings will override the options in 'default_settings', if it is left `nil` it will default to `[{'port' => '6379'}]`. If set to `[]` (empty array), no instances will be created.
