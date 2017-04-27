@@ -20,6 +20,10 @@ group :testing do
   gem 'rubocop'
 end
 
+group :travis_integration do
+  gem 'kitchen-dokken'
+end
+
 group :integration do
   gem 'busser-serverspec'
   gem 'kitchen-vagrant'

@@ -1,12 +1,28 @@
 language: ruby
 cache: bundler
+services: docker
+dist: trusty
 rvm:
   - 2.3.1
-sudo: false
+sudo: required
 branches:
   only:
     - master
 bundler_args: --without=integration --path=.bundle
+env:
+  global:
+    - KITCHEN_LOCAL_YAML=.kitchen.dokken.yml
+  matrix:
+    - CMD="rake" OPTIONS="style"
+    - CMD="rake" OPTIONS="spec"
+    - CMD="kitchen verify" OPTIONS="default-centos-6"
+    - CMD="kitchen verify" OPTIONS="default-centos-7"
+    - CMD="kitchen verify" OPTIONS="default-debian-7"
+    - CMD="kitchen verify" OPTIONS="default-debian-8"
+    - CMD="kitchen verify" OPTIONS="default-fedora-latest"
+    - CMD="kitchen verify" OPTIONS="default-ubuntu-1404"
+    - CMD="kitchen verify" OPTIONS="default-ubuntu-1604"
+before_script:
+  - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
 script:
-  - bundle exec rake style
-  - bundle exec rake spec
+  - bundle exec $CMD $OPTIONS
