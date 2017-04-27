@@ -39,7 +39,8 @@ end
 unless (os[:family] == 'redhat' && os[:release][0] == '7') ||
        os[:family] == 'freebsd' ||
        (os[:family] == 'ubuntu' && os[:release].to_f >= 16.04) ||
-       (os[:family] == 'debian' && os[:release].to_f >= 8.0)
+       (os[:family] == 'debian' && os[:release].to_f >= 8.0) ||
+       os[:family] == 'fedora'
   describe file('/etc/init.d/redis_sentinel_cluster') do
     [
       %r{SENTINELNAME=sentinel_cluster},

@@ -6,6 +6,7 @@ driver_config:
 
 provisioner:
   name: chef_solo
+  # log_level: debug
 
 platforms:
 <%
@@ -17,17 +18,14 @@ platforms:
 
   # non RHEL OS's
   test_platforms = %w(
-    ubuntu-14.04
-    ubuntu-16.04
+    centos-6.9
+    centos-7.3
     debian-7.11
     debian-8.7
+    fedora-25
     freebsd-10.3
-  )
-
-  # RHEL OS's
-  test_platforms_rhel = %w(
-      centos-6.9
-      centos-7.3
+    ubuntu-14.04
+    ubuntu-16.04
   )
 %>
 
@@ -36,16 +34,16 @@ platforms:
     driver_config:
       box: bento/<%= platform_version %>
       require_chef_omnibus: <%= chef_version %>
-<% end %>
-
-<% test_platforms_rhel.product(chef_versions).each do |platform_version, chef_version| %>
-  - name: <%= platform_version %>-<%= chef_version %>
-    driver_config:
-      box: bento/<%= platform_version %>
-      require_chef_omnibus: <%= chef_version %>
+    <% if platform_version == 'debian-7.11' %>
+    # Set due to https://github.com/test-kitchen/kitchen-vagrant/issues/293
+    driver:
+      kitchen_cache_directory: .kitchen/cache/debian
+    <% end %>
+    <% if platform_version.start_with?('centos') %>
     run_list:
       - recipe[yum-epel::default]
       - recipe[yum-remi::default]
+    <% end %>
 <% end %>
 
 suites:

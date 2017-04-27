@@ -2,7 +2,8 @@ shared_examples_for 'redis on port' do |redis_port, _args|
   it 'enables the redis service' do
     service_name = if (os[:family] == 'redhat' && os[:release][0] == '7') ||
                       (os[:family] == 'ubuntu' && os[:release].to_f >= 16.04) ||
-                      (os[:family] == 'debian' && os[:release].to_f >= 8.0)
+                      (os[:family] == 'debian' && os[:release].to_f >= 8.0) ||
+                      os[:family] == 'fedora'
                      "redis@#{redis_port}"
                    else
                      "redis#{redis_port}"
