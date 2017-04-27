@@ -46,7 +46,7 @@ redisio_sentinel 'redis-sentinels' do
   base_piddir redis['base_piddir']
 end
 
-template '/usr/lib/systemd/system/redis-sentinel@.service' do
+template '/lib/systemd/system/redis-sentinel@.service' do
   source 'redis-sentinel@.service'
   variables(
     bin_path: node['redisio']['bin_path'],
