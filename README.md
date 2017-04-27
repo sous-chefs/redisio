@@ -415,24 +415,6 @@ You may also pass an array of masters to monitor like so:
 
 ## Resources/Providers
 
-### `service`
-
-Actions:
-
-* `start`
-* `stop`
-* `restart`
-* `enable`
-* `disable`
-
-Simply provide redis<server_name> where server name is the port if you haven't given it a name.
-
-```ruby
-service "redis<server_name>" do
-  action [:start,:stop,:restart,:enable,:disable]
-end
-```
-
 ### `install`
 
 Actions:
