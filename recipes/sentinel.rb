@@ -46,10 +46,16 @@ redisio_sentinel 'redis-sentinels' do
   base_piddir redis['base_piddir']
 end
 
-template '/usr/lib/systemd/system/redis-sentinel@.service' do
+bin_path = if node['redisio']['install_dir']
+             ::File.join(node['redisio']['install_dir'], 'bin')
+           else
+             node['redisio']['bin_path']
+           end
+
+template '/lib/systemd/system/redis-sentinel@.service' do
   source 'redis-sentinel@.service'
   variables(
-    bin_path: node['redisio']['bin_path'],
+    bin_path: bin_path,
     limit_nofile: redis['default_settings']['maxclients'] + 32
   )
   only_if { node['redisio']['job_control'] == 'systemd' }

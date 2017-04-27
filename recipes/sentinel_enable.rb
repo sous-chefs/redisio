@@ -32,7 +32,7 @@ if sentinel_instances.nil?
 end
 
 execute 'reload-systemd-sentinel' do
-  command '/usr/bin/systemctl daemon-reload'
+  command 'systemctl daemon-reload'
   only_if { node['redisio']['job_control'] == 'systemd' }
   action :nothing
 end
