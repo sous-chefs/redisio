@@ -40,3 +40,11 @@ before_script:
   - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
 script:
   - bundle exec $CMD $OPTIONS
+matrix:
+  allow_failures:
+    # https://github.com/brianbianco/redisio/issues/335
+    - env: CMD="kitchen verify" OPTIONS="redis-package-centos-6"
+    # https://github.com/brianbianco/redisio/issues/336
+    - env: CMD="kitchen verify" OPTIONS="redis-package-debian-7"
+    # https://github.com/brianbianco/redisio/issues/337
+    - env: CMD="kitchen verify" OPTIONS="redis-package-ubuntu-1404"
