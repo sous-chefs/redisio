@@ -139,6 +139,12 @@ port <%=@sentinel_port%>
 # NOTIFICATION SCRIPT
 #
 # sentinel notification-script <master-name> <script-path>
+<% @masters.each do |current| %>
+<% calc_name = String(current['master_name'] || @name || 'master_name') %>
+<% if current['notification_script'] %>
+<%= "sentinel notification-script #{calc_name} #{current['notification_script']}" %>
+<% end %>
+<% end %>
 #
 # Call the specified notification script for any sentienl event that is
 # generated in the WARNING level (for instance -sdown, -odown, and so forth).
@@ -159,6 +165,12 @@ port <%=@sentinel_port%>
 # CLIENTS RECONFIGURATION SCRIPT
 #
 # sentinel client-reconfig-script <master-name> <script-path>
+<% @masters.each do |current| %>
+<% calc_name = String(current['master_name'] || @name || 'master_name') %>
+<% if current['client_reconfig_script'] %>
+<%= "sentinel client-reconfig-script #{calc_name} #{current['client_reconfig_script']}" %>
+<% end %>
+<% end %>
 #
 # When the failover starts, ends, or is aborted, a script can be called in
 # order to perform application-specific tasks to notify the clients that the
