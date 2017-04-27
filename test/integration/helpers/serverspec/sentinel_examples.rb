@@ -3,7 +3,8 @@ shared_examples_for 'sentinel on port' do |redis_port, redis_cluster_name, _args
     redis_cluster_name ||= 'mycluster'
     name = if (os[:family] == 'redhat' && os[:release][0] == '7') ||
               (os[:family] == 'ubuntu' && os[:release].to_f >= 16.04) ||
-              (os[:family] == 'debian' && os[:release].to_f >= 8.0)
+              (os[:family] == 'debian' && os[:release].to_f >= 8.0) ||
+              os[:family] == 'fedora'
              "redis-sentinel@#{redis_cluster_name}"
            else
              "redis_sentinel_#{redis_cluster_name}"
