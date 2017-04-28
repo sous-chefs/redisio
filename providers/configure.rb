@@ -380,7 +380,7 @@ def configure
             bin_path: bin_path,
             user: current['user'],
             group: current['group'],
-            limit_nofile: current['maxclients'] + 32
+            limit_nofile: descriptors
           )
           notifies :run, "execute[#{reload_name}]", :immediately
         end
