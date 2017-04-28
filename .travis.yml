@@ -22,7 +22,36 @@ env:
     - CMD="kitchen verify" OPTIONS="default-fedora-latest"
     - CMD="kitchen verify" OPTIONS="default-ubuntu-1404"
     - CMD="kitchen verify" OPTIONS="default-ubuntu-1604"
+    - CMD="kitchen verify" OPTIONS="redis-package-centos-6"
+    - CMD="kitchen verify" OPTIONS="redis-package-centos-7"
+    - CMD="kitchen verify" OPTIONS="redis-package-debian-7"
+    - CMD="kitchen verify" OPTIONS="redis-package-debian-8"
+    - CMD="kitchen verify" OPTIONS="redis-package-fedora-latest"
+    - CMD="kitchen verify" OPTIONS="redis-package-ubuntu-1404"
+    - CMD="kitchen verify" OPTIONS="redis-package-ubuntu-1604"
+    - CMD="kitchen verify" OPTIONS="sentinel-centos-6"
+    - CMD="kitchen verify" OPTIONS="sentinel-centos-7"
+    - CMD="kitchen verify" OPTIONS="sentinel-debian-7"
+    - CMD="kitchen verify" OPTIONS="sentinel-debian-8"
+    - CMD="kitchen verify" OPTIONS="sentinel-fedora-latest"
+    - CMD="kitchen verify" OPTIONS="sentinel-ubuntu-1404"
+    - CMD="kitchen verify" OPTIONS="sentinel-ubuntu-1604"
+    - CMD="kitchen verify" OPTIONS="multisentinel-centos-6"
+    - CMD="kitchen verify" OPTIONS="multisentinel-centos-7"
+    - CMD="kitchen verify" OPTIONS="multisentinel-debian-7"
+    - CMD="kitchen verify" OPTIONS="multisentinel-debian-8"
+    - CMD="kitchen verify" OPTIONS="multisentinel-fedora-latest"
+    - CMD="kitchen verify" OPTIONS="multisentinel-ubuntu-1404"
+    - CMD="kitchen verify" OPTIONS="multisentinel-ubuntu-1604"
 before_script:
   - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
 script:
   - bundle exec $CMD $OPTIONS
+matrix:
+  allow_failures:
+    # https://github.com/brianbianco/redisio/issues/335
+    - env: CMD="kitchen verify" OPTIONS="redis-package-centos-6"
+    # https://github.com/brianbianco/redisio/issues/336
+    - env: CMD="kitchen verify" OPTIONS="redis-package-debian-7"
+    # https://github.com/brianbianco/redisio/issues/337
+    - env: CMD="kitchen verify" OPTIONS="redis-package-ubuntu-1404"

@@ -23,6 +23,9 @@ platforms:
     pid_one_command: /sbin/init
     intermediate_instructions:
       - RUN yum -y install which initscripts net-tools wget sudo
+  run_list:
+    - recipe[yum-epel::default]
+    - recipe[yum-remi::default]
 
 - name: centos-7
   driver:
@@ -31,6 +34,9 @@ platforms:
     pid_one_command: /usr/lib/systemd/systemd
     intermediate_instructions:
       - RUN yum -y install lsof which systemd-sysv initscripts wget net-tools sudo
+  run_list:
+    - recipe[yum-epel::default]
+    - recipe[yum-remi::default]
 
 - name: debian-7
   driver:
