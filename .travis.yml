@@ -36,6 +36,13 @@ env:
     - CMD="kitchen verify" OPTIONS="sentinel-fedora-latest"
     - CMD="kitchen verify" OPTIONS="sentinel-ubuntu-1404"
     - CMD="kitchen verify" OPTIONS="sentinel-ubuntu-1604"
+    - CMD="kitchen verify" OPTIONS="multisentinel-centos-6"
+    - CMD="kitchen verify" OPTIONS="multisentinel-centos-7"
+    - CMD="kitchen verify" OPTIONS="multisentinel-debian-7"
+    - CMD="kitchen verify" OPTIONS="multisentinel-debian-8"
+    - CMD="kitchen verify" OPTIONS="multisentinel-fedora-latest"
+    - CMD="kitchen verify" OPTIONS="multisentinel-ubuntu-1404"
+    - CMD="kitchen verify" OPTIONS="multisentinel-ubuntu-1604"
 before_script:
   - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
 script:
