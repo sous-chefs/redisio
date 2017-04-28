@@ -160,7 +160,8 @@ default['redisio']['default_settings'] = {
   'data_bag_item'            => nil,
   'data_bag_key'             => nil,
   'minslavestowrite'         => nil,
-  'minslavesmaxlag'          => nil
+  'minslavesmaxlag'          => nil,
+  'breadcrumb'               => true
 }
 
 # The default for this is set inside of the "install" recipe. This is due to the way deep merge handles arrays
