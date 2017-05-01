@@ -1,23 +1,15 @@
 require 'spec_helper'
 
+prefix = os[:family] == 'freebsd' ? '/usr/local' : ''
+
 describe 'Redis' do
   it_behaves_like 'redis on port', 6379
 end
 
-if os[:family] == 'freebsd'
-  describe file('/usr/local/etc/redis/savetest.conf') do
-    it { should be_file }
+describe file("#{prefix}/etc/redis/savetest.conf") do
+  it { should be_file }
 
-    ['save a', 'save b', 'save c'].each do |m|
-      its(:content) { should match(m) }
-    end
-  end
-else
-  describe file('/etc/redis/savetest.conf') do
-    it { should be_file }
-
-    ['save a', 'save b', 'save c'].each do |m|
-      its(:content) { should match(m) }
-    end
+  ['save a', 'save b', 'save c'].each do |m|
+    its(:content) { should match(m) }
   end
 end
