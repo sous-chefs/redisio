@@ -43,6 +43,14 @@ port <%=@sentinel_port%>
 <%= "sentinel announce-ip #{@announce_ip}" unless @announce_ip.nil? %>
 <%= "sentinel announce-ip #{@announce_port}" unless @announce_port.nil? %>
 
+# If you want you can bind a single interface, if the bind option is not
+# specified all the interfaces will listen for incoming connections.
+#
+# bind 127.0.0.1
+<% unless @sentinel_address.nil? %>
+  <%= "bind #{@sentinel_address.respond_to?(:join) ? @sentinel_address.join(" ") : @sentinel_address }" %>
+<% end %>
+
 # sentinel monitor <master-name> <ip> <redis-port> <quorum>
 #
 # Tells Sentinel to monitor this slave, and to consider it in O_DOWN
