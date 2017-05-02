@@ -220,8 +220,8 @@ def configure
 
       # Lay down the configuration files for the current instance
       template "#{current['configdir']}/#{server_name}.conf" do
-        source 'redis.conf.erb'
-        cookbook 'redisio'
+	source node['redisio']['template_source']
+        cookbook node['redisio']['template_cookbook']
         owner current['user']
         group current['group']
         mode '0644'
