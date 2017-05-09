@@ -41,6 +41,7 @@ if sentinel_instances.nil?
 end
 
 redisio_sentinel 'redis-sentinels' do
+  version redis['version'] if redis['version']
   sentinel_defaults redis['sentinel_defaults']
   sentinels sentinel_instances
   base_piddir redis['base_piddir']

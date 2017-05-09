@@ -285,6 +285,7 @@ Using the sentinel resources:
 
 ```ruby
 redisio_sentinel "redis-sentinels" do
+  version '2.6.9'
   sentinel_defaults node['redisio']['sentinel_defaults']
   sentinels sentinel_instances
   base_piddir node['redisio']['base_piddir']
