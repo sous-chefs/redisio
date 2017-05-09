@@ -25,12 +25,12 @@ end
 def configure
   base_piddir = new_resource.base_piddir
 
-  if not new_resource.version
-    redis_output = %x[#{node['redisio']['bin_path']}/redis-server -v]
-    current_version = redis_output.gsub(/.*v=((\d+\.){2}\d+).*/, '\1')
-  else
-    current_version = new_resource.version
-  end
+  current_version = if new_resource.version.nil?
+                      version
+                    else
+                      new_resource.version
+                    end
+
   version_hash = RedisioHelper.version_to_hash(current_version)
 
   # Setup a configuration file and init script for each configuration provided
@@ -246,7 +246,35 @@ def configure
   end # servers each loop
 end
 
+def redis_exists?
+  bin_path = if node['redisio']['install_dir']
+               ::File.join(node['redisio']['install_dir'], 'bin')
+             else
+               node['redisio']['bin_path']
+             end
+  redis_server = ::File.join(bin_path, 'redis-server')
+  ::File.exist?(redis_server)
+end
+
+def version
+  if redis_exists?
+    bin_path = if node['redisio']['install_dir']
+                 ::File.join(node['redisio']['install_dir'], 'bin')
+               else
+                 node['redisio']['bin_path']
+               end
+    redis_server = ::File.join(bin_path, 'redis-server')
+    redis_version = Mixlib::ShellOut.new("#{redis_server} -v")
+    redis_version.run_command
+    version = redis_version.stdout[/version (\d*.\d*.\d*)/, 1] || redis_version.stdout[/v=(\d*.\d*.\d*)/, 1]
+    Chef::Log.info("The Redis server version is: #{version}")
+    return version.delete("\n")
+  end
+  nil
+end
+
 def load_current_resource
   @current_resource = Chef::Resource::RedisioSentinel.new(new_resource.name)
+  @current_resource.version(version)
   @current_resource
 end
