@@ -47,13 +47,6 @@ def configure
     # Merge the configuration defaults with the provided array of configurations provided
     current = current_defaults_hash.merge(current_instance_hash)
 
-    # Merge in the default maxmemory
-    node_memory_kb = node['memory']['total']
-    # On BSD platforms Ohai reports total memory as a Fixnum
-    if node_memory_kb.is_a? String
-      node_memory_kb.slice! 'kB'
-      node_memory_kb = node_memory_kb.to_i
-    end
 
     # Here we determine what the logfile is.  It has these possible states
     #
@@ -80,13 +73,6 @@ def configure
       end
     end
 
-    maxmemory = current['maxmemory'].to_s
-    if !maxmemory.empty? && maxmemory.include?('%')
-      # Just assume this is sensible like "95%" or "95 %"
-      percent_factor = current['maxmemory'].to_f / 100.0
-      # Ohai reports memory in KB as it looks in /proc/meminfo
-      maxmemory = (node_memory_kb * 1024 * percent_factor / new_resource.servers.length).round.to_s
-    end
 
     descriptors = if current['ulimit'].zero?
                     current['maxclients'] + 32
@@ -264,7 +250,6 @@ def configure
           requirepass:                current['requirepass'],
           rename_commands:            current['rename_commands'],
           maxclients:                 current['maxclients'],
-          maxmemory:                  maxmemory,
           maxmemorypolicy:            current['maxmemorypolicy'],
           maxmemorysamples:           current['maxmemorysamples'],
           appendfilename:             current['appendfilename'],
@@ -404,7 +389,3 @@ def configure
   end # servers each loop
 end
 
-def load_current_resource
-  @current_resource = Chef::Resource::RedisioConfigure.new(new_resource.name)
-  @current_resource
-end

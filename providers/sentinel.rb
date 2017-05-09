@@ -235,7 +235,3 @@ def configure
   end # servers each loop
 end
 
-def load_current_resource
-  @current_resource = Chef::Resource::RedisioSentinel.new(new_resource.name)
-  @current_resource
-end
