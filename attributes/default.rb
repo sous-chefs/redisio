@@ -42,6 +42,10 @@ else
   package_name = 'redis'
 end
 
+# Overwite template used for the Redis Server config (not sentinel)
+default['redisio']['redis_config']['template_cookbook'] = 'redisio'
+default['redisio']['redis_config']['template_source'] = 'redis.conf.erb'
+
 # Install related attributes
 default['redisio']['safe_install'] = true
 default['redisio']['package_install'] = default_package_install
