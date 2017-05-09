@@ -117,6 +117,8 @@ port <%=@sentinel_port%>
 <% calc_name = String(current['master_name'] || @name || 'master_name') %>
 <%= "sentinel failover-timeout #{calc_name} #{current['failover_timeout']}" unless current['failover_timeout'].nil? %>
 <% end %>
+
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 8 || @version[:major].to_i > 3 %>
 # SCRIPTS EXECUTION
 #
 # sentinel notification-script and sentinel reconfig-script are used in order
@@ -155,6 +157,7 @@ port <%=@sentinel_port%>
 # Example:
 #
 # sentinel notification-script mymaster /var/redis/notify.sh
+<%= "sentinel notification-script #{@name} #{@notification_script}" unless @notification_script.nil? %>
 
 # CLIENTS RECONFIGURATION SCRIPT
 #
@@ -192,3 +195,5 @@ port <%=@sentinel_port%>
 # Example:
 #
 # sentinel client-reconfig-script mymaster /var/redis/reconfig.sh
+<%= "sentinel client-reconfig-script #{@name} #{@client_reconfig_script}" unless @client_reconfig_script.nil? %>
+<% end %>
