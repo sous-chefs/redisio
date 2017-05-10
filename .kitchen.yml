@@ -61,9 +61,13 @@ suites:
   - name: redis-package
     run_list:
       - recipe[redisio::default]
+      - recipe[redisio::install]
+      - recipe[redisio::disable_os_default]
+      - recipe[redisio::configure]
       - recipe[redisio::enable]
     attributes:
      redisio:
+        bypass_setup: true
         servers:
           - port: 6379
         package_install: true
