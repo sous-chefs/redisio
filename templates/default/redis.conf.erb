@@ -603,6 +603,7 @@ no-appendfsync-on-rewrite <%=@noappendfsynconrewrite%>
 auto-aof-rewrite-percentage <%=@aofrewritepercentage%>
 auto-aof-rewrite-min-size <%=@aofrewriteminsize%>
 
+<% if @version[:major].to_i >= 3 %>
 # An AOF file may be found to be truncated at the end during the Redis
 # startup process, when the AOF data gets loaded back into memory.
 # This may happen when the system where Redis is running
@@ -626,6 +627,7 @@ auto-aof-rewrite-min-size <%=@aofrewriteminsize%>
 # Redis will try to read more data from the AOF file but not enough bytes
 # will be found.
 aof-load-truncated <%= @aofloadtruncated %>
+<% end %>
 
 ################################ LUA SCRIPTING  ###############################
 
