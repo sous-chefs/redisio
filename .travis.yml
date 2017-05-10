@@ -51,5 +51,3 @@ matrix:
   allow_failures:
     # https://github.com/brianbianco/redisio/issues/335
     - env: CMD="kitchen verify" OPTIONS="redis-package-centos-6"
-    # https://github.com/brianbianco/redisio/issues/336
-    - env: CMD="kitchen verify" OPTIONS="redis-package-debian-7"
