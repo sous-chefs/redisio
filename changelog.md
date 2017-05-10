@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2.6.1 - Released 5/10/2017
+  - Restrict aof-load-truncated to redis 3+ ([#343](https://github.com/brianbianco/redisio/pull/343))
+  - Fix Redis 2.4.x config ([#344](https://github.com/brianbianco/redisio/pull/344))
+
 ## 2.6.0 - Released 5/9/2017
   - Update 'bind' config comments ([#293](https://github.com/brianbianco/redisio/pull/293))
   - Add disable_os_default recipe ([#224](https://github.com/brianbianco/redisio/pull/224))
