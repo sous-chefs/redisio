@@ -1,6 +1,8 @@
 # redisio CHANGE LOG
 
 ## Unreleased
+
+## 2.6.0 - Released 5/9/2017
   - Update 'bind' config comments ([#293](https://github.com/brianbianco/redisio/pull/293))
   - Add disable_os_default recipe ([#224](https://github.com/brianbianco/redisio/pull/224))
   - Use the config's ulimits if set and is > max_clients ([#234](https://github.com/brianbianco/redisio/pull/234))
@@ -17,6 +19,21 @@
     - Note: this drops support for Chef < 11
   - Add min-slaves redis options ([#313](https://github.com/brianbianco/redisio/pull/313))
   - Allow /etc/init start after sigterm from system or user ([#310](https://github.com/brianbianco/redisio/pull/310))
+  - Check user existence with Etc, not ohai node attributes ([#303](https://github.com/brianbianco/redisio/pull/303))
+  - Various systemd-related improvements ([#302](https://github.com/brianbianco/redisio/pull/302))
+  - Update serverspec testing with correct OS's for systemd ([#329](https://github.com/brianbianco/redisio/pull/329))
+  - Add kitchen-dokken testing to Travis ([#330](https://github.com/brianbianco/redisio/pull/330))
+  - Add fedora-25 to kitchen testing and clean up kitchen config ([#331](https://github.com/brianbianco/redisio/pull/331))
+  - Fix systemd paths for sentinel service ([#332](https://github.com/brianbianco/redisio/pull/332))
+  - Add redis-package and sentinel to Travis kitchen verify ([#334](https://github.com/brianbianco/redisio/pull/334))
+  - Add breadcrumb-file creation condition as attribute ([#268](https://github.com/brianbianco/redisio/pull/268))
+  - Fix cluster options in README ([#333](https://github.com/brianbianco/redisio/pull/333))
+  - Fix systemd loader to use descriptors instead of max_clients+32 ([#338](https://github.com/brianbianco/redisio/pull/338))
+  - Add SELinux support ([#305](https://github.com/brianbianco/redisio/pull/305))
+  - Make source of redis.conf template configurable ([#341](https://github.com/brianbianco/redisio/pull/341))
+  - Support sentinel notification-script and client-reconfig-script ([#342](https://github.com/brianbianco/redisio/pull/342))
+
+## 2.5.1 - never released
 
 ## 2.5.0 - Released 9/15/2016
   - Ubuntu 14 added as tested platform. (#264)
