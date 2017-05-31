@@ -231,6 +231,23 @@ run_list *%w[
 ```
 
 #### Install redis and setup two instances, on the same server, on different ports, the second instance configuration file will be overwriten by chef
+<<<<<<< HEAD
+
+```ruby
+run_list *%w[
+  recipe[redisio]
+  recipe[redisio::enable]
+]
+
+default_attributes({
+  'redisio' => {
+    'servers' => [{'port' => '6379'}, {'port' => '6380', 'breadcrumb' => false}]
+  }
+})
+```
+
+=======
+>>>>>>> basic/master
 
 ```ruby
 run_list *%w[
