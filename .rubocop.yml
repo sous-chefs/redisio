@@ -1,11 +1,16 @@
 AllCops:
   DisplayCopNames: true
-  TargetRubyVersion: 2.1
+  Exclude:
+    - '.bundle/**/*'
+  TargetRubyVersion: 2.3
 
 Lint/PercentStringArray:
   Enabled: false
 
 Metrics/AbcSize:
+  Enabled: false
+
+Metrics/BlockLength:
   Enabled: false
 
 Metrics/CyclomaticComplexity:
@@ -30,6 +35,9 @@ Metrics/PerceivedComplexity:
 Style/Documentation:
   Enabled: false
 
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
 Style/LeadingCommentSpace:
   Enabled: true
   Exclude:
@@ -41,6 +49,10 @@ Style/NestedParenthesizedCalls:
 Style/NumericLiterals:
   Enabled: false
 
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    '%w': '()'
+
 Style/RegexpLiteral:
   Enabled: false
 
@@ -48,3 +60,6 @@ Style/SpaceAroundOperators:
   Enabled: true
   Exclude:
     - attributes/default.rb
+
+Style/SymbolArray:
+  EnforcedStyle: brackets

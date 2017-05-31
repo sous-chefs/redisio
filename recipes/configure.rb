@@ -38,15 +38,6 @@ redisio_configure 'redis-servers' do
   base_piddir redis['base_piddir']
 end
 
-template '/usr/lib/systemd/system/redis@.service' do
-  source 'redis@.service.erb'
-  variables(
-    bin_path: node['redisio']['bin_path'],
-    limit_nofile: redis['default_settings']['maxclients'] + 32
-  )
-  only_if { node['redisio']['job_control'] == 'systemd' }
-end
-
 # Create a service resource for each redis instance, named for the port it runs on.
 redis_instances.each do |current_server|
   server_name = current_server['name'] || current_server['port']
@@ -74,11 +65,11 @@ redis_instances.each do |current_server|
   when 'rcinit'
     service "redis#{server_name}" do
       provider Chef::Provider::Service::Freebsd
-      supports :start => true, :stop => true, :restart => true, :status => true
+      supports start: true, stop: true, restart: true, status: true
     end
   else
     Chef::Log.error('Unknown job control type, no service resource created!')
   end
 end
 
-node.set['redisio']['servers'] = redis_instances
+node.normal['redisio']['servers'] = redis_instances

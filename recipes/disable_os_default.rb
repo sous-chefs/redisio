@@ -1,8 +1,9 @@
 #
 # Cookbook Name:: redisio
-# Resource::sentinel
+# Recipe:: disable_os_default
 #
-# Copyright 2013, Rackspace Hosting <ryan.cleere@rackspace.com>
+# Copyright 2013, Brian Bianco <brian.bianco@gmail.com>
+#
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,14 +17,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-actions :run
 
-default_action :run
+# disable the default OS redis init script
+service_name = case node['platform']
+               when 'debian', 'ubuntu'
+                 'redis-server'
+               when 'redhat', 'centos', 'fedora', 'scientific', 'suse', 'amazon'
+                 'redis'
+               end
 
-# Configuration attributes
-attribute :version, kind_of: String
-attribute :base_piddir, kind_of: String, default: '/var/run/redis'
-attribute :user, kind_of: String, default: 'redis'
-
-attribute :sentinel_defaults, kind_of: Hash
-attribute :sentinels, kind_of: Array
+service service_name do
+  action [:stop, :disable]
+  only_if { service_name }
+end

@@ -18,6 +18,8 @@
 # limitations under the License.
 #
 
+include SELinuxPolicy::Helpers
+
 action :run do
   configure
   new_resource.updated_by_last_action(true)
@@ -45,11 +47,11 @@ def configure
     # Merge the configuration defaults with the provided array of configurations provided
     current = current_defaults_hash.merge(current_instance_hash)
 
-    #Merge in the default maxmemory
-    node_memory_kb = node["memory"]["total"]
-    #On BSD platforms Ohai reports total memory as a Fixnum
+    # Merge in the default maxmemory
+    node_memory_kb = node['memory']['total']
+    # On BSD platforms Ohai reports total memory as a Fixnum
     if node_memory_kb.is_a? String
-      node_memory_kb.slice! "kB"
+      node_memory_kb.slice! 'kB'
       node_memory_kb = node_memory_kb.to_i
     end
 
@@ -86,9 +88,17 @@ def configure
       maxmemory = (node_memory_kb * 1024 * percent_factor / new_resource.servers.length).round.to_s
     end
 
-    descriptors = current['ulimit'] == 0 ? current['maxclients'] + 32 : current['maxclients']
+    descriptors = if current['ulimit'].zero?
+                    current['maxclients'] + 32
+                  elsif current['ulimit'] > current['maxclients']
+                    current['ulimit']
+                  else
+                    current['maxclients']
+                  end
 
     recipe_eval do
+      include_recipe 'selinux_policy::install' if use_selinux
+
       server_name = current['name'] || current['port']
       piddir = "#{base_piddir}/#{server_name}"
       aof_file = current['appendfilename'] || "#{current['datadir']}/appendonly-#{server_name}.aof"
@@ -97,12 +107,19 @@ def configure
       # Create the owner of the redis data directory
       user current['user'] do
         comment 'Redis service account'
-        supports manage_home: true
+        manage_home true
         home current['homedir']
         shell current['shell']
         system current['systemuser']
         uid current['uid'] unless current['uid'].nil?
-        not_if { node['etc']['passwd'][current['user']] }
+
+        not_if do
+          begin
+            Etc.getpwnam current['user']
+          rescue ArgumentError
+            false
+          end
+        end
       end
       # Create the redis configuration directory
       directory current['configdir'] do
@@ -112,6 +129,9 @@ def configure
         recursive true
         action :create
       end
+      selinux_policy_fcontext "#{current['configdir']}(/.*)?" do
+        secontext 'redis_conf_t'
+      end
       # Create the instance data directory
       directory current['datadir'] do
         owner current['user']
@@ -119,6 +139,9 @@ def configure
         mode '0775'
         recursive true
         action :create
+      end
+      selinux_policy_fcontext "#{current['datadir']}(/.*)?" do
+        secontext 'redis_var_lib_t'
       end
       # Create the pid file directory
       directory piddir do
@@ -128,6 +151,9 @@ def configure
         recursive true
         action :create
       end
+      selinux_policy_fcontext "#{piddir}(/.*)?" do
+        secontext 'redis_var_run_t'
+      end
       # Create the log directory if syslog is not being used
       if log_directory
         directory log_directory do
@@ -136,7 +162,9 @@ def configure
           mode '0755'
           recursive true
           action :create
-          only_if { log_directory }
+        end
+        selinux_policy_fcontext "#{log_directory}(/.*)?" do
+          secontext 'redis_log_t'
         end
       end
       # Create the log file if syslog is not being used
@@ -169,10 +197,10 @@ def configure
 
       # Setup the redis users descriptor limits
       # Pending response on https://github.com/brianbianco/redisio/commit/4ee9aad3b53029cc3b6c6cf741f5126755e712cd#diff-8ae42a59a6f4e8dc5b4e6dd2d6a34eab
-      #TODO: ulimit cookbook v0.1.2 doesn't work with freeBSD
+      # TODO: ulimit cookbook v0.1.2 doesn't work with freeBSD
       if current['ulimit'] && node['platform_family'] != 'freebsd' # ~FC023
         user_ulimit current['user'] do
-             filehandle_limit descriptors
+          filehandle_limit descriptors
         end
       end
 
@@ -192,8 +220,8 @@ def configure
 
       # Lay down the configuration files for the current instance
       template "#{current['configdir']}/#{server_name}.conf" do
-        source 'redis.conf.erb'
-        cookbook 'redisio'
+        source node['redisio']['redis_config']['template_source']
+        cookbook node['redisio']['redis_config']['template_cookbook']
         owner current['user']
         group current['group']
         mode '0644'
@@ -230,6 +258,8 @@ def configure
           replpingslaveperiod:        current['replpingslaveperiod'],
           repltimeout:                current['repltimeout'],
           repldisabletcpnodelay:      current['repldisabletcpnodelay'],
+          replbacklogsize:            current['replbacklogsize'],
+          replbacklogttl:             current['replbacklogttl'],
           slavepriority:              current['slavepriority'],
           requirepass:                current['requirepass'],
           rename_commands:            current['rename_commands'],
@@ -242,6 +272,7 @@ def configure
           noappendfsynconrewrite:     current['noappendfsynconrewrite'],
           aofrewritepercentage:       current['aofrewritepercentage'],
           aofrewriteminsize:          current['aofrewriteminsize'],
+          aofloadtruncated:           current['aofloadtruncated'],
           luatimelimit:               current['luatimelimit'],
           slowloglogslowerthan:       current['slowloglogslowerthan'],
           slowlogmaxlen:              current['slowlogmaxlen'],
@@ -261,7 +292,11 @@ def configure
           clusterenabled:             current['clusterenabled'],
           clusterconfigfile:          current['clusterconfigfile'],
           clusternodetimeout:         current['clusternodetimeout'],
-          includes:                   current['includes']
+          includes:                   current['includes'],
+          minslavestowrite:           current['minslavestowrite'],
+          minslavesmaxlag:            current['minslavesmaxlag'],
+          repldisklesssync:           current['repldisklesssync'],
+          repldisklesssyncdelay:      current['repldisklesssyncdelay']
         )
         not_if { ::File.exist?("#{current['configdir']}/#{server_name}.conf.breadcrumb") }
       end
@@ -279,72 +314,94 @@ def configure
                    node['redisio']['bin_path']
                  end
 
-      template "/etc/init.d/redis#{server_name}" do
-        source 'redis.init.erb'
-        cookbook 'redisio'
-        owner 'root'
-        group 'root'
-        mode '0755'
-        variables(
-          name: server_name,
-          bin_path: bin_path,
-          port: current['port'],
-          address: current['address'],
-          user: current['user'],
-          configdir: current['configdir'],
-          piddir: piddir,
-          requirepass: current['requirepass'],
-          shutdown_save: current['shutdown_save'],
-          platform: node['platform'],
-          unixsocket: current['unixsocket'],
-          ulimit: descriptors,
-          required_start: node['redisio']['init.d']['required_start'].join(' '),
-          required_stop: node['redisio']['init.d']['required_stop'].join(' ')
-        )
-        only_if { node['redisio']['job_control'] == 'initd' }
+      case node['redisio']['job_control']
+      when 'initd'
+        template "/etc/init.d/redis#{server_name}" do
+          source 'redis.init.erb'
+          cookbook 'redisio'
+          owner 'root'
+          group 'root'
+          mode '0755'
+          variables(
+            name: server_name,
+            bin_path: bin_path,
+            port: current['port'],
+            address: current['address'],
+            user: current['user'],
+            configdir: current['configdir'],
+            piddir: piddir,
+            requirepass: current['requirepass'],
+            shutdown_save: current['shutdown_save'],
+            platform: node['platform'],
+            unixsocket: current['unixsocket'],
+            ulimit: descriptors,
+            required_start: node['redisio']['init.d']['required_start'].join(' '),
+            required_stop: node['redisio']['init.d']['required_stop'].join(' ')
+          )
+        end
+      when 'upstart'
+        template "/etc/init/redis#{server_name}.conf" do
+          source 'redis.upstart.conf.erb'
+          cookbook 'redisio'
+          owner current['user']
+          group current['group']
+          mode '0644'
+          variables(
+            name: server_name,
+            bin_path: bin_path,
+            port: current['port'],
+            user: current['user'],
+            group: current['group'],
+            configdir: current['configdir'],
+            piddir: piddir
+          )
+        end
+      when 'rcinit'
+        template "/usr/local/etc/rc.d/redis#{server_name}" do
+          source 'redis.rcinit.erb'
+          cookbook 'redisio'
+          owner current['user']
+          group current['group']
+          mode '0755'
+          variables(
+            name: server_name,
+            bin_path: bin_path,
+            user: current['user'],
+            configdir: current['configdir'],
+            piddir: piddir
+          )
+        end
+      when 'systemd'
+        service_name = "redis@#{server_name}"
+        reload_name = "#{service_name} systemd reload"
+
+        file "/etc/tmpfiles.d/#{service_name}.conf" do
+          content "d #{piddir} 0755 #{current['user']} #{current['group']}\n"
+          owner 'root'
+          group 'root'
+          mode '0644'
+        end
+
+        execute reload_name do
+          command 'systemctl daemon-reload'
+          action :nothing
+        end
+
+        template "/lib/systemd/system/#{service_name}.service" do
+          source 'redis@.service.erb'
+          cookbook 'redisio'
+          owner 'root'
+          group 'root'
+          mode '0644'
+          variables(
+            bin_path: bin_path,
+            user: current['user'],
+            group: current['group'],
+            limit_nofile: descriptors
+          )
+          notifies :run, "execute[#{reload_name}]", :immediately
+        end
       end
-      template "/etc/init/redis#{server_name}.conf" do
-        source 'redis.upstart.conf.erb'
-        cookbook 'redisio'
-        owner current['user']
-        group current['group']
-        mode '0644'
-        variables(
-          name: server_name,
-          bin_path: bin_path,
-          port: current['port'],
-          user: current['user'],
-          group: current['group'],
-          configdir: current['configdir'],
-          piddir: piddir
-        )
-        only_if { node['redisio']['job_control'] == 'upstart' }
-      end
-       template "/usr/local/etc/rc.d/redis#{server_name}" do
-         source 'redis.rcinit.erb'
-         cookbook 'redisio'
-         owner current['user']
-         group current['group']
-         mode '0755'
-         variables({
-           :name => server_name,
-           :bin_path => bin_path,
-           :job_control => node['redisio']['job_control'],
-           :port => current['port'],
-           :address => current['address'],
-           :user => current['user'],
-           :group => current['group'],
-           :maxclients => current['maxclients'],
-           :requirepass => current['requirepass'],
-           :shutdown_save => current['shutdown_save'],
-           :save => current['save'],
-           :configdir => current['configdir'],
-           :piddir => piddir,
-           :platform => node['platform'],
-           :unixsocket => current['unixsocket']
-         })
-         only_if { node['redisio']['job_control'] == 'rcinit' }
-       end
     end
   end # servers each loop
 end

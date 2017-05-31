@@ -23,6 +23,7 @@ namespace :style do
       :chef_version => '11.6.0',
       :tags => %w(
         ~FC059
+        ~FC085
       )
     }
     # rubocop:enable Style/HashSyntax
@@ -31,13 +32,6 @@ end
 
 desc 'Run all style checks'
 task style: ['style:chef', 'style:ruby']
-
-require 'kitchen'
-desc 'Run Test Kitchen integration tests'
-task :integration do
-  Kitchen.logger = Kitchen.default_file_logger
-  sh 'kitchen test -c'
-end
 
 desc 'Destroy test kitchen instances'
 task :destroy do
@@ -59,6 +53,13 @@ task default: [:style, :spec, :integration]
 begin
   require 'kitchen/rake_tasks'
   Kitchen::RakeTasks.new
+
+  require 'kitchen'
+  desc 'Run Test Kitchen integration tests'
+  task :integration do
+    Kitchen.logger = Kitchen.default_file_logger
+    sh 'kitchen test -c'
+  end
 rescue LoadError
   puts '>>>>> Kitchen gem not loaded, omitting tasks' unless ENV['CI']
 end

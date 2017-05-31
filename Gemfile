@@ -1,7 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'berkshelf'
-
 # Uncomment these lines if you want to live on the Edge:
 #
 # group :development do
@@ -14,14 +12,22 @@ gem 'berkshelf'
 #   gem "vagrant-omnibus", github: "schisamo/vagrant-omnibus"
 # end
 
-gem 'rubocop'
-gem 'foodcritic'
+group :testing do
+  gem 'berkshelf'
+  gem 'chefspec'
+  gem 'foodcritic'
+  gem 'rake'
+  gem 'rubocop'
+end
 
-gem 'test-kitchen'
-gem 'kitchen-vagrant'
+group :travis_integration do
+  gem 'kitchen-dokken'
+end
 
-gem 'chefspec'
-gem 'serverspec'
-
-gem 'busser-serverspec'
-gem 'vagrant-wrapper'
+group :integration do
+  gem 'busser-serverspec'
+  gem 'kitchen-vagrant'
+  gem 'serverspec'
+  gem 'test-kitchen'
+  gem 'vagrant-wrapper'
+end

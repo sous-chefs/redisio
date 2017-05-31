@@ -83,6 +83,7 @@ protected-mode <%= @protected_mode %>
 # Close the connection after a client is idle for N seconds (0 to disable)
 <%= "timeout #{@timeout}" %>
 
+<% if (@version[:major].to_i == 2 && @version[:minor].to_i >= 8) || @version[:major].to_i >= 3 %>
 # TCP keepalive.
 #
 # If non-zero, use SO_KEEPALIVE to send TCP ACKs to clients in absence
@@ -98,6 +99,7 @@ protected-mode <%= @protected_mode %>
 #
 # A reasonable value for this option is 60 seconds.
 tcp-keepalive <%=@keepalive%>
+<% end %>
 
 # Set server verbosity to 'debug'
 # it can be one of:
@@ -160,6 +162,7 @@ databases <%=@databases%>
     <% end %>
   <% end %>
 
+<% if (@version[:major].to_i == 2 && @version[:minor].to_i >= 6) || @version[:major].to_i >= 3 %>
 # By default Redis will stop accepting writes if RDB snapshots are enabled
 # (at least one save point) and the latest background save failed.
 # This will make the user aware (in a hard way) that data is not persisting
@@ -174,6 +177,7 @@ databases <%=@databases%>
 # continue to work as usual even if there are problems with disk,
 # permissions, and so forth.
 stop-writes-on-bgsave-error <%= @stopwritesonbgsaveerror %>
+<% end %>
 
 # Compress string objects using LZF when dump .rdb databases?
 # For default that's set to 'yes' as it's almost always a win.
@@ -214,9 +218,18 @@ dir <%=@datadir%>
 ################################# REPLICATION #################################
 
 # Master-Slave replication. Use slaveof to make a Redis instance a copy of
-# another Redis server. Note that the configuration is local to the slave
-# so for example it is possible to configure the slave to save the DB with a
-# different interval, or to listen to another port, and so on.
+# another Redis server. A few things to understand ASAP about Redis replication.
+#
+# 1) Redis replication is asynchronous, but you can configure a master to
+#    stop accepting writes if it appears to be not connected with at least
+#    a given number of slaves.
+# 2) Redis slaves are able to perform a partial resynchronization with the
+#    master if the replication link is lost for a relatively small amount of
+#    time. You may want to configure the replication backlog size (see the next
+#    sections of this file) with a sensible value depending on your needs.
+# 3) Replication is automatic and does not need user intervention. After a
+#    network partition slaves automatically try to reconnect to masters
+#    and resynchronize with them.
 #
 # slaveof <ip> <port>
 <%= "slaveof #{@slaveof['address']} #{@slaveof['port']}" unless @slaveof.nil? %>
@@ -241,6 +254,71 @@ dir <%=@datadir%>
 #    but to INFO and SLAVEOF.
 #
 slave-serve-stale-data <%=@slaveservestaledata%>
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 6 || @version[:major].to_i >= 3 -%>
+<% ######## Redis 2.6 and higher ######## -%>
+
+# You can configure a slave instance to accept writes or not. Writing against
+# a slave instance may be useful to store some ephemeral data (because data
+# written on a slave will be easily deleted after resync with the master) but
+# may also cause problems if clients are writing to it because of a
+# misconfiguration.
+#
+# Since Redis 2.6 by default slaves are read-only.
+#
+# Note: read only slaves are not designed to be exposed to untrusted clients
+# on the internet. It's just a protection layer against misuse of the instance.
+# Still a read only slave exports by default all the administrative commands
+# such as CONFIG, DEBUG, and so forth. To a limited extent you can improve
+# security of read only slaves using 'rename-command' to shadow all the
+# administrative / dangerous commands.
+slave-read-only <%=@slavereadonly%>
+<% end %>
+
+<% if (@version[:major].to_i == 2 && @version[:minor].to_i == 8 && @version[:tiny].to_i >= 18) or (@version[:major].to_i == 2 && @version[:minor].to_i >= 9) or @version[:major].to_i >= 3 -%>
+<% ######## Redis 2.8.18 and higher ######## -%>
+# Replication SYNC strategy: disk or socket.
+#
+# -------------------------------------------------------
+# WARNING: DISKLESS REPLICATION IS EXPERIMENTAL CURRENTLY
+# -------------------------------------------------------
+#
+# New slaves and reconnecting slaves that are not able to continue the replication
+# process just receiving differences, need to do what is called a "full
+# synchronization". An RDB file is transmitted from the master to the slaves.
+# The transmission can happen in two different ways:
+#
+# 1) Disk-backed: The Redis master creates a new process that writes the RDB
+#                 file on disk. Later the file is transferred by the parent
+#                 process to the slaves incrementally.
+# 2) Diskless: The Redis master creates a new process that directly writes the
+#              RDB file to slave sockets, without touching the disk at all.
+#
+# With disk-backed replication, while the RDB file is generated, more slaves
+# can be queued and served with the RDB file as soon as the current child producing
+# the RDB file finishes its work. With diskless replication instead once
+# the transfer starts, new slaves arriving will be queued and a new transfer
+# will start when the current one terminates.
+#
+# When diskless replication is used, the master waits a configurable amount of
+# time (in seconds) before starting the transfer in the hope that multiple slaves
+# will arrive and the transfer can be parallelized.
+#
+# With slow disks and fast (large bandwidth) networks, diskless replication
+# works better.
+repl-diskless-sync <%=@repldisklesssync%>
+
+# When diskless replication is enabled, it is possible to configure the delay
+# the server waits in order to spawn the child that transfers the RDB via socket
+# to the slaves.
+#
+# This is important since once the transfer starts, it is not possible to serve
+# new slaves arriving, that will be queued for the next RDB transfer, so the server
+# waits a delay in order to let more slaves arrive.
+#
+# The delay is specified in seconds, and by default is 5 seconds. To disable
+# it entirely just set it to 0 seconds and the transfer will start ASAP.
+repl-diskless-sync-delay <%=@repldisklesssyncdelay%>
+<% end %>
 
 <% if @version[:major].to_i == 2 && @version[:minor].to_i >= 6 || @version[:major].to_i == 3 %>
 # You can configure a slave instance to accept writes or not. Writing against
@@ -292,6 +370,31 @@ repl-timeout <%=@repltimeout%>
 repl-disable-tcp-nodelay <%= @repldisabletcpnodelay %>
 <% end %>
 
+<% if (@version[:major].to_i == 2 && @version[:minor].to_i >= 8) || @version[:major].to_i >= 3 %>
+# Set the replication backlog size. The backlog is a buffer that accumulates
+# slave data when slaves are disconnected for some time, so that when a slave
+# wants to reconnect again, often a full resync is not needed, but a partial
+# resync is enough, just passing the portion of data the slave missed while
+# disconnected.
+#
+# The bigger the replication backlog, the longer the time the slave can be
+# disconnected and later be able to perform a partial resynchronization.
+#
+# The backlog is only allocated once there is at least a slave connected.
+#
+repl-backlog-size <%= @replbacklogsize %>
+
+# After a master has no longer connected slaves for some time, the backlog
+# will be freed. The following option configures the amount of seconds that
+# need to elapse, starting from the time the last slave disconnected, for
+# the backlog buffer to be freed.
+#
+# A value of 0 means to never release the backlog.
+#
+repl-backlog-ttl <%= @replbacklogttl %>
+<% end %>
+
+<% if (@version[:major].to_i == 2 && @version[:minor].to_i >= 6) || @version[:major].to_i >= 3 %>
 # The slave priority is an integer number published by Redis in the INFO output.
 # It is used by Redis Sentinel in order to select a slave to promote into a
 # master if the master is no longer working correctly.
@@ -306,6 +409,64 @@ repl-disable-tcp-nodelay <%= @repldisabletcpnodelay %>
 #
 # By default the priority is 100.
 slave-priority <%= @slavepriority %>
+<% end %>
+
+<% if @version[:major].to_i >= 3 %>
+# It is possible for a master to stop accepting writes if there are less than
+# N slaves connected, having a lag less or equal than M seconds.
+#
+# The N slaves need to be in "online" state.
+#
+# The lag in seconds, that must be <= the specified value, is calculated from
+# the last ping received from the slave, that is usually sent every second.
+#
+# This option does not GUARANTEE that N replicas will accept the write, but
+# will limit the window of exposure for lost writes in case not enough slaves
+# are available, to the specified number of seconds.
+#
+# For example to require at least 3 slaves with a lag <= 10 seconds use:
+#
+# min-slaves-to-write 3
+# min-slaves-max-lag 10
+#
+# Setting one or the other to 0 disables the feature.
+#
+# By default min-slaves-to-write is set to 0 (feature disabled) and
+# min-slaves-max-lag is set to 10.
+<%= "min-slaves-to-write #{@minslavestowrite}" unless @minslavestowrite.nil? %>
+<%= "min-slaves-max-lag #{@minslavesmaxlag}" unless @minslavesmaxlag.nil? %>
+<% end %>
+
+<% if @version[:major].to_i >= 4 %>
+# A Redis master is able to list the address and port of the attached
+# slaves in different ways. For example the "INFO replication" section
+# offers this information, which is used, among other tools, by
+# Redis Sentinel in order to discover slave instances.
+# Another place where this info is available is in the output of the
+# "ROLE" command of a masteer.
+#
+# The listed IP and address normally reported by a slave is obtained
+# in the following way:
+#
+#   IP: The address is auto detected by checking the peer address
+#   of the socket used by the slave to connect with the master.
+#
+#   Port: The port is communicated by the slave during the replication
+#   handshake, and is normally the port that the slave is using to
+#   list for connections.
+#
+# However when port forwarding or Network Address Translation (NAT) is
+# used, the slave may be actually reachable via different IP and port
+# pairs. The following two options can be used by a slave in order to
+# report to its master a specific set of IP and port, so that both INFO
+# and ROLE will report those values.
+#
+# There is no need to use both the options if you need to override just
+# the port or the IP address.
+#
+# slave-announce-ip 5.5.5.5
+# slave-announce-port 1234
+<% end %>
 
 ################################## SECURITY ###################################
 
@@ -340,7 +501,7 @@ slave-priority <%= @slavepriority %>
 # rename-command CONFIG ""
 <% if !@rename_commands.nil? %>
   <% @rename_commands.each do |k, v| %>
-    <% v = '""' if v.empty? || v.nil? %>
+    <% v = '""' if v.nil? || v.empty? %>
     <%= "rename-command #{k} #{v}" %>
   <% end %>
 <% end %>
@@ -416,21 +577,23 @@ slave-priority <%= @slavepriority %>
 
 ############################## APPEND ONLY MODE ###############################
 
-# By default Redis asynchronously dumps the dataset on disk. If you can live
-# with the idea that the latest records will be lost if something like a crash
-# happens this is the preferred way to run Redis. If instead you care a lot
-# about your data and don't want to that a single record can get lost you should
-# enable the append only mode: when this mode is enabled Redis will append
-# every write operation received in the file appendonly.aof. This file will
-# be read on startup in order to rebuild the full dataset in memory.
+# By default Redis asynchronously dumps the dataset on disk. This mode is
+# good enough in many applications, but an issue with the Redis process or
+# a power outage may result into a few minutes of writes lost (depending on
+# the configured save points).
 #
-# Note that you can have both the async dumps and the append only file if you
-# like (you have to comment the "save" statements above to disable the dumps).
-# Still if append only mode is enabled Redis will load the data from the
-# log file at startup ignoring the dump.rdb file.
+# The Append Only File is an alternative persistence mode that provides
+# much better durability. For instance using the default data fsync policy
+# (see later in the config file) Redis can lose just one second of writes in a
+# dramatic event like a server power outage, or a single write if something
+# wrong with the Redis process itself happens, but the operating system is
+# still running correctly.
 #
-# IMPORTANT: Check the BGREWRITEAOF to check how to rewrite the append
-# log file in background when it gets too big.
+# AOF and RDB persistence can be enabled at the same time without problems.
+# If the AOF is enabled on startup Redis will load the AOF, that is the file
+# with the better durability guarantees.
+#
+# Please check http://redis.io/topics/persistence for more information.
 
 <%if (@backuptype == 'aof' || @backuptype == 'both')%>
 appendonly yes
@@ -452,7 +615,7 @@ appendfilename appendonly-<%=@name%>.aof
 #
 # no: don't fsync, just let the OS flush the data when it wants. Faster.
 # always: fsync after every write to the append only log. Slow, Safest.
-# everysec: fsync only if one second passed since the last fsync. Compromise.
+# everysec: fsync only one time every second. Compromise.
 #
 # The default is "everysec", as that's usually the right compromise between
 # speed and data safety. It's up to you to understand if you can relax this to
@@ -461,6 +624,9 @@ appendfilename appendonly-<%=@name%>.aof
 # some data loss consider the default persistence mode that's snapshotting),
 # or on the contrary, use "always" that's very slow but a bit safer than
 # everysec.
+#
+# More details please check the following article:
+# http://antirez.com/post/redis-persistence-demystified.html
 #
 # If unsure, use "everysec".
 
@@ -487,6 +653,7 @@ appendfilename appendonly-<%=@name%>.aof
 #
 # If you have latency problems turn this to "yes". Otherwise leave it as
 # "no" that is the safest pick from the point of view of durability.
+
 no-appendfsync-on-rewrite <%=@noappendfsynconrewrite%>
 
 # Automatic rewrite of the append only file.
@@ -509,6 +676,33 @@ no-appendfsync-on-rewrite <%=@noappendfsynconrewrite%>
 auto-aof-rewrite-percentage <%=@aofrewritepercentage%>
 auto-aof-rewrite-min-size <%=@aofrewriteminsize%>
 
+<% if @version[:major].to_i >= 3 %>
+# An AOF file may be found to be truncated at the end during the Redis
+# startup process, when the AOF data gets loaded back into memory.
+# This may happen when the system where Redis is running
+# crashes, especially when an ext4 filesystem is mounted without the
+# data=ordered option (however this can't happen when Redis itself
+# crashes or aborts but the operating system still works correctly).
+#
+# Redis can either exit with an error when this happens, or load as much
+# data as possible (the default now) and start if the AOF file is found
+# to be truncated at the end. The following option controls this behavior.
+#
+# If aof-load-truncated is set to yes, a truncated AOF file is loaded and
+# the Redis server starts emitting a log to inform the user of the event.
+# Otherwise if the option is set to no, the server aborts with an error
+# and refuses to start. When the option is set to no, the user requires
+# to fix the AOF file using the "redis-check-aof" utility before to restart
+# the server.
+#
+# Note that if the AOF file will be found to be corrupted in the middle
+# the server will still exit with an error. This option only applies when
+# Redis will try to read more data from the AOF file but not enough bytes
+# will be found.
+aof-load-truncated <%= @aofloadtruncated %>
+<% end %>
+
+<% if (@version[:major].to_i == 2 && @version[:minor].to_i >= 6) || @version[:major].to_i >= 3 %>
 ################################ LUA SCRIPTING  ###############################
 
 # Max execution time of a Lua script in milliseconds.
@@ -526,6 +720,7 @@ auto-aof-rewrite-min-size <%=@aofrewriteminsize%>
 #
 # Set it to 0 or a negative value for unlimited execution without warnings.
 lua-time-limit <%= @luatimelimit %>
+<% end %>
 
 ################################## SLOW LOG ###################################
 
@@ -551,7 +746,7 @@ slowlog-log-slower-than <%= @slowloglogslowerthan %>
 # You can reclaim memory used by the slow log with SLOWLOG RESET.
 slowlog-max-len <%= @slowlogmaxlen %>
 
-<% unless @version[:major].to_i == 2 && @version[:minor].to_i >= 5 || @version[:major].to_i == 3 %>
+<% if @version[:major].to_i <= 2 && @version[:minor].to_i <= 4 %>
 ################################ VIRTUAL MEMORY ###############################
 
 ### WARNING! Virtual Memory is deprecated in Redis 2.4
@@ -753,6 +948,7 @@ activerehashing <%= @activerehasing %>
   hash-max-zipmap-value 64
 <% end %>
 
+<% if (@version[:major].to_i == 2 && @version[:minor].to_i >= 6) || @version[:major].to_i >= 3 %>
 # The client output buffer limits can be used to force disconnection of clients
 # that are not reading data from the server fast enough for some reason (a
 # common reason is that a Pub/Sub client can't consume messages as fast as the
@@ -794,7 +990,9 @@ activerehashing <%= @activerehasing %>
 <% @clientoutputbufferlimit.each do |c| %>
 <%= "client-output-buffer-limit #{c.flatten.join(' ')}" %>
 <% end %>
+<% end %>
 
+<% if (@version[:major].to_i == 2 && @version[:minor].to_i >= 8) || @version[:major].to_i >= 3 %>
 # Redis calls an internal function to perform many background tasks, like
 # closing connections of clients in timeout, purging expired keys that are
 # never requested, and so forth.
@@ -817,6 +1015,7 @@ hz <%= @hz %>
 # in order to commit the file to the disk more incrementally and avoid
 # big latency spikes.
 aof-rewrite-incremental-fsync <%= @aofrewriteincrementalfsync %>
+<% end %>
 
 <%if @clusterenabled == 'yes' %>
 cluster-enabled yes
