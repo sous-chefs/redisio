@@ -274,7 +274,7 @@ def version
 end
 
 def load_current_resource
-  @current_resource = Chef::Resource::RedisioSentinel.new(new_resource.name)
+  @current_resource = Chef::Resource.resource_for_node(:redisio_sentinel, node).new(new_resource.name)
   @current_resource.version(version)
   @current_resource
 end
