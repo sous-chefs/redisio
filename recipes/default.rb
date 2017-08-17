@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-# debian 6.0.x fails the build_essential recipe without an apt-get update prior to run
+# ubuntu / debian fail the build_essential recipe without an apt-get update prior to run
 if platform?('debian', 'ubuntu')
   execute 'apt-get-update-periodic' do
     command 'apt-get update'
