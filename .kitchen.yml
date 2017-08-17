@@ -21,7 +21,7 @@ platforms:
     centos-6.9
     centos-7.3
     debian-7.11
-    debian-8.7
+    debian-8.8
     fedora-25
     freebsd-10.3
     ubuntu-14.04
