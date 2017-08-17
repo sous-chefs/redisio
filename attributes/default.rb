@@ -158,16 +158,16 @@ default['redisio']['default_settings'] = {
   ],
   'hz'                         => '10',
   'aofrewriteincrementalfsync' => 'yes',
-  'clusterenabled'            => 'no',
-  'clusterconfigfile'        => nil, # Defaults to redis instance name inside of template if cluster is enabled.
-  'clusternodetimeout'       => 5000,
-  'includes'                 => nil,
-  'data_bag_name'            => nil,
-  'data_bag_item'            => nil,
-  'data_bag_key'             => nil,
-  'minslavestowrite'         => nil,
-  'minslavesmaxlag'          => nil,
-  'breadcrumb'               => true
+  'clusterenabled'             =>   'no',
+  'clusterconfigfile'          => nil, # Defaults to redis instance name inside of template if cluster is enabled.
+  'clusternodetimeout'         => 5000,
+  'includes'                   => nil,
+  'data_bag_name'              => nil,
+  'data_bag_item'              => nil,
+  'data_bag_key'               => nil,
+  'minslavestowrite'           => nil,
+  'minslavesmaxlag'            => nil,
+  'breadcrumb'                 => true,
 }
 
 # The default for this is set inside of the "install" recipe. This is due to the way deep merge handles arrays
