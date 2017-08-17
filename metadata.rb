@@ -14,6 +14,8 @@ version          '2.7.1'
   redhat
   scientific
   suse
+  opensuse
+  opensuseleap
   ubuntu
 ).each do |os|
   supports os
