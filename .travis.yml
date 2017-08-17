@@ -1,53 +1,64 @@
-language: ruby
-cache: bundler
-services: docker
-dist: trusty
-rvm:
-  - 2.3.1
 sudo: required
+dist: trusty
+
+addons:
+  apt:
+    sources:
+      - chef-current-trusty
+    packages:
+      - chefdk
+
+# Don't `bundle install` which takes about 1.5 mins
+install: echo "skip bundle install"
+
 branches:
   only:
     - master
-bundler_args: --without=integration --path=.bundle
+
+services: docker
+
 env:
-  global:
-    - KITCHEN_LOCAL_YAML=.kitchen.dokken.yml
   matrix:
-    - CMD="rake" OPTIONS="style"
-    - CMD="rake" OPTIONS="spec"
-    - CMD="kitchen verify" OPTIONS="default-centos-6"
-    - CMD="kitchen verify" OPTIONS="default-centos-7"
-    - CMD="kitchen verify" OPTIONS="default-debian-7"
-    - CMD="kitchen verify" OPTIONS="default-debian-8"
-    - CMD="kitchen verify" OPTIONS="default-fedora-latest"
-    - CMD="kitchen verify" OPTIONS="default-ubuntu-1404"
-    - CMD="kitchen verify" OPTIONS="default-ubuntu-1604"
-    - CMD="kitchen verify" OPTIONS="redis-package-centos-6"
-    - CMD="kitchen verify" OPTIONS="redis-package-centos-7"
-    - CMD="kitchen verify" OPTIONS="redis-package-debian-7"
-    - CMD="kitchen verify" OPTIONS="redis-package-debian-8"
-    - CMD="kitchen verify" OPTIONS="redis-package-fedora-latest"
-    - CMD="kitchen verify" OPTIONS="redis-package-ubuntu-1404"
-    - CMD="kitchen verify" OPTIONS="redis-package-ubuntu-1604"
-    - CMD="kitchen verify" OPTIONS="sentinel-centos-6"
-    - CMD="kitchen verify" OPTIONS="sentinel-centos-7"
-    - CMD="kitchen verify" OPTIONS="sentinel-debian-7"
-    - CMD="kitchen verify" OPTIONS="sentinel-debian-8"
-    - CMD="kitchen verify" OPTIONS="sentinel-fedora-latest"
-    - CMD="kitchen verify" OPTIONS="sentinel-ubuntu-1404"
-    - CMD="kitchen verify" OPTIONS="sentinel-ubuntu-1604"
-    - CMD="kitchen verify" OPTIONS="multisentinel-centos-6"
-    - CMD="kitchen verify" OPTIONS="multisentinel-centos-7"
-    - CMD="kitchen verify" OPTIONS="multisentinel-debian-7"
-    - CMD="kitchen verify" OPTIONS="multisentinel-debian-8"
-    - CMD="kitchen verify" OPTIONS="multisentinel-fedora-latest"
-    - CMD="kitchen verify" OPTIONS="multisentinel-ubuntu-1404"
-    - CMD="kitchen verify" OPTIONS="multisentinel-ubuntu-1604"
+  - INSTANCE=default-centos-6
+  - INSTANCE=default-centos-7
+  - INSTANCE=default-debian-7
+  - INSTANCE=default-debian-8
+  - INSTANCE=default-fedora-latest
+  - INSTANCE=default-ubuntu-1404
+  - INSTANCE=default-ubuntu-1604
+  - INSTANCE=redis-package-centos-6
+  - INSTANCE=redis-package-centos-7
+  - INSTANCE=redis-package-debian-7
+  - INSTANCE=redis-package-debian-8
+  - INSTANCE=redis-package-fedora-latest
+  - INSTANCE=redis-package-ubuntu-1404
+  - INSTANCE=redis-package-ubuntu-1604
+  - INSTANCE=sentinel-centos-6
+  - INSTANCE=sentinel-centos-7
+  - INSTANCE=sentinel-debian-7
+  - INSTANCE=sentinel-debian-8
+  - INSTANCE=sentinel-fedora-latest
+  - INSTANCE=sentinel-ubuntu-1404
+  - INSTANCE=sentinel-ubuntu-1604
+  - INSTANCE=multisentinel-centos-6
+  - INSTANCE=multisentinel-centos-7
+  - INSTANCE=multisentinel-debian-7
+  - INSTANCE=multisentinel-debian-8
+  - INSTANCE=multisentinel-fedora-latest
+  - INSTANCE=multisentinel-ubuntu-1404
+  - INSTANCE=multisentinel-ubuntu-1604
+
 before_script:
   - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
-script:
-  - bundle exec $CMD $OPTIONS
+  - eval "$(chef shell-init bash)"
+  - chef --version
+  - cookstyle --version
+  - foodcritic --version
+
+script: KITCHEN_LOCAL_YAML=.kitchen.dokken.yml kitchen verify ${INSTANCE}
+
 matrix:
-  allow_failures:
-    # https://github.com/brianbianco/redisio/issues/335
-    - env: CMD="kitchen verify" OPTIONS="redis-package-centos-6"
+  include:
+    - script:
+      - chef exec delivery local all
+      env: UNIT_AND_LINT=1
