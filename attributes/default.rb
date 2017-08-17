@@ -20,12 +20,12 @@ package_bin_path = '/usr/bin'
 config_dir = '/etc/redis'
 default_package_install = false
 
-case node['platform']
-when 'ubuntu', 'debian'
+case node['platform_family']
+when 'debian'
   shell = '/bin/false'
   homedir = '/var/lib/redis'
   package_name = 'redis-server'
-when 'centos', 'redhat', 'scientific', 'amazon', 'suse', 'fedora'
+when 'rhel', 'fedora', 'amazon', 'suse'
   shell = '/bin/sh'
   homedir = '/var/lib/redis'
   package_name = 'redis'

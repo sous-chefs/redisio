@@ -17,12 +17,8 @@
 # limitations under the License.
 #
 
-packages_to_install = case node['platform']
-                      when 'debian', 'ubuntu'
-                        %w(
-                          tar
-                        )
-                      when 'redhat', 'centos', 'fedora', 'scientific', 'suse', 'amazon'
+packages_to_install = case node['platform_family']
+                      when 'debian', 'rhel', 'fedora', 'amazon', 'suse'
                         %w(
                           tar
                         )
