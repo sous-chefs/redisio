@@ -26,8 +26,4 @@ packages_to_install = case node['platform_family']
                         %w()
                       end
 
-packages_to_install.each do |pkg|
-  package pkg do
-    action :install
-  end
-end
+package packages_to_install
