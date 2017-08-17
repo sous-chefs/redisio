@@ -87,7 +87,7 @@ def configure
       maxmemory = (node_memory_kb * 1024 * percent_factor / new_resource.servers.length).round.to_s
     end
 
-    descriptors = if current['ulimit'].zero?
+    descriptors = if current['ulimit'] == 0
                     current['maxclients'] + 32
                   elsif current['ulimit'] > current['maxclients']
                     current['ulimit']
