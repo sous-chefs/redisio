@@ -20,7 +20,7 @@ if system('command -v semanage &>/dev/null')
       %r{^/etc/redis\(/\.\*\)\?\s.*:redis_conf_t:},
       %r{^/var/lib/redis\(/\.\*\)\?\s.*:redis_var_lib_t:},
       %r{^/var/run/redis\(/\.\*\)\?\s.*:redis_var_run_t:},
-      %r{^/var/log/redis\(/\.\*\)\?\s.*:redis_log_t:}
+      %r{^/var/log/redis\(/\.\*\)\?\s.*:redis_log_t:},
     ].each do |pattern|
       its(:stdout) { should match(pattern) }
     end

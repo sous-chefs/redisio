@@ -154,7 +154,7 @@ default['redisio']['default_settings'] = {
   'clientoutputbufferlimit' => [
     %w(normal 0 0 0),
     %w(slave 256mb 64mb 60),
-    %w(pubsub 32mb 8mb 60)
+    %w(pubsub 32mb 8mb 60),
   ],
   'hz'                         => '10',
   'aofrewriteincrementalfsync' => 'yes',

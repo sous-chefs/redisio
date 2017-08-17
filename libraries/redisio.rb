@@ -47,7 +47,7 @@ module RedisioHelper
       major: version_array[0].include?(':') ? version_array[0].split(':')[1] : version_array[0],
       minor: version_array[1],
       tiny: version_array[2],
-      rc: version_array[3]
+      rc: version_array[3],
     }
   end
 end
