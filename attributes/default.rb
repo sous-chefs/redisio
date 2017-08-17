@@ -1,4 +1,4 @@
-# Cookbook Name:: redisio
+# Cookbook:: redisio
 # Attribute::default
 #
 # Copyright 2013, Brian Bianco <brian.bianco@gmail.com>

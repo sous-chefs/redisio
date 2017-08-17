@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: redisio
+# Cookbook:: redisio
 # Resource::sentinel
 #
 # Copyright 2013, Rackspace Hosting <ryan.cleere@rackspace.com>

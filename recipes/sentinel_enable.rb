@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: redisio
+# Cookbook:: redisio
 # Recipe:: sentinel_enable
 #
 # Copyright 2013, Brian Bianco <brian.bianco@gmail.com>
