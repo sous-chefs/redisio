@@ -3,10 +3,15 @@ Description=Redis (%i) persistent key-value database
 After=network.target
 
 [Service]
+Type=simple
 ExecStart=<%= @bin_path %>/redis-server /etc/redis/%i.conf --daemonize no
 User=<%= @user %>
 Group=<%= @group %>
 LimitNOFILE=<%= @limit_nofile %>
+
+ExecStartPre=/bin/sh -c "mkdir -p /var/run/redis/%i/ && chown <%=@user%>:<%=@group%> /var/run/redis/%i"
+ExecStartPost=/bin/sh -c "echo $MAINPID > /var/run/redis/%i/redis_%i.pid" <%= @user %>
+ExecStopPost=/bin/sh -c "touch /var/run/redis/%i/redis_%i.pid && rm /var/run/redis/%i/redis_%i.pid" <%= @user %>
 
 [Install]
 WantedBy=multi-user.target
