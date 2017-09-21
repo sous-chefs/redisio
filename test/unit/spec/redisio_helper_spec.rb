@@ -1,5 +1,3 @@
-# Encoding: utf-8
-
 require_relative 'spec_helper'
 
 describe RedisioHelper do
@@ -18,11 +16,13 @@ describe RedisioHelper do
           'the_item'
         ).and_return(item)
 
-        expect(RedisioHelper.load_secret(
-          'chef_vault_name' => 'the_vault',
-          'chef_vault_item' => 'the_item',
-          'chef_vault_key' => 'the_key'
-        )).to eq('the_secret')
+        expect(
+          RedisioHelper.load_secret(
+            'chef_vault_name' => 'the_vault',
+            'chef_vault_item' => 'the_item',
+            'chef_vault_key' => 'the_key'
+          )
+        ).to eq('the_secret')
       end
     end
 
@@ -39,12 +39,14 @@ describe RedisioHelper do
           'decrypt_key'
         ).and_return(item)
 
-        expect(RedisioHelper.load_secret(
-          'data_bag_name' => 'the_data_bag',
-          'data_bag_item' => 'the_item',
-          'data_bag_secret' => '/path/to/secret',
-          'data_bag_key' => 'the_key'
-        )).to eq('the_secret')
+        expect(
+          RedisioHelper.load_secret(
+            'data_bag_name' => 'the_data_bag',
+            'data_bag_item' => 'the_item',
+            'data_bag_secret' => '/path/to/secret',
+            'data_bag_key' => 'the_key'
+          )
+        ).to eq('the_secret')
       end
     end
   end

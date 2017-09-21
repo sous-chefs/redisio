@@ -1,5 +1,3 @@
-# Encoding: utf-8
-
 require_relative 'spec_helper'
 
 # the runlist came from test-kitchen's default suite

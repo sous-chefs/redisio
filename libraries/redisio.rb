@@ -64,7 +64,8 @@ module RedisioHelper
   def self.load_secret(opts = {})
     if opts['chef_vault_name'] && opts['chef_vault_item'] && opts['chef_vault_key']
       Chef::Log.info(
-        "Loading secret from vault #{opts['chef_vault_name']} / #{opts['chef_vault_item']} / #{opts['chef_vault_key']}"
+        "Loading secret from vault #{opts['chef_vault_name']} / "\
+        "#{opts['chef_vault_item']} / #{opts['chef_vault_key']}"
       )
 
       require 'chef-vault'
@@ -73,7 +74,8 @@ module RedisioHelper
       item[opts['chef_vault_key']]
     elsif opts['data_bag_name'] && opts['data_bag_item'] && opts['data_bag_key']
       Chef::Log.info(
-        "Loading secret from encrypted data bag #{opts['data_bag_name']} / #{opts['data_bag_item']} / #{opts['data_bag_key']}"
+        "Loading secret from encrypted data bag #{opts['data_bag_name']} / "\
+        "#{opts['data_bag_item']} / #{opts['data_bag_key']}"
       )
       secret = if opts['data_bag_secret']
                  Chef::EncryptedDataBagItem.load_secret(opts['data_bag_secret'])
