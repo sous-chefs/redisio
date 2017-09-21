@@ -136,13 +136,48 @@ run_list *%w[
 default_attributes({
   'redisio' => {
     'servers' => [
-      {'data_bag_name' => 'redis', 'data_bag_item' => 'auth', 'data_bag_key' => 'password'},
+      {
+        'data_bag_name' => 'redis',
+        'data_bag_item' => 'auth',
+        'data_bag_secret' => '/etc/chef/my_data_bag_secret',
+        'data_bag_key' => 'password'
+      }
     ]
   }
 })
 ```
 
-###### Data Bag
+###### Data Bag Item
+
+```
+{
+    "id": "auth",
+    "password": "abcdefghijklmnopqrstuvwxyz"
+}
+```
+
+##### Install redis and pull the password from a Chef Vault item
+
+```ruby
+run_list *%w[
+  recipe[redisio]
+  recipe[redisio::enable]
+]
+
+default_attributes({
+  'redisio' => {
+    'servers' => [
+      {
+        'chef_vault_name' => 'redis',
+        'chef_vault_item' => 'auth',
+        'chef_vault_key' => 'password'
+      }
+    ]
+  }
+})
+```
+
+###### Chef Vault Item
 
 ```
 {

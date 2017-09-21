@@ -50,4 +50,43 @@ module RedisioHelper
       rc: version_array[3]
     }
   end
+
+  # Load password from vault or data bag
+  #
+  # @param [Hash] opts defines where to get the secret
+  # @option opts [String] :chef_vault_name chef vault name to load secret from
+  # @option opts [String] :chef_vault_item chef vault item to load secret from
+  # @option opts [String] :chef_vault_key chef vault key to load secret from
+  # @option opts [String] :data_bag_name data bag name to load secret from
+  # @option opts [String] :data_bag_item data bag item to load secret from
+  # @option opts [String] :data_bag_key data bag key to load secret from
+  # @option opts [String] :data_bag_secret path to secret to decrypt data bag item
+  def self.load_secret(opts = {})
+    if opts['chef_vault_name'] && opts['chef_vault_item'] && opts['chef_vault_key']
+      Chef::Log.info(
+        "Loading secret from vault #{opts['chef_vault_name']} / #{opts['chef_vault_item']} / #{opts['chef_vault_key']}"
+      )
+
+      require 'chef-vault'
+
+      item = ChefVault::Item.load(opts['chef_vault_name'], opts['chef_vault_item'])
+      item[opts['chef_vault_key']]
+    elsif opts['data_bag_name'] && opts['data_bag_item'] && opts['data_bag_key']
+      Chef::Log.info(
+        "Loading secret from encrypted data bag #{opts['data_bag_name']} / #{opts['data_bag_item']} / #{opts['data_bag_key']}"
+      )
+      secret = if opts['data_bag_secret']
+                 Chef::EncryptedDataBagItem.load_secret(opts['data_bag_secret'])
+               end
+      bag = Chef::EncryptedDataBagItem.load(
+        opts['data_bag_name'],
+        opts['data_bag_item'],
+        secret
+      )
+      bag[opts['data_bag_key']]
+    else
+      Chef::Log.info('Not loading secret from vault or encrypted data bag')
+      nil
+    end
+  end
 end

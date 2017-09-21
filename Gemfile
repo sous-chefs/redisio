@@ -12,6 +12,8 @@ source 'https://rubygems.org'
 #   gem "vagrant-omnibus", github: "schisamo/vagrant-omnibus"
 # end
 
+gem 'chef-vault'
+
 group :testing do
   gem 'berkshelf'
   gem 'chefspec'

@@ -130,11 +130,15 @@ def configure
         masters = [current['masters']].flatten
       end
 
-      # Load password for use with requirepass from data bag if needed
-      if current['data_bag_name'] && current['data_bag_item'] && current['data_bag_key']
-        bag = Chef::EncryptedDataBagItem.load(current['data_bag_name'], current['data_bag_item'])
+      # Load password for use with requirepass from vault or data bag if needed
+      chef_gem 'chef-vault' do
+        action :nothing
+      end.run_action(:install)
+
+      secret = RedisioHelper.load_secret(current)
+      if secret
         masters.each do |master|
-          master['auth_pass'] = bag[current['data_bag_key']]
+          master['auth_pass'] = secret
         end
       end
 
