@@ -1,0 +1,100 @@
+require_relative 'spec_helper'
+
+describe 'redisio::configure' do
+  cached(:chef_run) do
+    ChefSpec::ServerRunner.new(step_into: ['redisio_configure']) do |node|
+      # node.set['attribute'] = 'value'
+    end.converge(described_recipe)
+  end
+
+  it do
+    expect(chef_run).to run_redisio_configure('redis-servers').with(
+      version: '2.8.20',
+      default_settings: {
+        'activerehasing' => 'yes',
+        'address' => nil,
+        'aofloadtruncated' => 'yes',
+        'aofrewriteincrementalfsync' => 'yes',
+        'aofrewriteminsize' => '64mb',
+        'aofrewritepercentage' => '100',
+        'appendfilename' => nil,
+        'appendfsync' => 'everysec',
+        'backuptype' => 'rdb',
+        'breadcrumb' => true,
+        'clientoutputbufferlimit' => [%w(normal 0 0 0), %w(slave 256mb 64mb 60), %w(pubsub 32mb 8mb 60)],
+        'clusterconfigfile' => nil,
+        'clusterenabled' => 'no',
+        'clusternodetimeout' => 5000,
+        'configdir' => '/etc/redis',
+        'data_bag_item' => nil,
+        'data_bag_key' => nil,
+        'data_bag_name' => nil,
+        'databases' => '16',
+        'datadir' => '/var/lib/redis',
+        'dbfilename' => nil,
+        'group' => 'redis',
+        'hashmaxziplistentries' => '512',
+        'hashmaxziplistvalue' => '64',
+        'hllsparsemaxbytes' => '3000',
+        'homedir' => '/var/lib/redis',
+        'hz' => '10',
+        'includes' => nil,
+        'keepalive' => '0',
+        'listmaxziplistentries' => '512',
+        'listmaxziplistvalue' => '64',
+        'logfile' => nil,
+        'loglevel' => 'notice',
+        'luatimelimit' => '5000',
+        'masterauth' => nil,
+        'maxclients' => 10000,
+        'maxmemory' => nil,
+        'maxmemorypolicy' => nil,
+        'maxmemorysamples' => nil,
+        'minslavesmaxlag' => nil,
+        'minslavestowrite' => nil,
+        'name' => nil,
+        'noappendfsynconrewrite' => 'no',
+        'notifykeyspaceevents' => '',
+        'protected_mode' => nil,
+        'rdbchecksum' => 'yes',
+        'rdbcompression' => 'yes',
+        'rename_commands' => nil,
+        'replbacklogsize' => '1mb',
+        'replbacklogttl' => 3600,
+        'repldisabletcpnodelay' => 'no',
+        'repldisklesssync' => 'no',
+        'repldisklesssyncdelay' => '5',
+        'replpingslaveperiod' => '10',
+        'repltimeout' => '60',
+        'requirepass' => nil,
+        'save' => nil,
+        'setmaxintsetentries' => '512',
+        'shell' => '/bin/false',
+        'shutdown_save' => false,
+        'slaveof' => nil,
+        'slavepriority' => '100',
+        'slavereadonly' => 'yes',
+        'slaveservestaledata' => 'yes',
+        'slowloglogslowerthan' => '10000',
+        'slowlogmaxlen' => '1024',
+        'stopwritesonbgsaveerror' => 'yes',
+        'syslogenabled' => 'yes',
+        'syslogfacility' => 'local0',
+        'systemuser' => true,
+        'tcpbacklog' => '511',
+        'timeout' => '0',
+        'uid' => nil,
+        'ulimit' => 0,
+        'unixsocket' => nil,
+        'unixsocketperm' => nil,
+        'user' => 'redis',
+        'zsetmaxziplistentries' => '128',
+        'zsetmaxziplistvalue' => '64'
+      },
+      servers: [
+        { 'port' => '6379' }
+      ],
+      base_piddir: '/var/run/redis'
+    )
+  end
+end
