@@ -1,4 +1,4 @@
-name             'redisio'
+name             'dd-redisio'
 maintainer       'Brian Bianco'
 maintainer_email 'brian.bianco@gmail.com'
 license          'Apache-2.0'
