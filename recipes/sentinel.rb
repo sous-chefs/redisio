@@ -17,8 +17,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-include_recipe 'redisio::_install_prereqs'
-include_recipe 'redisio::install'
+include_recipe 'dd-redisio::_install_prereqs'
+include_recipe 'dd-redisio::install'
 include_recipe 'ulimit::default'
 
 redis = node['redisio']

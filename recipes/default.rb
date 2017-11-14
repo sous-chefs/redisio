@@ -30,11 +30,11 @@ if platform?('debian', 'ubuntu')
 end
 
 unless node['redisio']['package_install']
-  include_recipe 'redisio::_install_prereqs'
+  include_recipe 'dd-redisio::_install_prereqs'
   include_recipe 'build-essential::default'
 end
 
 unless node['redisio']['bypass_setup']
-  include_recipe 'redisio::install'
-  include_recipe 'redisio::configure'
+  include_recipe 'dd-redisio::install'
+  include_recipe 'dd-redisio::configure'
 end

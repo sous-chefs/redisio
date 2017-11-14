@@ -28,8 +28,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     r.vm.provision :chef_solo do |chef|
       chef.cookbooks_path = cookbooks_path
-      chef.add_recipe "redisio::default"
-      chef.add_recipe "redisio::enable"
+      chef.add_recipe "dd-redisio::default"
+      chef.add_recipe "dd-redisio::enable"
       chef.json = {
         'redisio' => {
           'servers' => [
@@ -50,8 +50,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     s.vm.provision :chef_solo do |chef|
       chef.cookbooks_path = cookbooks_path
-      chef.add_recipe "redisio::sentinel"
-      chef.add_recipe "redisio::sentinel_enable"
+      chef.add_recipe "dd-redisio::sentinel"
+      chef.add_recipe "dd-redisio::sentinel_enable"
       chef.json = {
         'redisio' => {
           'sentinels' => [
@@ -61,5 +61,4 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       }
     end
   end
-
 end

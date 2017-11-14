@@ -9,7 +9,7 @@ describe 'sentinel recipes' do
     enable
     sentinel
     sentinel_enable
-  ).map { |r| "redisio::#{r}" }
+  ).map { |r| "dd-redisio::#{r}" }
 
   # pick an arbitrary OS; just for fauxhai to provide some values
   it 'creates a default sentinel instance' do

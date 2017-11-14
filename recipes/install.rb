@@ -23,7 +23,7 @@ if node['redisio']['package_install']
     action :install
   end
 else
-  include_recipe 'redisio::_install_prereqs'
+  include_recipe 'dd-redisio::_install_prereqs'
   include_recipe 'build-essential::default'
 
   redis = node['redisio']
