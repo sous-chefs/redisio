@@ -11,9 +11,10 @@ provisioner:
   name: dokken
   require_chef_omnibus: 12.19.36
 
-# TODO: uncomment after converting to inspec
-# verifier:
-#   name: inspec
+verifier:
+  root_path: '/opt/verifier'
+  # TODO: uncomment after converting to inspec
+  # name: inspec
 
 platforms:
 - name: centos-6
