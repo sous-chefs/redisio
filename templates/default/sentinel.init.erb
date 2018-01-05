@@ -15,7 +15,8 @@
 SENTINELNAME=<%= @name %>
 <% case @platform %>
 <% when 'ubuntu','debian','fedora' %>
-EXEC="su -s /bin/sh -c '<%= File.join(@bin_path, 'redis-server') %> <%= @configdir %>/${SENTINELNAME}.conf --sentinel' <%= @user %>"
+# EXEC="su -s /bin/sh -c '<%= File.join(@bin_path, 'redis-server') %> <%= @configdir %>/${SENTINELNAME}.conf --sentinel' <%= @user %>"
+EXEC="SHELL=/bin/sh sudo -s '<%= File.join(@bin_path, 'redis-server') %> <%= @configdir %>/${SENTINELNAME}.conf --sentinel' <%= @user %>"
 <% else %>
 EXEC="runuser <%= @user %> -c \"<%= File.join(@bin_path, 'redis-server') %> <%= @configdir %>/${SENTINELNAME}.conf --sentinel\""
 <% end %>
