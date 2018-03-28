@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 2.7.0 - Released 53/28/2018
+  - enables diskless replication configuration for versions `~> 2.6 || ~> 3.0` ([#340]https://github.com/brianbianco/redisio/pull/340)
+  - adds chef 13 compatability ([#350]https://github.com/brianbianco/redisio/pull/350)
+
+
 ## 2.6.1 - Released 5/10/2017
   - Restrict aof-load-truncated to redis 3+ ([#343](https://github.com/brianbianco/redisio/pull/343))
   - Fix Redis 2.4.x config ([#344](https://github.com/brianbianco/redisio/pull/344))
