@@ -4,6 +4,16 @@ AllCops:
     - '.bundle/**/*'
   TargetRubyVersion: 2.3
 
+Layout/LeadingCommentSpace:
+  Enabled: true
+  Exclude:
+    - resources/*
+
+Layout/SpaceAroundOperators:
+  Enabled: true
+  Exclude:
+    - attributes/default.rb
+
 Lint/PercentStringArray:
   Enabled: false
 
@@ -38,10 +48,8 @@ Style/Documentation:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-Style/LeadingCommentSpace:
-  Enabled: true
-  Exclude:
-    - resources/*
+Style/MixinUsage:
+  Enabled: false
 
 Style/NestedParenthesizedCalls:
   Enabled: false
@@ -55,11 +63,6 @@ Style/PercentLiteralDelimiters:
 
 Style/RegexpLiteral:
   Enabled: false
-
-Style/SpaceAroundOperators:
-  Enabled: true
-  Exclude:
-    - attributes/default.rb
 
 Style/SymbolArray:
   EnforcedStyle: brackets

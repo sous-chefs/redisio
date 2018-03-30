@@ -247,7 +247,7 @@ def configure
         only_if { node['redisio']['job_control'] == 'rcinit' }
       end
     end
-  end # servers each loop
+  end
 end
 
 def redis_exists?

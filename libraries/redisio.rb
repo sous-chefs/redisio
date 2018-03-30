@@ -32,9 +32,11 @@ module RedisioHelper
     begin
       Chef::Runner.new(sub_run_context).converge
     ensure
+      # rubocop:disable Style/IfUnlessModifier
       if sub_run_context.resource_collection.any?(&:updated?)
         new_resource.updated_by_last_action(true)
       end
+      # rubocop:enable Style/IfUnlessModifier
     end
   end
 
@@ -77,13 +79,10 @@ module RedisioHelper
         "Loading secret from encrypted data bag #{opts['data_bag_name']} / "\
         "#{opts['data_bag_item']} / #{opts['data_bag_key']}"
       )
-      secret = if opts['data_bag_secret']
-                 Chef::EncryptedDataBagItem.load_secret(opts['data_bag_secret'])
-               end
-      bag = Chef::EncryptedDataBagItem.load(
+      bag = data_bag_item(
         opts['data_bag_name'],
         opts['data_bag_item'],
-        secret
+        opts['data_bag_secret'] # if this is nil, data_bag_item still works
       )
       bag[opts['data_bag_key']]
     else

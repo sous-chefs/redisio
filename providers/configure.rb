@@ -50,9 +50,7 @@ def configure
     # Merge in the default maxmemory
     node_memory_kb = node['memory']['total']
     # On BSD platforms Ohai reports total memory as a Fixnum
-    if node_memory_kb.is_a? String
-      node_memory_kb = node_memory_kb.sub('kB', '').to_i
-    end
+    node_memory_kb = node_memory_kb.sub('kB', '').to_i if node_memory_kb.is_a? String
 
     # Here we determine what the logfile is.  It has these possible states
     #
@@ -204,7 +202,7 @@ def configure
       end
 
       computed_save = current['save']
-      if current['save'] && current['save'].respond_to?(:each_line)
+      if current['save']&.respond_to?(:each_line)
         computed_save = current['save'].each_line
         Chef::Log.warn("#{server_name}: given a save argument as a string, instead of an array.")
         Chef::Log.warn("#{server_name}: This will be deprecated in future versions of the redisio cookbook.")
@@ -406,7 +404,7 @@ def configure
         end
       end
     end
-  end # servers each loop
+  end
 end
 
 def load_current_resource
