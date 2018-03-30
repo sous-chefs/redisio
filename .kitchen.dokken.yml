@@ -20,11 +20,15 @@ platforms:
   driver:
     image: dokken/amazonlinux
     pid_one_command: /sbin/init
+  intermediate_instructions:
+    - RUN yum -y install sudo
 
 - name: centos-6
   driver:
     image: dokken/centos-6
     pid_one_command: /sbin/init
+  intermediate_instructions:
+    - RUN yum -y install sudo
   run_list:
     - recipe[yum-epel::default]
     - recipe[yum-remi::default]
@@ -33,6 +37,8 @@ platforms:
   driver:
     image: dokken/centos-7
     pid_one_command: /usr/lib/systemd/systemd
+  intermediate_instructions:
+    - RUN yum -y install sudo
   run_list:
     - recipe[yum-epel::default]
     - recipe[yum-remi::default]
@@ -43,6 +49,7 @@ platforms:
     pid_one_command: /bin/systemd
     intermediate_instructions:
       - RUN /usr/bin/apt-get update
+      - RUN /usr/bin/apt-get -y install sudo
 
 - name: debian-9
   driver:
@@ -50,11 +57,14 @@ platforms:
     pid_one_command: /bin/systemd
     intermediate_instructions:
       - RUN /usr/bin/apt-get update
+      - RUN /usr/bin/apt-get -y install sudo
 
 - name: fedora-latest
   driver:
     image: dokken/fedora-latest
     pid_one_command: /usr/lib/systemd/systemd
+  intermediate_instructions:
+    - RUN dnf -y install sudo
 
 - name: ubuntu-14.04
   driver:
@@ -62,6 +72,7 @@ platforms:
     pid_one_command: /sbin/init
     intermediate_instructions:
       - RUN /usr/bin/apt-get update
+      - RUN /usr/bin/apt-get -y install sudo
 
 - name: ubuntu-16.04
   driver:
@@ -69,6 +80,7 @@ platforms:
     pid_one_command: /bin/systemd
     intermediate_instructions:
       - RUN /usr/bin/apt-get update
+      - RUN /usr/bin/apt-get -y install sudo
 
 - name: ubuntu-18.04
   driver:
@@ -82,3 +94,5 @@ platforms:
   driver:
     image: dokken/opensuse-leap
     pid_one_command: /bin/systemd
+  intermediate_instructions:
+    - RUN /usr/bin/zypper install -y sudo
