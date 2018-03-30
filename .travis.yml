@@ -46,7 +46,7 @@ env:
 before_script:
   - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
 script:
-  - travis_wait 100 bundle exec $CMD $OPTIONS
+  - bundle exec $CMD $OPTIONS
 matrix:
   allow_failures:
     # https://github.com/brianbianco/redisio/issues/335
