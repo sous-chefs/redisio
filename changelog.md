@@ -2,7 +2,10 @@
 
 ## Unreleased
 
-## 2.7.0 - Released 53/28/2018
+## 2.7.1 - 3/30/2018
+- fixes sentinal config where `announce-ip` was being given the value of `announce-port` improperly ([#354])
+
+## 2.7.0 - Released 3/28/2018
   - enables diskless replication configuration for versions `~> 2.6 || ~> 3.0` ([#340]https://github.com/brianbianco/redisio/pull/340)
   - adds chef 13 compatability ([#350]https://github.com/brianbianco/redisio/pull/350)
 
