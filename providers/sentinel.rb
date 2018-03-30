@@ -55,7 +55,6 @@ def configure
         shell current['shell']
         system current['systemuser']
         uid current['uid'] unless current['uid'].nil?
-
         not_if do
           begin
             Etc.getpwnam current['user']
@@ -67,7 +66,7 @@ def configure
       # Create the redis configuration directory
       directory current['configdir'] do
         owner 'root'
-        group node['platform_family'] == 'freebsd' ? 'wheel' : 'root'
+        group node['root_group']
         mode '0755'
         recursive true
         action :create

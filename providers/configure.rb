@@ -123,7 +123,7 @@ def configure
       # Create the redis configuration directory
       directory current['configdir'] do
         owner 'root'
-        group node['platform_family'] == 'freebsd' ? 'wheel' : 'root'
+        group node['root_group']
         mode '0755'
         recursive true
         action :create
