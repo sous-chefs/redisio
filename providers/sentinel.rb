@@ -1,6 +1,6 @@
 #
 # Cookbook:: redisio
-# Provider::sentinel
+# Provider:: sentinel
 #
 # Copyright 2013, Rackspace Hosting <ryan.cleere@rackspace.com>
 #

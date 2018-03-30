@@ -1,6 +1,6 @@
 #
 # Cookbook:: redisio
-# Provider::configure
+# Provider:: configure
 #
 # Copyright 2013, Brian Bianco <brian.bianco@gmail.com>
 # Copyright 2013, Rackspace Hosting <ryan.cleere@rackspace.com>
