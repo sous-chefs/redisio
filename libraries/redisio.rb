@@ -56,38 +56,49 @@ module RedisioHelper
   # Load password from vault or data bag
   #
   # @param [Hash] opts defines where to get the secret
-  # @option opts [String] :chef_vault_name chef vault name to load secret from
-  # @option opts [String] :chef_vault_item chef vault item to load secret from
-  # @option opts [String] :chef_vault_key chef vault key to load secret from
-  # @option opts [String] :data_bag_name data bag name to load secret from
-  # @option opts [String] :data_bag_item data bag item to load secret from
-  # @option opts [String] :data_bag_key data bag key to load secret from
-  # @option opts [String] :data_bag_secret path to secret to decrypt data bag item
+  # @option opts [String] 'data_bag_name' data bag name to load secret from
+  # @option opts [String] 'data_bag_item' data bag item to load secret from
+  # @option opts [String] 'data_bag_key' item's key to load the secret from
+  # @option opts [String] 'data_bag_secret' path to secret file to decrypt data bag item
   def self.load_secret(opts = {})
-    if opts['chef_vault_name'] && opts['chef_vault_item'] && opts['chef_vault_key']
-      Chef::Log.info(
-        "Loading secret from vault #{opts['chef_vault_name']} / "\
-        "#{opts['chef_vault_item']} / #{opts['chef_vault_key']}"
-      )
+    # wont be able to load data bag unless these are set
+    unless opts['data_bag_name'] && opts['data_bag_item']
+      Chef::Log.info('Not loading secret from chef vault or data bag')
+      return nil
+    end
 
-      require 'chef-vault'
+    # defaults for opts hash
+    opts['data_bag_key'] ||= 'password'
+    opts['data_bag_secret'] ||= Chef::Config[:encrypted_data_bag_secret]
 
-      item = ChefVault::Item.load(opts['chef_vault_name'], opts['chef_vault_item'])
-      item[opts['chef_vault_key']]
-    elsif opts['data_bag_name'] && opts['data_bag_item'] && opts['data_bag_key']
+    require 'chef-vault'
+
+    case ChefVault::Item.data_bag_item_type(opts['data_bag_name'], opts['data_bag_item'])
+    when :vault
       Chef::Log.info(
-        "Loading secret from encrypted data bag #{opts['data_bag_name']} / "\
+        "Loading secret from vault #{opts['data_bag_name']} / "\
         "#{opts['data_bag_item']} / #{opts['data_bag_key']}"
       )
-      bag = data_bag_item(
+      item = ChefVault::Item.load(opts['data_bag_name'], opts['data_bag_item'])
+      item[opts['data_bag_key']]
+    when :encrypted
+      Chef::Log.info(
+        "Loading secret from encrypted data bag item #{opts['data_bag_name']} "\
+        "/ #{opts['data_bag_item']} / #{opts['data_bag_key']}"
+      )
+      bag = Chef::EncryptedDataBagItem.load(
         opts['data_bag_name'],
         opts['data_bag_item'],
-        opts['data_bag_secret'] # if this is nil, data_bag_item still works
+        Chef::EncryptedDataBagItem.load_secret(opts['data_bag_secret'])
       )
       bag[opts['data_bag_key']]
-    else
-      Chef::Log.info('Not loading secret from vault or encrypted data bag')
-      nil
+    when :normal
+      Chef::Log.warn(
+        "Loading secret from unencrypted data bag item #{opts['data_bag_name']}"\
+        " / #{opts['data_bag_item']} / #{opts['data_bag_key']}"
+      )
+      bag = Chef::DataBagItem.load(opts['data_bag_name'], opts['data_bag_item'])
+      bag[opts['data_bag_key']]
     end
   end
 end

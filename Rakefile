@@ -24,6 +24,7 @@ namespace :style do
       :tags => %w(
         ~FC059
         ~FC085
+        ~FC086
       )
     }
     # rubocop:enable Style/HashSyntax
