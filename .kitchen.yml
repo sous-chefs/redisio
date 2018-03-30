@@ -11,21 +11,21 @@ provisioner:
 platforms:
 <%
   chef_versions = %w(
-    11.0.0
     12.19.36
     latest
   )
 
   # non RHEL OS's
   test_platforms = %w(
-    centos-6.9
-    centos-7.3
-    debian-7.11
-    debian-8.8
-    fedora-25
-    freebsd-10.3
+    centos-6
+    centos-7
+    debian-8
+    debian-9
+    fedora-27
+    freebsd-10
     ubuntu-14.04
     ubuntu-16.04
+    ubuntu-18.04
   )
 %>
 
@@ -34,11 +34,6 @@ platforms:
     driver_config:
       box: bento/<%= platform_version %>
       require_chef_omnibus: <%= chef_version %>
-    <% if platform_version == 'debian-7.11' %>
-    # Set due to https://github.com/test-kitchen/kitchen-vagrant/issues/293
-    driver:
-      kitchen_cache_directory: .kitchen/cache/debian
-    <% end %>
     <% if platform_version.start_with?('centos') %>
     run_list:
       - recipe[yum-epel::default]
