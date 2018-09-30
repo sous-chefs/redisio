@@ -2,7 +2,10 @@
 
 ## Unreleased
 
-## 2.7.1 - 3/30/2018
+## 2.7.2 - Released 9/30/2018
+- fixes sentinal cluster init script by providing missing LSB statements ([#374])
+
+## 2.7.1 - Released 3/30/2018
 - fixes sentinal config where `announce-ip` was being given the value of `announce-port` improperly ([#354])
 
 ## 2.7.0 - Released 3/28/2018
