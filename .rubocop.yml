@@ -63,3 +63,10 @@ Style/SpaceAroundOperators:
 
 Style/SymbolArray:
   EnforcedStyle: brackets
+
+# matching cookstyle eventually we should transition but babby steps
+Style/SafeNavigation:
+  Enabled: false
+
+Style/MixinUsage:
+  Enabled: false

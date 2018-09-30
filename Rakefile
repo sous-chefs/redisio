@@ -1,4 +1,3 @@
-# Encoding: utf-8
 require 'bundler/setup'
 
 namespace :style do
@@ -20,10 +19,13 @@ namespace :style do
     t.options = {
       :search_gems => true,
       :fail_tags => ['correctness'],
-      :chef_version => '11.6.0',
+      :chef_version => '13.3.0',
+      # TODO: come back and remove foodcritic checks for cookbooks when we drop chef 13 support
       :tags => %w(
         ~FC059
         ~FC085
+        ~FC121
+        ~FC122
       )
     }
     # rubocop:enable Style/HashSyntax
@@ -36,7 +38,7 @@ task style: ['style:chef', 'style:ruby']
 desc 'Destroy test kitchen instances'
 task :destroy do
   Kitchen.logger = Kitchen.default_file_logger
-  Kitchen::Config.new.instances.each do |instance|
+  Kitchen::Config.new.instances.each do |instance| # rubocop:disable Style/SymbolProc
     instance.destroy
   end
 end

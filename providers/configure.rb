@@ -50,9 +50,8 @@ def configure
     # Merge in the default maxmemory
     node_memory_kb = node['memory']['total']
     # On BSD platforms Ohai reports total memory as a Fixnum
-    if node_memory_kb.is_a? String
-      node_memory_kb = node_memory_kb.sub('kB', '').to_i
-    end
+
+    node_memory_kb = node_memory_kb.sub('kB', '').to_i if node_memory_kb.is_a?(String)
 
     # Here we determine what the logfile is.  It has these possible states
     #
@@ -212,7 +211,7 @@ def configure
 
       # Load password for use with requirepass from data bag if needed
       if current['data_bag_name'] && current['data_bag_item'] && current['data_bag_key']
-        bag = Chef::EncryptedDataBagItem.load(current['data_bag_name'], current['data_bag_item'])
+        bag = data_bag_item(current['data_bag_name'], current['data_bag_item'])
         current['requirepass'] = bag[current['data_bag_key']]
         current['masterauth'] = bag[current['data_bag_key']]
       end
@@ -402,7 +401,8 @@ def configure
         end
       end
     end
-  end # servers each loop
+  end
+  # servers each loop
 end
 
 def load_current_resource

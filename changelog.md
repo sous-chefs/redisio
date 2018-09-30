@@ -1,6 +1,9 @@
 # redisio CHANGE LOG
 
 ## Unreleased
+- drop chef support for versions `< 13.3`
+- pin rubocop gem to minor
+- appeased cops and critics
 
 ## 2.7.2 - Released 9/30/2018
 - fixes sentinal cluster init script by providing missing LSB statements ([#374])

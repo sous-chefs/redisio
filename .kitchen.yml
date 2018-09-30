@@ -11,8 +11,7 @@ provisioner:
 platforms:
 <%
   chef_versions = %w(
-    11.0.0
-    12.19.36
+    13.3.0
     latest
   )
 
@@ -33,7 +32,8 @@ platforms:
   - name: <%= platform_version %>-<%= chef_version %>
     driver_config:
       box: bento/<%= platform_version %>
-      require_chef_omnibus: <%= chef_version %>
+      product_name: chef
+      product_version: <%= chef_version %>
     <% if platform_version == 'debian-7.11' %>
     # Set due to https://github.com/test-kitchen/kitchen-vagrant/issues/293
     driver:
