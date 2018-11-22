@@ -21,7 +21,7 @@ end
 
 source_url 'https://github.com/brianbianco/redisio'	if respond_to?(:source_url)
 issues_url 'https://github.com/brianbianco/redisio/issues' if respond_to?(:issues_url)
-chef_version '>= 11' if respond_to?(:chef_version)
+chef_version '>= 13' if respond_to?(:chef_version)
 
 recipe 'redisio::default', 'This recipe is used to install the prequisites for building and installing redis, as well as provides the LWRPs'
 recipe 'redisio::install', 'This recipe is used to install redis'

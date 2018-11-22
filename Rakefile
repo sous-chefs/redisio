@@ -20,7 +20,7 @@ namespace :style do
     t.options = {
       :search_gems => true,
       :fail_tags => ['correctness'],
-      :chef_version => '11.6.0',
+      :chef_version => '13.8.3',
       :tags => %w(
         ~FC059
         ~FC085

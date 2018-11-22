@@ -1,7 +1,7 @@
 driver:
   name: dokken
   privileged: true # because Docker and SystemD/Upstart
-  chef_version: 12.19.36
+  chef_version: 13.8.3
   # chef_version: current
 
 transport:
@@ -9,7 +9,7 @@ transport:
 
 provisioner:
   name: dokken
-  require_chef_omnibus: 12.19.36
+  require_chef_omnibus: 13.8.3
 
 # TODO: uncomment after converting to inspec
 # verifier:
