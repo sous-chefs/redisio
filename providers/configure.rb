@@ -96,7 +96,7 @@ def configure
                   end
 
     recipe_eval do
-      include_recipe 'selinux_policy::install' if use_selinux
+      include_recipe 'selinux_policy::install' if use_selinux(new_resource)
 
       server_name = current['name'] || current['port']
       piddir = "#{base_piddir}/#{server_name}"
