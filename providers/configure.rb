@@ -18,8 +18,6 @@
 # limitations under the License.
 #
 
-include SELinuxPolicy::Helpers
-
 action :run do
   configure
   new_resource.updated_by_last_action(true)
@@ -96,8 +94,6 @@ def configure
                   end
 
     recipe_eval do
-      include_recipe 'selinux_policy::install' if use_selinux(new_resource)
-
       server_name = current['name'] || current['port']
       piddir = "#{base_piddir}/#{server_name}"
       aof_file = current['appendfilename'] || "#{current['datadir']}/appendonly-#{server_name}.aof"
