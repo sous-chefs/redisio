@@ -17,7 +17,8 @@ group :testing do
   gem 'chefspec'
   gem 'foodcritic'
   gem 'rake'
-  gem 'rubocop'
+  gem 'rubocop', '~> 0.59.0'
+  gem 'cucumber-core', '~> 3.2'
 end
 
 group :travis_integration do
