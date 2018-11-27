@@ -9,8 +9,8 @@ shared_examples_for 'sentinel on port' do |redis_port, redis_cluster_name, _args
            else
              "redis_sentinel_#{redis_cluster_name}"
            end
-    expect(service name).to be_enabled
-    expect(service name).to be_running, if: os[:family] != 'fedora'
+    expect(service(name)).to be_enabled
+    expect(service(name)).to be_running, if: os[:family] != 'fedora'
   end
 
   describe command("ps aux | grep -v grep | grep 'redis-server' | grep '*:#{redis_port}'"), if: os[:family] == 'fedora' do
@@ -18,6 +18,6 @@ shared_examples_for 'sentinel on port' do |redis_port, redis_cluster_name, _args
   end
 
   it "is listening on port #{redis_port}" do
-    expect(port redis_port).to be_listening
+    expect(port(redis_port)).to be_listening
   end
 end

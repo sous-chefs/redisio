@@ -123,8 +123,8 @@ def configure
             auth_pass:                    current['auth-pass'] || current[:authpass],
             down_after_milliseconds:      current['down-after-milliseconds'] || current[:downaftermil],
             parallel_syncs:               current['parallel-syncs'] || current[:parallelsyncs],
-            failover_timeout:             current['failover-timeout'] || current[:failovertimeout]
-          }
+            failover_timeout:             current['failover-timeout'] || current[:failovertimeout],
+          },
         ]
       else
         masters = [current['masters']].flatten

@@ -1,8 +1,8 @@
 name             'redisio'
-maintainer       'Brian Bianco'
-maintainer_email 'brian.bianco@gmail.com'
+maintainer       'Sous Chefs'
+maintainer_email 'help@sous-chefs.org'
 license          'Apache-2.0'
-description      'Installs/Configures redis'
+description      'Installs and configures redis'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '3.0.0'
 
@@ -19,9 +19,9 @@ version          '3.0.0'
   supports os
 end
 
-source_url 'https://github.com/brianbianco/redisio'	if respond_to?(:source_url)
-issues_url 'https://github.com/brianbianco/redisio/issues' if respond_to?(:issues_url)
-chef_version '>= 13.0' if respond_to?(:chef_version)
+source_url 'https://github.com/sous-chefs/redisio'
+issues_url 'https://github.com/sous-chefs/redisio/issues'
+chef_version '>= 13.0'
 
 recipe 'redisio::default', 'This recipe is used to install the prequisites for building and installing redis, as well as provides the LWRPs'
 recipe 'redisio::install', 'This recipe is used to install redis'
@@ -34,5 +34,5 @@ recipe 'redisio::redis_gem', 'this recipe will install the redis ruby gem into t
 recipe 'redisio::disable_os_default', 'This recipe is used to disable the default OS redis init script'
 
 depends 'ulimit', '>= 0.1.2'
-depends 'build-essential'
+depends 'build-essential', '>= 5.0'
 depends 'selinux_policy'

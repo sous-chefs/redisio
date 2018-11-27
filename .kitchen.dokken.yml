@@ -9,71 +9,63 @@ transport:
 
 provisioner:
   name: dokken
-  product_name: chef
-  product_version: 13.3.0
 
 # TODO: uncomment after converting to inspec
 # verifier:
 #   name: inspec
 
 platforms:
+- name: amazonlinux
+  driver:
+    image: dokken/amazonlinux
+    pid_one_command: /sbin/init
+
 - name: centos-6
   driver:
-    image: centos:6
-    platform: rhel
+    image: dokken/centos-6
     pid_one_command: /sbin/init
-    intermediate_instructions:
-      - RUN yum -y install which initscripts net-tools wget sudo
   run_list:
     - recipe[yum-epel::default]
     - recipe[yum-remi::default]
 
 - name: centos-7
   driver:
-    image: centos:7
-    platform: rhel
+    image: dokken/centos-7
     pid_one_command: /usr/lib/systemd/systemd
-    intermediate_instructions:
-      - RUN yum -y install lsof which systemd-sysv initscripts wget net-tools sudo
   run_list:
     - recipe[yum-epel::default]
     - recipe[yum-remi::default]
 
-- name: debian-7
-  driver:
-    image: debian:7
-    pid_one_command: /sbin/init
-    intermediate_instructions:
-      - RUN /usr/bin/apt-get update
-      - RUN /usr/bin/apt-get install -y apt-transport-https lsb-release procps net-tools sudo
 
 - name: debian-8
   driver:
-    image: debian:8
+    image: dokken/debian-8
     pid_one_command: /bin/systemd
     intermediate_instructions:
       - RUN /usr/bin/apt-get update
-      - RUN /usr/bin/apt-get install -y apt-transport-https lsb-release procps net-tools sudo
+
+- name: debian-9
+  driver:
+    image: dokken/debian-9
+    pid_one_command: /bin/systemd
+    intermediate_instructions:
+      - RUN /usr/bin/apt-get update
 
 - name: fedora-latest
   driver:
-    image: fedora:latest
+    image: dokken/fedora-latest
     pid_one_command: /usr/lib/systemd/systemd
-    intermediate_instructions:
-      - RUN dnf -y install yum which systemd-sysv initscripts wget net-tools sudo
-
-- name: ubuntu-14.04
-  driver:
-    image: ubuntu-upstart:14.04
-    pid_one_command: /sbin/init
-    intermediate_instructions:
-      - RUN /usr/bin/apt-get update
-      - RUN /usr/bin/apt-get install -y apt-transport-https lsb-release procps net-tools sudo
 
 - name: ubuntu-16.04
   driver:
-    image: ubuntu:16.04
+    image: dokken/ubuntu-16.04
     pid_one_command: /bin/systemd
     intermediate_instructions:
       - RUN /usr/bin/apt-get update
-      - RUN /usr/bin/apt-get install -y apt-transport-https lsb-release procps net-tools sudo
+
+- name: ubuntu-18.04
+  driver:
+    image: dokken/ubuntu-18.04
+    pid_one_command: /bin/systemd
+    intermediate_instructions:
+      - RUN /usr/bin/apt-get update
