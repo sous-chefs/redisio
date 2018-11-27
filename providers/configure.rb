@@ -18,8 +18,6 @@
 # limitations under the License.
 #
 
-include SELinuxPolicy::Helpers
-
 action :run do
   configure
   new_resource.updated_by_last_action(true)
@@ -96,8 +94,6 @@ def configure
                   end
 
     recipe_eval do
-      include_recipe 'selinux_policy::install' if use_selinux
-
       server_name = current['name'] || current['port']
       piddir = "#{base_piddir}/#{server_name}"
       aof_file = current['appendfilename'] || "#{current['datadir']}/appendonly-#{server_name}.aof"
@@ -128,9 +124,6 @@ def configure
         recursive true
         action :create
       end
-      selinux_policy_fcontext "#{current['configdir']}(/.*)?" do
-        secontext 'redis_conf_t'
-      end
       # Create the instance data directory
       directory current['datadir'] do
         owner current['user']
@@ -139,9 +132,6 @@ def configure
         recursive true
         action :create
       end
-      selinux_policy_fcontext "#{current['datadir']}(/.*)?" do
-        secontext 'redis_var_lib_t'
-      end
       # Create the pid file directory
       directory piddir do
         owner current['user']
@@ -149,9 +139,6 @@ def configure
         mode '0755'
         recursive true
         action :create
-      end
-      selinux_policy_fcontext "#{piddir}(/.*)?" do
-        secontext 'redis_var_run_t'
       end
       # Create the log directory if syslog is not being used
       if log_directory
@@ -162,8 +149,26 @@ def configure
           recursive true
           action :create
         end
-        selinux_policy_fcontext "#{log_directory}(/.*)?" do
-          secontext 'redis_log_t'
+      end
+      # Configure SELinux if it is enabled
+      extend Chef::Util::Selinux
+
+      if selinux_enabled?
+        selinux_policy_install 'install'
+
+        selinux_policy_fcontext "#{current['configdir']}(/.*)?" do
+          secontext 'redis_conf_t'
+        end
+        selinux_policy_fcontext "#{current['datadir']}(/.*)?" do
+          secontext 'redis_var_lib_t'
+        end
+        selinux_policy_fcontext "#{piddir}(/.*)?" do
+          secontext 'redis_var_run_t'
+        end
+        if log_directory
+          selinux_policy_fcontext "#{log_directory}(/.*)?" do
+            secontext 'redis_log_t'
+          end
         end
       end
       # Create the log file if syslog is not being used
