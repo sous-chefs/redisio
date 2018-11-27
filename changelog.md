@@ -1,7 +1,7 @@
 # redisio CHANGE LOG
 
 ## Unreleased
-- drop chef support for versions `< 13.3`
+- drop chef support for versions `< 13`
 - pin rubocop gem to minor
 - appeased cops and critics
 
