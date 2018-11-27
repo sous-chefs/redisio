@@ -1,6 +1,7 @@
 require 'bundler/setup'
 
 namespace :style do
+  require 'cookstyle'
   require 'rubocop/rake_task'
   desc 'Run Ruby style checks'
   RuboCop::RakeTask.new(:ruby) do |task|
