@@ -1,8 +1,8 @@
 name             'redisio'
-maintainer       'Brian Bianco'
-maintainer_email 'brian.bianco@gmail.com'
+maintainer       'Sous Chefs'
+maintainer_email 'help@sous-chefs.org'
 license          'Apache-2.0'
-description      'Installs/Configures redis'
+description      'Installs and configures redis'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '3.0.0'
 
