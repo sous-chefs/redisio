@@ -2,12 +2,12 @@
 
 **Please read the changelog when upgrading from the 1.x series to the 2.x series**
 
-[![Build Status](https://travis-ci.org/brianbianco/redisio.svg?branch=master)](https://travis-ci.org/brianbianco/redisio)
+[![Build Status](https://travis-ci.org/sous-chefs/redisio.svg?branch=master)](https://travis-ci.org/sous-chefs/redisio)
 [![Cookbook Version](https://img.shields.io/cookbook/v/redisio.svg)](https://supermarket.chef.io/cookbooks/redisio)
 
 ## Description
 
-Website:: https://github.com/brianbianco/redisio
+Website:: https://github.com/sous-chefs/redisio
 
 Installs and configures Redis server instances
 
@@ -26,11 +26,9 @@ It depends on the ulimit cookbook: https://github.com/bmhatfield/chef-ulimit and
 
 ### Testing
 
-This cookbook is tested with rspec/chefspec and test-kitchen/serverspec.  Run `bundle install` to install required gems.
+This cookbook is tested with Delivery's local mode run under Chef-DK and Test Kitchen
 
-* rake spec
-* rake integration
-* knife cookbook test redisio -o ../
+* delivery local all
 * kitchen test
 
 Tested on:
