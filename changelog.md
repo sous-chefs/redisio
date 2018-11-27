@@ -1,9 +1,18 @@
-# redisio CHANGE LOG
+# redisio cookbook CHANGELOG
 
-## Unreleased
-- drop chef support for versions `< 13`
-- pin rubocop gem to minor
-- appeased cops and critics
+## 3.0.0 - Released 11/27/2018
+- This cookbook is now maintained by the Sous Chefs. If you're interested in helping with maintenance or learning more check out https://sous-chefs.org/. Thank you Brian Bianco for the work you've done over the years on this cookbook. We'll be sure to take good care of it.
+- This cookbook now requires Chef 13 or later
+- Incompatibilities with the latest selinux_policy cookbook have been resolved by using Chef's built in selinux helpers
+- All Chefstyle warnings have been resolved
+- Contributing.md and CODE_OF_CONDUCT.md files have been added
+- The build_essential resource is now directly used so that the built in resource in Chef 14+ can be used. This increases the required build-essential cookbook to 5.0+
+- Duplicate dependencies in the Berksfile have been removed
+- The chefignore file has been updated to prevent more unnecessary files from being uploaded to the chef server
+- Data bags are now loaded with the data_bag_item helper instead of Chef::EncryptedDataBagItem.load directly
+- Testing has been updated to use Delivery Local Mode which is built into ChefDK. The legacy Rakefile, Vagrantfile, Thorfile, and Cheffile have been removed
+- Platforms in Test Kitchen configurations have been updated and dokken images are now used in dokken
+
 
 ## 2.7.2 - Released 9/30/2018
 - fixes sentinal cluster init script by providing missing LSB statements ([#374])
