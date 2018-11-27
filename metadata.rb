@@ -34,5 +34,5 @@ recipe 'redisio::redis_gem', 'this recipe will install the redis ruby gem into t
 recipe 'redisio::disable_os_default', 'This recipe is used to disable the default OS redis init script'
 
 depends 'ulimit', '>= 0.1.2'
-depends 'build-essential'
+depends 'build-essential', '>= 5.0'
 depends 'selinux_policy'
