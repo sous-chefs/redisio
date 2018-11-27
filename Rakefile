@@ -20,14 +20,10 @@ namespace :style do
     t.options = {
       :search_gems => true,
       :fail_tags => ['correctness'],
-      :chef_version => '13.3.0',
       # TODO: come back and remove foodcritic checks for cookbooks when we drop chef 13 support
       :tags => %w(
-        ~FC059
         ~FC085
-        ~FC121
-        ~FC122
-      )
+      ),
     }
     # rubocop:enable Style/HashSyntax
   end
