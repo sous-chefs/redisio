@@ -6,7 +6,7 @@
 
 [List any existing issues this PR resolves]
 
-### Contribution Check List
+### Contribution Checklist
 
 - [ ] All tests pass.
 - [ ] New functionality includes testing.
