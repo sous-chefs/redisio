@@ -64,7 +64,7 @@ default['redisio']['version'] = if node['redisio']['package_install']
                                   nil
                                 else
                                   # force version for tarball
-                                  '2.8.20'
+                                  '3.2.11'
                                 end
 
 # Custom installation directory
