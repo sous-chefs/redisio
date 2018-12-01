@@ -28,7 +28,7 @@ def sysconfig
   hugepage_file = "/sys/kernel/mm/transparent_hugepage/enabled"
   file hugepage_file do
     content 'never'
-    only_if { ::File.exists?(hugepage_file) }
+    only_if { ::File.exists?(hugepage_file) && File.read(hugepage_file).chomp == 'never' }
   end
 end
 
