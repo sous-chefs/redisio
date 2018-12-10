@@ -1,0 +1,112 @@
+version: 2.1
+
+orbs:
+  kitchen: sous-chefs/kitchen@1.0.1
+
+workflows:
+  kitchen:
+    jobs:
+      - kitchen/danger:
+          name: danger
+          context: Danger
+      - kitchen/lint:
+          name: lint
+      - kitchen/dokken-single:
+          platform: centos-6
+          suite: default
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: centos-7
+          platform: centos-7
+          suite: default
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: fedora-latest
+          platform: fedora-latest
+          suite: default
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-8
+          platform: debian-8
+          suite: default
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: ubuntu-16.04
+          platform: ubuntu-1604
+          suite: default
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: centos-6
+          platform: centos-6
+          suite: redis-package
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: centos-7
+          platform: centos-7
+          suite: redis-package
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: fedora-latest
+          platform: fedora-latest
+          suite: redis-package
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-8
+          platform: debian-8
+          suite: redis-package
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: ubuntu-16.04
+          platform: ubuntu-1604
+          suite: redis-package
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: centos-6
+          platform: centos-6
+          suite: sentinel
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: centos-7
+          platform: centos-7
+          suite: sentinel
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: fedora-latest
+          platform: fedora-latest
+          suite: sentinel
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-8
+          platform: debian-8
+          suite: sentinel
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: ubuntu-16.04
+          platform: ubuntu-1604
+          suite: sentinel
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: centos-6
+          platform: centos-6
+          suite: multisentinel
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: centos-7
+          platform: centos-7
+          suite: multisentinel
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: fedora-latest
+          platform: fedora-latest
+          suite: multisentinel
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: debian-8
+          platform: debian-8
+          suite: multisentinel
+          requires: [ lint, danger ]
+      - kitchen/dokken-single:
+          name: ubuntu-16.04
+          platform: ubuntu-1604
+          suite: multisentinel
+          requires: [ lint, danger ]
