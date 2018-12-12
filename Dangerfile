@@ -29,7 +29,7 @@ warn 'This is a big Pull Request.' if git.lines_of_code > 400
 
 # Require a CHANGELOG entry for non-test changes.
 if !git.modified_files.include?('CHANGELOG.md') && code_changes?
-  raise 'Please include a [CHANGELOG](https://github.com/sous-chefs/line-cookbook/blob/master/CHANGELOG.md) entry.'
+  raise 'Please include a [CHANGELOG](https://github.com/sous-chefs/redisio/blob/master/CHANGELOG.md) entry.'
 end
 
 # A sanity check for tests.
