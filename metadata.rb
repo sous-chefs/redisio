@@ -9,7 +9,6 @@ source_url        'https://github.com/sous-chefs/redisio'
 issues_url        'https://github.com/sous-chefs/redisio/issues'
 chef_version      '>= 13.0'
 
-
 %w(
   amazon
   centos
@@ -22,7 +21,6 @@ chef_version      '>= 13.0'
 ).each do |os|
   supports os
 end
-
 
 recipe 'redisio::default', 'This recipe is used to install the prequisites for building and installing redis, as well as provides the LWRPs'
 recipe 'redisio::install', 'This recipe is used to install redis'
