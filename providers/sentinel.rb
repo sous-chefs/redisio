@@ -55,8 +55,8 @@ def configure
         shell current['shell']
         system current['systemuser']
         uid current['uid'] unless current['uid'].nil?
-
       end
+
       # Create the redis configuration directory
       directory current['configdir'] do
         owner 'root'
