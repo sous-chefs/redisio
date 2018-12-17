@@ -1,4 +1,7 @@
+
 # redisio cookbook CHANGELOG
+
+## Unreleased
 
 ## 3.0.0 - Released 11/27/2018
 - This cookbook is now maintained by the Sous Chefs. If you're interested in helping with maintenance or learning more check out https://sous-chefs.org/. Thank you Brian Bianco for the work you've done over the years on this cookbook. We'll be sure to take good care of it.
