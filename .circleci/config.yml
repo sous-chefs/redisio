@@ -12,17 +12,13 @@ workflows:
       - kitchen/lint:
           name: lint
       - kitchen/dokken-single:
-          platform: default-centos-6
+          name: default-centos-6
+          platform: centos-6
           suite: default
           requires: [ lint, danger ]
       - kitchen/dokken-single:
           name: default-centos-7
           platform: centos-7
-          suite: default
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: default-fedora-latest
-          platform: fedora-latest
           suite: default
           requires: [ lint, danger ]
       - kitchen/dokken-single:
@@ -36,27 +32,27 @@ workflows:
           suite: default
           requires: [ lint, danger ]
       - kitchen/dokken-single:
-          name: redis-centos-6
+          name: redis-package-centos-6
           platform: centos-6
           suite: redis-package
           requires: [ lint, danger ]
       - kitchen/dokken-single:
-          name: redis-centos-7
+          name: redis-package-centos-7
           platform: centos-7
           suite: redis-package
           requires: [ lint, danger ]
       - kitchen/dokken-single:
-          name: redis-fedora-latest
+          name: redis-package-fedora-latest
           platform: fedora-latest
           suite: redis-package
           requires: [ lint, danger ]
       - kitchen/dokken-single:
-          name: redis-debian-8
+          name: redis-package-debian-8
           platform: debian-8
           suite: redis-package
           requires: [ lint, danger ]
       - kitchen/dokken-single:
-          name: redis-ubuntu-16.04
+          name: redis-package-ubuntu-16.04
           platform: ubuntu-1604
           suite: redis-package
           requires: [ lint, danger ]
