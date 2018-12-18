@@ -3,7 +3,7 @@
 **Please read the changelog when upgrading from the 1.x series to the 2.x series**
 
 [![CircleCI](https://circleci.com/gh/sous-chefs/redisio.svg?style=svg)](https://circleci.com/gh/sous-chefs/redisio) [![Cookbook Version](https://img.shields.io/cookbook/v/redisio.svg)](https://supermarket.chef.io/cookbooks/redisio) [![License](https://img.shields.io/badge/license-apache2_2-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-]
+
 
 ## Description
 
