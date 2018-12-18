@@ -1,10 +1,13 @@
-name             'redisio'
-maintainer       'Sous Chefs'
-maintainer_email 'help@sous-chefs.org'
-license          'Apache-2.0'
-description      'Installs and configures redis'
-long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '3.0.0'
+name              'redisio'
+maintainer        'Sous Chefs'
+maintainer_email  'help@sous-chefs.org'
+license           'Apache-2.0'
+description       'Installs and configures redis'
+long_description  IO.read(File.join(File.dirname(__FILE__), 'README.md'))
+version           '3.0.0'
+source_url        'https://github.com/sous-chefs/redisio'
+issues_url        'https://github.com/sous-chefs/redisio/issues'
+chef_version      '>= 13.0'
 
 %w(
   amazon
@@ -18,10 +21,6 @@ version          '3.0.0'
 ).each do |os|
   supports os
 end
-
-source_url 'https://github.com/sous-chefs/redisio'
-issues_url 'https://github.com/sous-chefs/redisio/issues'
-chef_version '>= 13.0'
 
 recipe 'redisio::default', 'This recipe is used to install the prequisites for building and installing redis, as well as provides the LWRPs'
 recipe 'redisio::install', 'This recipe is used to install redis'

@@ -106,15 +106,8 @@ def configure
         shell current['shell']
         system current['systemuser']
         uid current['uid'] unless current['uid'].nil?
-
-        not_if do
-          begin
-            Etc.getpwnam current['user']
-          rescue ArgumentError
-            false
-          end
-        end
       end
+
       # Create the redis configuration directory
       directory current['configdir'] do
         owner 'root'
