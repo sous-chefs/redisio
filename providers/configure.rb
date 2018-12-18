@@ -99,9 +99,6 @@ def configure
       rdb_file = current['dbfilename'] || "#{current['datadir']}/dump-#{server_name}.rdb"
 
       # Create the owner of the redis data directory
-      Chef::Log.warn("user: #{current['user']}")
-      Chef::Log.warn("systemuser: #{current['systemuser']}")
-      Chef::Log.warn("shell: #{current['shell']}")
       user current['user'] do
         comment 'Redis service account'
         manage_home true
