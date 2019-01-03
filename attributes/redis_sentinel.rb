@@ -44,6 +44,7 @@ default['redisio']['sentinel_defaults'] = {
   'announce-port'           => nil,
   'notification-script'     => nil,
   'client-reconfig-script'  => nil,
+  'protected_mode'          => nil,
 }
 
 # Manage Sentinel Config File
