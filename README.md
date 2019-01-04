@@ -328,6 +328,7 @@ Available options and their defaults
 'logfile'                 => nil,
 'syslogenabled'           => 'yes',
 'syslogfacility'          => 'local0',
+'protected_mode'          => 'yes',
 'shutdown_save'           => false,
 'save'                    => nil, # Defaults to ['900 1','300 10','60 10000'] inside of template.  Needed due to lack of hash subtraction
 'stopwritesonbgsaveerror' => 'yes',
