@@ -1,13 +1,16 @@
 # Redisio Cookbook
 
-**Please read the changelog when upgrading from the 1.x series to the 2.x series**
+[![Cookbook Version](https://img.shields.io/cookbook/v/redisio.svg)](https://supermarket.chef.io/cookbooks/redisio)
+[![Build Status](https://img.shields.io/circleci/project/github/sous-chefs/redisio/master.svg)](https://circleci.com/gh/sous-chefs/redisio)
+[![OpenCollective](https://opencollective.com/sous-chefs/backers/badge.svg)](#backers)
+[![OpenCollective](https://opencollective.com/sous-chefs/sponsors/badge.svg)](#sponsors)
+[![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
 
-[![CircleCI](https://circleci.com/gh/sous-chefs/redisio.svg?style=svg)](https://circleci.com/gh/sous-chefs/redisio) [![Cookbook Version](https://img.shields.io/cookbook/v/redisio.svg)](https://supermarket.chef.io/cookbooks/redisio) [![License](https://img.shields.io/badge/license-apache2_2-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![pullreminders](https://pullreminders.com/badge.svg)](https://pullreminders.com?ref=badge)
+Please read the changelog when upgrading from the 1.x series to the 2.x series
 
 ## Description
 
-Website:: https://github.com/sous-chefs/redisio
+Website:: [https://github.com/sous-chefs/redisio](https://github.com/sous-chefs/redisio)
 
 Installs and configures Redis server instances
 
@@ -15,8 +18,7 @@ Installs and configures Redis server instances
 
 This cookbook builds redis from source or install it from packages, so it should work on any architecture for the supported distributions.  Init scripts are installed into /etc/init.d/
 
-It depends on the ulimit cookbook: https://github.com/bmhatfield/chef-ulimit and the build-essentials cookbook: https://github.com/opscode-cookbooks/build-essential
-
+It depends on the ulimit cookbook: [https://github.com/bmhatfield/chef-ulimit](https://github.com/bmhatfield/chef-ulimit) and the build-essentials cookbook: [https://github.com/chef-cookbooks/build-essential](https://github.com/opscode-cookbooks/build-essential)
 
 ### Platforms
 
@@ -75,7 +77,7 @@ Redis-sentinel will write configuration and state data back into its configurati
 
 ### Role File Examples
 
-##### Install redis and setup an instance with default settings on default port, and start the service through a role file
+#### Install redis and setup an instance with default settings on default port, and start the service through a role file
 
 ```ruby
 run_list *%w[
@@ -138,7 +140,7 @@ default_attributes({
 
 ###### Data Bag
 
-```
+```ruby
 {
     "id": "auth",
     "password": "abcdefghijklmnopqrstuvwxyz"
@@ -199,7 +201,7 @@ default_attributes({
 })
 ```
 
-##### Install redis 2.4.11 (lower than the default version) and turn safe install off, for the event where redis is already installed.  This will use the default settings.  Keep in mind the redis version will not actually be updated until you restart the service (either through the LWRP or manually).
+##### Install redis 2.4.11 (lower than the default version) and turn safe install off, for the event where redis is already installed This will use the default settings.  Keep in mind the redis version will not actually be updated until you restart the service (either through the LWRP or manually)
 
 ```ruby
 run_list *%w[
@@ -239,7 +241,6 @@ default_attributes({
 })
 ```
 
-
 ## LWRP Examples
 
 Instead of using my provided recipes, you can simply depend on the redisio cookbook in your metadata and use the LWRP's yourself.  I will show a few examples of ways to use the LWRPS, detailed breakdown of options are below
@@ -260,7 +261,7 @@ end
 
 ### Configure Resource
 
-The servers resource expects an array of hashes where each hash is required to contain at a key-value pair of 'port' => '<port numbers>'.
+The servers resource expects an array of hashes where each hash is required to contain at a key-value pair of 'port' => 'port numbers'.
 
 ```ruby
 redisio_configure "redis-servers" do
@@ -290,7 +291,7 @@ end
 
 Configuration options, each option corresponds to the same-named configuration option in the redis configuration file;  default values listed
 
-* `redisio['mirror']` - mirror server with path to download redis package, default is http://download.redis.io/releases/
+* `redisio['mirror']` - mirror server with path to download redis package, default is [http://download.redis.io/releases/](http://download.redis.io/releases/)
 * `redisio['base_name']` - the base name of the redis package to be downloaded (the part before the version), default is 'redis-'
 * `redisio['artifact_type']` - the file extension of the package.  currently only .tar.gz and .tgz are supported, default is 'tar.gz'
 * `redisio['version']` - the version number of redis to install (also appended to the `base_name` for downloading), default is '2.8.17'
@@ -306,7 +307,7 @@ Default settings is a hash of default settings to be applied to to ALL instances
 
 Available options and their defaults
 
-```
+```config
 'user'                    => 'redis' - the user to own the redis datadir, redis will also run under this user
 'group'                   => 'redis' - the group to own the redis datadir
 'homedir'                 => Home directory of the user. Varies on distribution, check attributes file
@@ -393,7 +394,7 @@ The sentinel recipe's use their own attribute file.
 
 * `redisio['sentinel_defaults']` - { 'sentinel-option' => 'option setting' }
 
-```
+```config
 'user'                    => 'redis',
 'configdir'               => '/etc/redis',
 'sentinel_bind'           => nil,
@@ -415,7 +416,8 @@ The sentinel recipe's use their own attribute file.
 * `redisio['redisio']['sentinels']` - Array of sentinels to configure on the node. These settings will override the options in 'sentinel_defaults', if it is left `nil` it will default to `[{'port' => '26379', 'name' => 'mycluster', 'master_ip' => '127.0.0.1', 'master_port' => 6379}]`. If set to `[]` (empty array), no instances will be created.
 
 You may also pass an array of masters to monitor like so:
-```
+
+```ruby
 [{
   'sentinel_port' => '26379',
   'name' => 'mycluster_sentinel',
@@ -481,48 +483,25 @@ end
 
 ## Contributors
 
-This project exists thanks to all the people who contribute.
-<img src="https://opencollective.com/sous-chefs/contributors.svg?width=890&button=false" /></a>
-
+This project exists thanks to all the people who [contribute.](https://opencollective.com/sous-chefs/contributors.svg?width=890&button=false)
 
 ### Backers
 
-Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/sous-chefs#backer)]
-<a href="https://opencollective.com/sous-chefs#backers" target="_blank"><img src="https://opencollective.com/sous-chefs/backers.svg?width=890"></a>
+Thank you to all our backers!
+
+![https://opencollective.com/sous-chefs#backers](https://opencollective.com/sous-chefs/backers.svg?width=600&avatarHeight=40)
 
 ### Sponsors
 
-Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/sous-chefs#sponsor)]
-<a href="https://opencollective.com/sous-chefs/sponsor/0/website" target="_blank"><img src="https://opencollective.com/sous-chefs/sponsor/0/avatar.svg"></a>
-<a href="https://opencollective.com/sous-chefs/sponsor/1/website" target="_blank"><img src="https://opencollective.com/sous-chefs/sponsor/1/avatar.svg"></a>
-<a href="https://opencollective.com/sous-chefs/sponsor/2/website" target="_blank"><img src="https://opencollective.com/sous-chefs/sponsor/2/avatar.svg"></a>
-<a href="https://opencollective.com/sous-chefs/sponsor/3/website" target="_blank"><img src="https://opencollective.com/sous-chefs/sponsor/3/avatar.svg"></a>
-<a href="https://opencollective.com/sous-chefs/sponsor/4/website" target="_blank"><img src="https://opencollective.com/sous-chefs/sponsor/4/avatar.svg"></a>
-<a href="https://opencollective.com/sous-chefs/sponsor/5/website" target="_blank"><img src="https://opencollective.com/sous-chefs/sponsor/5/avatar.svg"></a>
-<a href="https://opencollective.com/sous-chefs/sponsor/6/website" target="_blank"><img src="https://opencollective.com/sous-chefs/sponsor/6/avatar.svg"></a>
-<a href="https://opencollective.com/sous-chefs/sponsor/7/website" target="_blank"><img src="https://opencollective.com/sous-chefs/sponsor/7/avatar.svg"></a>
-<a href="https://opencollective.com/sous-chefs/sponsor/8/website" target="_blank"><img src="https://opencollective.com/sous-chefs/sponsor/8/avatar.svg"></a>
-<a href="https://opencollective.com/sous-chefs/sponsor/9/website" target="_blank"><img src="https://opencollective.com/sous-chefs/sponsor/9/avatar.svg"></a>
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website.
 
-## License and Author
-
-Author:: [Brian Bianco](<brian.bianco@gmail.com>)
-Author\_Website:: http://www.brianbianco.com
-Twitter:: [@brianwbianco ](http://twitter.com/brianwbianco)
-IRC:: geekbri on freenode
-
-Copyright 2013, Brian Bianco
-
-```text
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
+![https://opencollective.com/sous-chefs/sponsor/0/website](https://opencollective.com/sous-chefs/sponsor/0/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/1/website](https://opencollective.com/sous-chefs/sponsor/1/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/2/website](https://opencollective.com/sous-chefs/sponsor/2/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/3/website](https://opencollective.com/sous-chefs/sponsor/3/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/4/website](https://opencollective.com/sous-chefs/sponsor/4/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/5/website](https://opencollective.com/sous-chefs/sponsor/5/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/6/website](https://opencollective.com/sous-chefs/sponsor/6/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/7/website](https://opencollective.com/sous-chefs/sponsor/7/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/8/website](https://opencollective.com/sous-chefs/sponsor/8/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/9/website](https://opencollective.com/sous-chefs/sponsor/9/avatar.svg?avatarHeight=100)
