@@ -1,31 +1,30 @@
 ---
 driver:
   name: vagrant
-driver_config:
-  use_vagrant_berkshelf_plugin: true
 
 provisioner:
   name: chef_solo
-  # log_level: debug
+  product_name: chef
+  product_version: 13
+
 
 platforms:
 <%
   chef_versions = %w(
-    11.0.0
-    12.19.36
+    13.3.0
     latest
   )
 
   # non RHEL OS's
   test_platforms = %w(
-    centos-6.9
-    centos-7.3
-    debian-7.11
-    debian-8.7
-    fedora-25
-    freebsd-10.3
-    ubuntu-14.04
+    centos-6
+    centos-7
+    debian-8
+    debian-9
+    fedora-28
+    freebsd-11
     ubuntu-16.04
+    ubuntu-18.04
   )
 %>
 
@@ -33,7 +32,8 @@ platforms:
   - name: <%= platform_version %>-<%= chef_version %>
     driver_config:
       box: bento/<%= platform_version %>
-      require_chef_omnibus: <%= chef_version %>
+      product_name: chef
+      product_version: <%= chef_version %>
     <% if platform_version == 'debian-7.11' %>
     # Set due to https://github.com/test-kitchen/kitchen-vagrant/issues/293
     driver:

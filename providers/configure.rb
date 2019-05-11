@@ -18,8 +18,6 @@
 # limitations under the License.
 #
 
-include SELinuxPolicy::Helpers
-
 action :run do
   configure
   new_resource.updated_by_last_action(true)
@@ -50,9 +48,8 @@ def configure
     # Merge in the default maxmemory
     node_memory_kb = node['memory']['total']
     # On BSD platforms Ohai reports total memory as a Fixnum
-    if node_memory_kb.is_a? String
-      node_memory_kb = node_memory_kb.sub('kB', '').to_i
-    end
+
+    node_memory_kb = node_memory_kb.sub('kB', '').to_i if node_memory_kb.is_a?(String)
 
     # Here we determine what the logfile is.  It has these possible states
     #
@@ -87,7 +84,7 @@ def configure
       maxmemory = (node_memory_kb * 1024 * percent_factor / new_resource.servers.length).round.to_s
     end
 
-    descriptors = if current['ulimit'].zero?
+    descriptors = if current['ulimit'] == 0
                     current['maxclients'] + 32
                   elsif current['ulimit'] > current['maxclients']
                     current['ulimit']
@@ -96,8 +93,6 @@ def configure
                   end
 
     recipe_eval do
-      include_recipe 'selinux_policy::install' if use_selinux
-
       server_name = current['name'] || current['port']
       piddir = "#{base_piddir}/#{server_name}"
       aof_file = current['appendfilename'] || "#{current['datadir']}/appendonly-#{server_name}.aof"
@@ -111,15 +106,8 @@ def configure
         shell current['shell']
         system current['systemuser']
         uid current['uid'] unless current['uid'].nil?
-
-        not_if do
-          begin
-            Etc.getpwnam current['user']
-          rescue ArgumentError
-            false
-          end
-        end
       end
+
       # Create the redis configuration directory
       directory current['configdir'] do
         owner 'root'
@@ -127,9 +115,6 @@ def configure
         mode '0755'
         recursive true
         action :create
-      end
-      selinux_policy_fcontext "#{current['configdir']}(/.*)?" do
-        secontext 'redis_conf_t'
       end
       # Create the instance data directory
       directory current['datadir'] do
@@ -139,9 +124,6 @@ def configure
         recursive true
         action :create
       end
-      selinux_policy_fcontext "#{current['datadir']}(/.*)?" do
-        secontext 'redis_var_lib_t'
-      end
       # Create the pid file directory
       directory piddir do
         owner current['user']
@@ -149,9 +131,6 @@ def configure
         mode '0755'
         recursive true
         action :create
-      end
-      selinux_policy_fcontext "#{piddir}(/.*)?" do
-        secontext 'redis_var_run_t'
       end
       # Create the log directory if syslog is not being used
       if log_directory
@@ -162,8 +141,26 @@ def configure
           recursive true
           action :create
         end
-        selinux_policy_fcontext "#{log_directory}(/.*)?" do
-          secontext 'redis_log_t'
+      end
+      # Configure SELinux if it is enabled
+      extend Chef::Util::Selinux
+
+      if selinux_enabled?
+        selinux_policy_install 'install'
+
+        selinux_policy_fcontext "#{current['configdir']}(/.*)?" do
+          secontext 'redis_conf_t'
+        end
+        selinux_policy_fcontext "#{current['datadir']}(/.*)?" do
+          secontext 'redis_var_lib_t'
+        end
+        selinux_policy_fcontext "#{piddir}(/.*)?" do
+          secontext 'redis_var_run_t'
+        end
+        if log_directory
+          selinux_policy_fcontext "#{log_directory}(/.*)?" do
+            secontext 'redis_log_t'
+          end
         end
       end
       # Create the log file if syslog is not being used
@@ -212,7 +209,7 @@ def configure
 
       # Load password for use with requirepass from data bag if needed
       if current['data_bag_name'] && current['data_bag_item'] && current['data_bag_key']
-        bag = Chef::EncryptedDataBagItem.load(current['data_bag_name'], current['data_bag_item'])
+        bag = data_bag_item(current['data_bag_name'], current['data_bag_item'])
         current['requirepass'] = bag[current['data_bag_key']]
         current['masterauth'] = bag[current['data_bag_key']]
       end
@@ -402,7 +399,8 @@ def configure
         end
       end
     end
-  end # servers each loop
+  end
+  # servers each loop
 end
 
 def load_current_resource

@@ -28,10 +28,10 @@ default['redisio']['sentinel_defaults'] = {
   'sentinel_bind'           => nil,
   'sentinel_port'           => 26379,
   'monitor'                 => nil,
-  'down-after-milliseconds' => 30000,
+  'down_after_milliseconds' => 30000,
   'can-failover'            => 'yes',
   'parallel-syncs'          => 1,
-  'failover-timeout'        => 900000,
+  'failover_timeout'        => 900000,
   'loglevel'                => 'notice',
   'logfile'                 => nil,
   'syslogenabled'           => 'yes',
@@ -43,7 +43,7 @@ default['redisio']['sentinel_defaults'] = {
   'announce-ip'             => nil,
   'announce-port'           => nil,
   'notification-script'     => nil,
-  'client-reconfig-script'  => nil
+  'client-reconfig-script'  => nil,
 }
 
 # Manage Sentinel Config File
