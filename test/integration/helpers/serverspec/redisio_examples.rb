@@ -8,8 +8,8 @@ shared_examples_for 'redis on port' do |redis_port, _args|
                    else
                      "redis#{redis_port}"
                    end
-    expect(service service_name).to be_enabled
-    expect(service service_name).to be_running, if: os[:family] != 'fedora'
+    expect(service(service_name)).to be_enabled
+    expect(service(service_name)).to be_running, if: os[:family] != 'fedora'
   end
 
   # We use grep and commands here, since serverspec only checks systemd on fedora 20
@@ -19,6 +19,6 @@ shared_examples_for 'redis on port' do |redis_port, _args|
   end
 
   it "is listening on port #{redis_port}" do
-    expect(port redis_port).to be_listening
+    expect(port(redis_port)).to be_listening
   end
 end

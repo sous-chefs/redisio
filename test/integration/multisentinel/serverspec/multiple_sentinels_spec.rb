@@ -8,14 +8,14 @@ end
 
 describe file("#{prefix}/etc/redis/sentinel_cluster.conf") do
   [
-    %r{sentinel monitor master6379 127.0.0.1 6379 2},
-    %r{sentinel down-after-milliseconds master6379 30000},
-    %r{sentinel parallel-syncs master6379 1},
-    %r{sentinel failover-timeout master6379 900000},
-    %r{sentinel monitor master6380 127.0.0.1 6380 2},
-    %r{sentinel down-after-milliseconds master6380 30000},
-    %r{sentinel parallel-syncs master6380 1},
-    %r{sentinel failover-timeout master6380 900000}
+    /sentinel monitor master6379 127.0.0.1 6379 2/,
+    /sentinel down-after-milliseconds master6379 30000/,
+    /sentinel parallel-syncs master6379 1/,
+    /sentinel failover-timeout master6379 900000/,
+    /sentinel monitor master6380 127.0.0.1 6380 2/,
+    /sentinel down-after-milliseconds master6380 30000/,
+    /sentinel parallel-syncs master6380 1/,
+    /sentinel failover-timeout master6380 900000/,
   ].each do |pattern|
     its(:content) { should match(pattern) }
   end
@@ -28,11 +28,11 @@ unless (os[:family] == 'redhat' && os[:release][0] == '7') ||
        os[:family] == 'fedora'
   describe file('/etc/init.d/redis_sentinel_cluster') do
     [
-      %r{SENTINELNAME=sentinel_cluster},
+      /SENTINELNAME=sentinel_cluster/,
       %r{EXEC="(su -s /bin/sh)|(runuser redis) -c \\?["']/usr/local/bin/redis-server /etc/redis/\$\{SENTINELNAME\}.conf --sentinel\\?["']( redis)?"},
       %r{PIDFILE=/var/run/redis/sentinel_cluster/\$\{SENTINELNAME\}.pid},
       %r{mkdir -p /var/run/redis/sentinel_cluster},
-      %r{chown redis  /var/run/redis/sentinel_cluster}
+      %r{chown redis  /var/run/redis/sentinel_cluster},
     ].each do |pattern|
       its(:content) { should match(pattern) }
     end
@@ -41,33 +41,33 @@ end
 
 describe command('/usr/local/bin/redis-cli --raw -p 26379 SENTINEL MASTER master6379') do
   [
-    %r{name},
-    %r{master6379},
-    %r{ip},
-    %r{127.0.0.1},
-    %r{port},
-    %r{6379},
-    %r{flags},
-    %r{master},
-    %r{last-ping-sent},
-    %r{last-ok-ping-reply},
-    %r{last-ping-reply},
-    %r{down-after-milliseconds},
-    %r{30000},
-    %r{role-reported},
-    %r{master},
-    %r{config-epoch},
-    %r{0},
-    %r{num-slaves},
-    %r{0},
-    %r{num-other-sentinels},
-    %r{0},
-    %r{quorum},
-    %r{2},
-    %r{failover-timeout},
-    %r{900000},
-    %r{parallel-syncs},
-    %r{1}
+    /name/,
+    /master6379/,
+    /ip/,
+    /127.0.0.1/,
+    /port/,
+    /6379/,
+    /flags/,
+    /master/,
+    /last-ping-sent/,
+    /last-ok-ping-reply/,
+    /last-ping-reply/,
+    /down-after-milliseconds/,
+    /30000/,
+    /role-reported/,
+    /master/,
+    /config-epoch/,
+    /0/,
+    /num-slaves/,
+    /0/,
+    /num-other-sentinels/,
+    /0/,
+    /quorum/,
+    /2/,
+    /failover-timeout/,
+    /900000/,
+    /parallel-syncs/,
+    /1/,
   ].each do |pattern|
     its(:stdout) { should match(pattern) }
   end
@@ -75,33 +75,33 @@ end
 
 describe command('/usr/local/bin/redis-cli --raw -p 26379 SENTINEL MASTER master6380') do
   [
-    %r{name},
-    %r{master6380},
-    %r{ip},
-    %r{127.0.0.1},
-    %r{port},
-    %r{6380},
-    %r{flags},
-    %r{master},
-    %r{last-ping-sent},
-    %r{last-ok-ping-reply},
-    %r{last-ping-reply},
-    %r{down-after-milliseconds},
-    %r{30000},
-    %r{role-reported},
-    %r{master},
-    %r{config-epoch},
-    %r{0},
-    %r{num-slaves},
-    %r{0},
-    %r{num-other-sentinels},
-    %r{0},
-    %r{quorum},
-    %r{2},
-    %r{failover-timeout},
-    %r{900000},
-    %r{parallel-syncs},
-    %r{1}
+    /name/,
+    /master6380/,
+    /ip/,
+    /127.0.0.1/,
+    /port/,
+    /6380/,
+    /flags/,
+    /master/,
+    /last-ping-sent/,
+    /last-ok-ping-reply/,
+    /last-ping-reply/,
+    /down-after-milliseconds/,
+    /30000/,
+    /role-reported/,
+    /master/,
+    /config-epoch/,
+    /0/,
+    /num-slaves/,
+    /0/,
+    /num-other-sentinels/,
+    /0/,
+    /quorum/,
+    /2/,
+    /failover-timeout/,
+    /900000/,
+    /parallel-syncs/,
+    /1/,
   ].each do |pattern|
     its(:stdout) { should match(pattern) }
   end
