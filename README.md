@@ -340,6 +340,7 @@ Available options and their defaults
 'rdbchecksum'             => 'yes',
 'dbfilename'              => nil,
 'slaveof'                 => nil,
+'protected_mode'          => nil,
 'masterauth'              => nil,
 'slaveservestaledata'     => 'yes',
 'slavereadonly'           => 'yes',
