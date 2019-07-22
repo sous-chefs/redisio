@@ -40,6 +40,11 @@ if [ ! -d <%= @piddir %> ]; then
     chown <%= @user %>  <%= @piddir %>
 fi
 
+## Test and disable THP
+if test -f /sys/kernel/mm/transparent_hugepage/enabled; then
+  echo never > /sys/kernel/mm/transparent_hugepage/enabled
+fi
+
 ulimit -n <%= @ulimit %>
 
 case "$1" in
