@@ -33,23 +33,30 @@ if sentinel_instances.nil?
         {
           'master_name' => 'mycluster_master',
           'master_ip' => '127.0.0.1',
-          'master_port' => '6379'
-        }
-      ]
-    }
+          'master_port' => '6379',
+        },
+      ],
+    },
   ]
 end
 
 redisio_sentinel 'redis-sentinels' do
+  version redis['version'] if redis['version']
   sentinel_defaults redis['sentinel_defaults']
   sentinels sentinel_instances
   base_piddir redis['base_piddir']
 end
 
-template '/usr/lib/systemd/system/redis-sentinel@.service' do
+bin_path = if node['redisio']['install_dir']
+             ::File.join(node['redisio']['install_dir'], 'bin')
+           else
+             node['redisio']['bin_path']
+           end
+
+template '/lib/systemd/system/redis-sentinel@.service' do
   source 'redis-sentinel@.service'
   variables(
-    bin_path: node['redisio']['bin_path'],
+    bin_path: bin_path,
     limit_nofile: redis['default_settings']['maxclients'] + 32
   )
   only_if { node['redisio']['job_control'] == 'systemd' }

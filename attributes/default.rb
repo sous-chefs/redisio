@@ -42,6 +42,10 @@ else
   package_name = 'redis'
 end
 
+# Overwite template used for the Redis Server config (not sentinel)
+default['redisio']['redis_config']['template_cookbook'] = 'redisio'
+default['redisio']['redis_config']['template_source'] = 'redis.conf.erb'
+
 # Install related attributes
 default['redisio']['safe_install'] = true
 default['redisio']['package_install'] = default_package_install
@@ -60,20 +64,20 @@ default['redisio']['version'] = if node['redisio']['package_install']
                                   nil
                                 else
                                   # force version for tarball
-                                  '2.8.20'
+                                  '3.2.11'
                                 end
 
 # Custom installation directory
 default['redisio']['install_dir'] = nil
 
 # Job control related options (initd, upstart, or systemd)
-if node['platform_family'] == 'rhel' && Gem::Version.new(node['platform_version']) > Gem::Version.new('7.0.0')
-  default['redisio']['job_control'] = 'systemd'
-elsif node['platform_family'] == 'freebsd'
-  default['redisio']['job_control'] = 'rcinit'
-else
-  default['redisio']['job_control'] = 'initd'
-end
+default['redisio']['job_control'] = if node['init_package'] == 'systemd'
+                                      'systemd'
+                                    elsif node['platform_family'] == 'freebsd'
+                                      'rcinit'
+                                    else
+                                      'initd'
+                                    end
 
 # Init.d script related options
 default['redisio']['init.d']['required_start'] = []
@@ -114,9 +118,13 @@ default['redisio']['default_settings'] = {
   'masterauth'              => nil,
   'slaveservestaledata'     => 'yes',
   'slavereadonly'           => 'yes',
+  'repldisklesssync'        => 'no',
+  'repldisklesssyncdelay'   => '5',
   'replpingslaveperiod'     => '10',
   'repltimeout'             => '60',
   'repldisabletcpnodelay'   => 'no',
+  'replbacklogsize'         => '1mb',
+  'replbacklogttl'          => 3600,
   'slavepriority'           => '100',
   'requirepass'             => nil,
   'rename_commands'         => nil,
@@ -129,6 +137,7 @@ default['redisio']['default_settings'] = {
   'noappendfsynconrewrite'  => 'no',
   'aofrewritepercentage'    => '100',
   'aofrewriteminsize'       => '64mb',
+  'aofloadtruncated'        => 'yes',
   'luatimelimit'            => '5000',
   'slowloglogslowerthan'    => '10000',
   'slowlogmaxlen'           => '1024',
@@ -145,17 +154,20 @@ default['redisio']['default_settings'] = {
   'clientoutputbufferlimit' => [
     %w(normal 0 0 0),
     %w(slave 256mb 64mb 60),
-    %w(pubsub 32mb 8mb 60)
+    %w(pubsub 32mb 8mb 60),
   ],
   'hz'                         => '10',
   'aofrewriteincrementalfsync' => 'yes',
-  'clusterenabled'            => 'no',
-  'clusterconfigfile'        => nil, # Defaults to redis instance name inside of template if cluster is enabled.
-  'clusternodetimeout'       => 5000,
-  'includes'                 => nil,
-  'data_bag_name'            => nil,
-  'data_bag_item'            => nil,
-  'data_bag_key'             => nil
+  'clusterenabled'             => 'no',
+  'clusterconfigfile'          => nil, # Defaults to redis instance name inside of template if cluster is enabled.
+  'clusternodetimeout'         => 5000,
+  'includes'                   => nil,
+  'data_bag_name'              => nil,
+  'data_bag_item'              => nil,
+  'data_bag_key'               => nil,
+  'minslavestowrite'           => nil,
+  'minslavesmaxlag'            => nil,
+  'breadcrumb'                 => true,
 }
 
 # The default for this is set inside of the "install" recipe. This is due to the way deep merge handles arrays

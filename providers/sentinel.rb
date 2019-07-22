@@ -25,6 +25,14 @@ end
 def configure
   base_piddir = new_resource.base_piddir
 
+  current_version = if new_resource.version.nil?
+                      version
+                    else
+                      new_resource.version
+                    end
+
+  version_hash = RedisioHelper.version_to_hash(current_version)
+
   # Setup a configuration file and init script for each configuration provided
   new_resource.sentinels.each do |current_instance|
     # Retrieve the default settings hash and the current server setups settings hash.
@@ -42,13 +50,13 @@ def configure
       # Create the owner of the redis data directory
       user current['user'] do
         comment 'Redis service account'
-        supports manage_home: true
+        manage_home true
         home current['homedir']
         shell current['shell']
         system current['systemuser']
         uid current['uid'] unless current['uid'].nil?
-        not_if { node['etc']['passwd'][current['user']] }
       end
+
       # Create the redis configuration directory
       directory current['configdir'] do
         owner 'root'
@@ -105,11 +113,11 @@ def configure
             master_ip:                    current['master_ip'] || current[:masterip],
             master_port:                  current['master_port'] || current[:masterport],
             quorum_count:                 current['quorum_count'] || current[:quorum_count],
-            :'auth-pass' =>               current['auth-pass'] || current[:authpass],
-            :'down-after-milliseconds' => current['down-after-milliseconds'] || current[:downaftermil],
-            :'parallel-syncs' =>          current['parallel-syncs'] || current[:parallelsyncs],
-            :'failover-timeout' =>        current['failover-timeout'] || current[:failovertimeout]
-          }
+            auth_pass:                    current['auth-pass'] || current[:authpass],
+            down_after_milliseconds:      current['down-after-milliseconds'] || current[:downaftermil],
+            parallel_syncs:               current['parallel-syncs'] || current[:parallelsyncs],
+            failover_timeout:             current['failover-timeout'] || current[:failovertimeout],
+          },
         ]
       else
         masters = [current['masters']].flatten
@@ -117,9 +125,9 @@ def configure
 
       # Load password for use with requirepass from data bag if needed
       if current['data_bag_name'] && current['data_bag_item'] && current['data_bag_key']
-        bag = Chef::EncryptedDataBagItem.load(current['data_bag_name'], current['data_bag_item'])
+        bag = data_bag_item(current['data_bag_name'], current['data_bag_item'])
         masters.each do |master|
-          master['auth-pass'] = bag[current['data_bag_key']]
+          master['auth_pass'] = bag[current['data_bag_key']]
         end
       end
 
@@ -148,17 +156,21 @@ def configure
         mode '0644'
         action :create
         variables(
-          name:              current['name'],
-          piddir:            piddir,
-          job_control:       node['redisio']['job_control'],
-          sentinel_port:     current['sentinel_port'],
-          loglevel:          current['loglevel'],
-          logfile:           current['logfile'],
-          syslogenabled:     current['syslogenabled'],
-          syslogfacility:    current['syslogfacility'],
-          masters:           masters_with_defaults,
-          announce_ip:       current['announce-ip'],
-          announce_port:     current['announce-port']
+          name:                   current['name'],
+          piddir:                 piddir,
+          version:                version_hash,
+          job_control:            node['redisio']['job_control'],
+          sentinel_bind:          current['sentinel_bind'],
+          sentinel_port:          current['sentinel_port'],
+          loglevel:               current['loglevel'],
+          logfile:                current['logfile'],
+          syslogenabled:          current['syslogenabled'],
+          syslogfacility:         current['syslogfacility'],
+          masters:                masters_with_defaults,
+          announce_ip:            current['announce-ip'],
+          announce_port:          current['announce-port'],
+          notification_script:    current['notification-script'],
+          client_reconfig_script: current['client-reconfig-script']
         )
         not_if { ::File.exist?("#{current['configdir']}/#{sentinel_name}.conf.breadcrumb") }
       end
@@ -207,30 +219,56 @@ def configure
         )
         only_if { node['redisio']['job_control'] == 'upstart' }
       end
-      #TODO: fix for freebsd
-       template "/usr/local/etc/rc.d/redis_#{sentinel_name}" do
-          source 'sentinel.rcinit.erb'
-          cookbook 'redisio'
-          owner current['user']
-          group current['group']
-          mode '0755'
-          variables({
-            :name => sentinel_name,
-            :bin_path => bin_path,
-            :job_control => node['redisio']['job_control'],
-            :user => current['user'],
-            :group => current['group'],
-            :configdir => current['configdir'],
-            :piddir => piddir,
-            :platform => node['platform'],
-            })
-          only_if { node['redisio']['job_control'] == 'rcinit' }
-        end
+      # TODO: fix for freebsd
+      template "/usr/local/etc/rc.d/redis_#{sentinel_name}" do
+        source 'sentinel.rcinit.erb'
+        cookbook 'redisio'
+        owner current['user']
+        group current['group']
+        mode '0755'
+        variables(
+          name: sentinel_name,
+          bin_path: bin_path,
+          user: current['user'],
+          configdir: current['configdir'],
+          piddir: piddir
+        )
+        only_if { node['redisio']['job_control'] == 'rcinit' }
+      end
     end
-  end # servers each loop
+  end
+  # servers each loop
+end
+
+def redis_exists?
+  bin_path = if node['redisio']['install_dir']
+               ::File.join(node['redisio']['install_dir'], 'bin')
+             else
+               node['redisio']['bin_path']
+             end
+  redis_server = ::File.join(bin_path, 'redis-server')
+  ::File.exist?(redis_server)
+end
+
+def version
+  if redis_exists?
+    bin_path = if node['redisio']['install_dir']
+                 ::File.join(node['redisio']['install_dir'], 'bin')
+               else
+                 node['redisio']['bin_path']
+               end
+    redis_server = ::File.join(bin_path, 'redis-server')
+    redis_version = Mixlib::ShellOut.new("#{redis_server} -v")
+    redis_version.run_command
+    version = redis_version.stdout[/version (\d*.\d*.\d*)/, 1] || redis_version.stdout[/v=(\d*.\d*.\d*)/, 1]
+    Chef::Log.info("The Redis server version is: #{version}")
+    return version.delete("\n")
+  end
+  nil
 end
 
 def load_current_resource
-  @current_resource = Chef::Resource::RedisioSentinel.new(new_resource.name)
+  @current_resource = Chef::Resource.resource_for_node(:redisio_sentinel, node).new(new_resource.name)
+  @current_resource.version(version)
   @current_resource
 end
