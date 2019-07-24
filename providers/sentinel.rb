@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: redisio
+# Cookbook:: redisio
 # Provider::sentinel
 #
-# Copyright 2013, Rackspace Hosting <ryan.cleere@rackspace.com>
+# Copyright:: 2013, Rackspace Hosting <ryan.cleere@rackspace.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -109,14 +109,14 @@ def configure
         # use old key names if newer key names aren't present (e.g. 'foo' || :foo)
         masters = [
           {
-            master_name:                  current['master_name'] || current[:mastername],
-            master_ip:                    current['master_ip'] || current[:masterip],
-            master_port:                  current['master_port'] || current[:masterport],
-            quorum_count:                 current['quorum_count'] || current[:quorum_count],
-            auth_pass:                    current['auth-pass'] || current[:authpass],
-            down_after_milliseconds:      current['down-after-milliseconds'] || current[:downaftermil],
-            parallel_syncs:               current['parallel-syncs'] || current[:parallelsyncs],
-            failover_timeout:             current['failover-timeout'] || current[:failovertimeout],
+            master_name:             current['master_name'] || current[:mastername],
+            master_ip:               current['master_ip'] || current[:masterip],
+            master_port:             current['master_port'] || current[:masterport],
+            quorum_count:            current['quorum_count'] || current[:quorum_count],
+            auth_pass:               current['auth-pass'] || current[:authpass],
+            down_after_milliseconds: current['down-after-milliseconds'] || current[:downaftermil],
+            parallel_syncs:          current['parallel-syncs'] || current[:parallelsyncs],
+            failover_timeout:        current['failover-timeout'] || current[:failovertimeout],
           },
         ]
       else
@@ -193,12 +193,12 @@ def configure
         group 'root'
         mode '0755'
         variables(
-          name: sentinel_name,
-          bin_path: bin_path,
-          user: current['user'],
+          name:      sentinel_name,
+          bin_path:  bin_path,
+          user:      current['user'],
           configdir: current['configdir'],
-          piddir: piddir,
-          platform: node['platform']
+          piddir:    piddir,
+          platform:  node['platform']
         )
         only_if { node['redisio']['job_control'] == 'initd' }
       end
@@ -210,12 +210,12 @@ def configure
         group current['group']
         mode '0644'
         variables(
-          name: sentinel_name,
-          bin_path: bin_path,
-          user: current['user'],
-          group: current['group'],
+          name:      sentinel_name,
+          bin_path:  bin_path,
+          user:      current['user'],
+          group:     current['group'],
           configdir: current['configdir'],
-          piddir: piddir
+          piddir:    piddir
         )
         only_if { node['redisio']['job_control'] == 'upstart' }
       end
@@ -227,11 +227,11 @@ def configure
         group current['group']
         mode '0755'
         variables(
-          name: sentinel_name,
-          bin_path: bin_path,
-          user: current['user'],
+          name:      sentinel_name,
+          bin_path:  bin_path,
+          user:      current['user'],
           configdir: current['configdir'],
-          piddir: piddir
+          piddir:    piddir
         )
         only_if { node['redisio']['job_control'] == 'rcinit' }
       end

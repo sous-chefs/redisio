@@ -1,9 +1,9 @@
 #
-# Cookbook Name:: redisio
+# Cookbook:: redisio
 # Provider::configure
 #
-# Copyright 2013, Brian Bianco <brian.bianco@gmail.com>
-# Copyright 2013, Rackspace Hosting <ryan.cleere@rackspace.com>
+# Copyright:: 2013, Brian Bianco <brian.bianco@gmail.com>
+# Copyright:: 2013, Rackspace Hosting <ryan.cleere@rackspace.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -319,20 +319,20 @@ def configure
           group 'root'
           mode '0755'
           variables(
-            name: server_name,
-            bin_path: bin_path,
-            port: current['port'],
-            address: current['address'],
-            user: current['user'],
-            configdir: current['configdir'],
-            piddir: piddir,
-            requirepass: current['requirepass'],
-            shutdown_save: current['shutdown_save'],
-            platform: node['platform'],
-            unixsocket: current['unixsocket'],
-            ulimit: descriptors,
+            name:           server_name,
+            bin_path:       bin_path,
+            port:           current['port'],
+            address:        current['address'],
+            user:           current['user'],
+            configdir:      current['configdir'],
+            piddir:         piddir,
+            requirepass:    current['requirepass'],
+            shutdown_save:  current['shutdown_save'],
+            platform:       node['platform'],
+            unixsocket:     current['unixsocket'],
+            ulimit:         descriptors,
             required_start: node['redisio']['init.d']['required_start'].join(' '),
-            required_stop: node['redisio']['init.d']['required_stop'].join(' ')
+            required_stop:  node['redisio']['init.d']['required_stop'].join(' ')
           )
         end
       when 'upstart'
@@ -343,13 +343,13 @@ def configure
           group current['group']
           mode '0644'
           variables(
-            name: server_name,
-            bin_path: bin_path,
-            port: current['port'],
-            user: current['user'],
-            group: current['group'],
+            name:      server_name,
+            bin_path:  bin_path,
+            port:      current['port'],
+            user:      current['user'],
+            group:     current['group'],
             configdir: current['configdir'],
-            piddir: piddir
+            piddir:    piddir
           )
         end
       when 'rcinit'
@@ -360,11 +360,11 @@ def configure
           group current['group']
           mode '0755'
           variables(
-            name: server_name,
-            bin_path: bin_path,
-            user: current['user'],
+            name:      server_name,
+            bin_path:  bin_path,
+            user:      current['user'],
             configdir: current['configdir'],
-            piddir: piddir
+            piddir:    piddir
           )
         end
       when 'systemd'
@@ -390,9 +390,9 @@ def configure
           group 'root'
           mode '0644'
           variables(
-            bin_path: bin_path,
-            user: current['user'],
-            group: current['group'],
+            bin_path:     bin_path,
+            user:         current['user'],
+            group:        current['group'],
             limit_nofile: descriptors
           )
           notifies :run, "execute[#{reload_name}]", :immediately

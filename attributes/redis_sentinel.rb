@@ -1,7 +1,7 @@
-# Cookbook Name:: redisio
+# Cookbook:: redisio
 # Attribute::default
 #
-# Copyright 2013, Rackspace Hosting <ryan.cleere@rackspace.com>
+# Copyright:: 2013, Rackspace Hosting <ryan.cleere@rackspace.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

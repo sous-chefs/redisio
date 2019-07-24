@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: redisio
+# Cookbook:: redisio
 # Resource::install
 #
-# Copyright 2013, Brian Bianco <brian.bianco@gmail.com>
+# Copyright:: 2013, Brian Bianco <brian.bianco@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -44,8 +44,8 @@ module RedisioHelper
     {
       major: version_array[0].include?(':') ? version_array[0].split(':')[1] : version_array[0],
       minor: version_array[1],
-      tiny: version_array[2],
-      rc: version_array[3],
+      tiny:  version_array[2],
+      rc:    version_array[3],
     }
   end
 end

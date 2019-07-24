@@ -1,9 +1,9 @@
 #
-# Cookbook Name:: redisio
+# Cookbook:: redisio
 # Recipe:: sentinel
 #
-# Copyright 2013, Brian Bianco <brian.bianco@gmail.com>
-# Copyright 2013, Rackspace Hosting <ryan.cleere@rackspace.com>
+# Copyright:: 2013, Brian Bianco <brian.bianco@gmail.com>
+# Copyright:: 2013, Rackspace Hosting <ryan.cleere@rackspace.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,11 +28,11 @@ if sentinel_instances.nil?
   sentinel_instances = [
     {
       'sentinel_port' => '26379',
-      'name' => 'mycluster',
-      'masters' => [
+      'name'          => 'mycluster',
+      'masters'       => [
         {
           'master_name' => 'mycluster_master',
-          'master_ip' => '127.0.0.1',
+          'master_ip'   => '127.0.0.1',
           'master_port' => '6379',
         },
       ],
@@ -56,7 +56,7 @@ bin_path = if node['redisio']['install_dir']
 template '/lib/systemd/system/redis-sentinel@.service' do
   source 'redis-sentinel@.service'
   variables(
-    bin_path: bin_path,
+    bin_path:     bin_path,
     limit_nofile: redis['default_settings']['maxclients'] + 32
   )
   only_if { node['redisio']['job_control'] == 'systemd' }
