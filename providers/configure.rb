@@ -51,7 +51,7 @@ def configure
 
     node_memory_kb = node_memory_kb.sub('kB', '').to_i if node_memory_kb.is_a?(String)
 
-    # Here we determine what the logfile is.  It has these possible states
+    # Here we determine what the logfile is. It has these possible states
     #
     # Redis 2.6 and lower can be
     #   stdout
