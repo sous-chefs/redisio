@@ -453,9 +453,9 @@ Attribute Parameters
 
 This resource expects the following naming conventions:
 
-package file should be in the format <base_name><version_number>.<artifact_type>
+package file should be in the format base_nameVersion_number.artifact_type
 
-package file after extraction should be inside of the directory <base_name><version_number>
+package file after extraction should be inside of the directory base_nameVersion_number
 
 ```ruby
 install "redis" do
