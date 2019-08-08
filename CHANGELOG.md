@@ -7,6 +7,7 @@
 - Removed build essentials cookbook dependancy
 - Minimum Chef is now 14
 - Removed tests for Debian 8
+- Added support for chef 15
 
 ## 3.0.0 (2018-11-27)
 
@@ -272,7 +273,7 @@
 - Fixes bug where the version method was not properly parsing version strings in redis 2.6.x, as the version string from redis-server -v changed
 - Fixes bug in default attributes for fedora default redis data directory
 - Now uses chefs service resource for each redis instance instead of using a custom redisio_service resource.  This cleans up many issues, including a lack of updated_by_last_action
-- The use of the redisio_service resource is deprecated.  Use the redis<port_number> instead.
+- The use of the redisio_service resource is deprecated.  Use the redis port_number instead.
 - The default version of redis has been bumped to the current stable, which is 2.6.9
 - Adds metadata.json to the gitignore file so that the cookbook can be submoduled.
 - Adds the ability to handle non standard bind address in the init scripts stop command
