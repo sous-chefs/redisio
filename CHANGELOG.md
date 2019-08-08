@@ -1,5 +1,5 @@
 
-# redisio cookbook CHANGELOG
+# redisio
 
 ## Unreleased
 

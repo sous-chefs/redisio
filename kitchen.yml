@@ -35,11 +35,11 @@ suites:
       - recipe[redisio::enable]
     attributes:
       redisio:
-          servers:
-            - port: 6379
-            - port: 16379
-              name: 'savetest'
-              save: "a\nb\nc"
+        servers:
+          - port: 6379
+          - port: 16379
+            name: 'savetest'
+            save: "a\nb\nc"
 
   - name: redis-package
     run_list:
@@ -50,11 +50,11 @@ suites:
       - recipe[redisio::enable]
     attributes:
       redisio:
-          bypass_setup: true
-          servers:
-            - port: 6379
-          package_install: true
-          version:
+        bypass_setup: true
+        servers:
+          - port: 6379
+        package_install: true
+        version:
 
   - name: sentinel
     run_list:
@@ -64,8 +64,8 @@ suites:
       - recipe[redisio::sentinel_enable]
     attributes:
       redisio:
-          servers:
-            - port: 6379
+        servers:
+          - port: 6379
 
   - name: multisentinel
     run_list:
@@ -75,22 +75,22 @@ suites:
       - recipe[redisio::sentinel_enable]
     attributes:
       redisio:
-          servers:
-            - port: 6379
-            - port: 6380
-          sentinels:
-            -
-              name: 'cluster'
-              sentinel_bind: 0.0.0.0
-              sentinel_port: 26379
-              masters:
-            -
-              name: 'sentinel6379'
-              master_name: 'master6379'
-              master_ip: '127.0.0.1'
-              master_port: 6379
-            -
-              name: 'sentinel6380'
-              master_name: 'master6380'
-              master_ip: '127.0.0.1'
-              master_port: 6380
+        servers:
+          - port: 6379
+          - port: 6380
+        sentinels:
+          -
+            name: 'cluster'
+            sentinel_bind: 0.0.0.0
+            sentinel_port: 26379
+            masters:
+          -
+            name: 'sentinel6379'
+            master_name: 'master6379'
+            master_ip: '127.0.0.1'
+            master_port: 6379
+          -
+            name: 'sentinel6380'
+            master_name: 'master6380'
+            master_ip: '127.0.0.1'
+            master_port: 6380
