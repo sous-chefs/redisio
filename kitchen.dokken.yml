@@ -16,19 +16,6 @@ verifier:
   name: inspec
 
 platforms:
-  - name: amazonlinux
-    driver:
-      image: dokken/amazonlinux
-      pid_one_command: /sbin/init
-
-  - name: centos-6
-    driver:
-      image: dokken/centos-6
-      pid_one_command: /sbin/init
-    run_list:
-      - recipe[yum-epel::default]
-      - recipe[yum-remi::default]
-
   - name: centos-7
     driver:
       image: dokken/centos-7

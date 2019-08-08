@@ -17,10 +17,6 @@ verifier:
   name: inspec
 
 platforms:
-  - name: amazon-linux
-    driver_config:
-      box: mvbcoding/awslinux
-  - name: centos-6
   - name: centos-7
   - name: debian-9
   - name: freebsd-10
