@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: redisio
+# Cookbook:: redisio
 # Provider::sentinel
 #
-# Copyright 2013, Rackspace Hosting <ryan.cleere@rackspace.com>
+# Copyright:: 2013, Rackspace Hosting <ryan.cleere@rackspace.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -109,14 +109,14 @@ def configure
         # use old key names if newer key names aren't present (e.g. 'foo' || :foo)
         masters = [
           {
-            master_name:                  current['master_name'] || current[:mastername],
-            master_ip:                    current['master_ip'] || current[:masterip],
-            master_port:                  current['master_port'] || current[:masterport],
-            quorum_count:                 current['quorum_count'] || current[:quorum_count],
-            auth_pass:                    current['auth-pass'] || current[:authpass],
-            down_after_milliseconds:      current['down-after-milliseconds'] || current[:downaftermil],
-            parallel_syncs:               current['parallel-syncs'] || current[:parallelsyncs],
-            failover_timeout:             current['failover-timeout'] || current[:failovertimeout],
+            master_name: current['master_name'] || current[:mastername],
+            master_ip: current['master_ip'] || current[:masterip],
+            master_port: current['master_port'] || current[:masterport],
+            quorum_count: current['quorum_count'] || current[:quorum_count],
+            auth_pass: current['auth-pass'] || current[:authpass],
+            down_after_milliseconds: current['down-after-milliseconds'] || current[:downaftermil],
+            parallel_syncs: current['parallel-syncs'] || current[:parallelsyncs],
+            failover_timeout: current['failover-timeout'] || current[:failovertimeout],
           },
         ]
       else
@@ -156,20 +156,20 @@ def configure
         mode '0644'
         action :create
         variables(
-          name:                   current['name'],
-          piddir:                 piddir,
-          version:                version_hash,
-          job_control:            node['redisio']['job_control'],
-          sentinel_bind:          current['sentinel_bind'],
-          sentinel_port:          current['sentinel_port'],
-          loglevel:               current['loglevel'],
-          logfile:                current['logfile'],
-          syslogenabled:          current['syslogenabled'],
-          syslogfacility:         current['syslogfacility'],
-          masters:                masters_with_defaults,
-          announce_ip:            current['announce-ip'],
-          announce_port:          current['announce-port'],
-          notification_script:    current['notification-script'],
+          name: current['name'],
+          piddir: piddir,
+          version: version_hash,
+          job_control: node['redisio']['job_control'],
+          sentinel_bind: current['sentinel_bind'],
+          sentinel_port: current['sentinel_port'],
+          loglevel: current['loglevel'],
+          logfile: current['logfile'],
+          syslogenabled: current['syslogenabled'],
+          syslogfacility: current['syslogfacility'],
+          masters: masters_with_defaults,
+          announce_ip: current['announce-ip'],
+          announce_port: current['announce-port'],
+          notification_script: current['notification-script'],
           client_reconfig_script: current['client-reconfig-script']
         )
         not_if { ::File.exist?("#{current['configdir']}/#{sentinel_name}.conf.breadcrumb") }
