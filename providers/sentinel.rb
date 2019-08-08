@@ -135,7 +135,7 @@ def configure
       masters_with_defaults = []
       masters.each do |current_sentinel_master|
         default_sentinel_master = new_resource.sentinel_defaults.to_hash
-        sentinel_master = default_sentinel_master.merge(current_sentinel_master)
+        sentinel_master = default_sentinel_master.merge(current_sentinel_master.to_hash)
         masters_with_defaults << sentinel_master
       end
 
