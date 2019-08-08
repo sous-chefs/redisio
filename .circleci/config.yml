@@ -33,13 +33,3 @@ workflows:
           suite: redis-package
           requires:
             *lint_and_unit
-      - kitchen/dokken-single:
-          name: sentinel
-          suite: sentinel
-          requires:
-            *lint_and_unit
-      - kitchen/dokken-single:
-          name: multisentinel
-          suite: multisentinel
-          requires:
-            *lint_and_unit
