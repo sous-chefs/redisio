@@ -227,7 +227,7 @@ def configure
           piddir: piddir,
           name: server_name,
           job_control: node['redisio']['job_control'],
-          daemonize: node['redisio']['daemonize'],
+          daemonize: current['daemonize'],
           port: current['port'],
           tcpbacklog: current['tcpbacklog'],
           address: current['address'],
@@ -395,7 +395,7 @@ def configure
             user: current['user'],
             group: current['group'],
             limit_nofile: descriptors,
-            daemonize: node['redisio']['daemonize']
+            daemonize: current['daemonize']
           )
           notifies :run, "execute[#{reload_name}]", :immediately
         end
