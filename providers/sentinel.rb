@@ -60,7 +60,7 @@ def configure
       # Create the redis configuration directory
       directory current['configdir'] do
         owner 'root'
-        group node['platform_family'] == 'freebsd' ? 'wheel' : 'root'
+        group platform_family?('freebsd') ? 'wheel' : 'root'
         mode '0755'
         recursive true
         action :create
@@ -156,20 +156,20 @@ def configure
         mode '0644'
         action :create
         variables(
-          name: current['name'],
-          piddir: piddir,
-          version: version_hash,
-          job_control: node['redisio']['job_control'],
-          sentinel_bind: current['sentinel_bind'],
-          sentinel_port: current['sentinel_port'],
-          loglevel: current['loglevel'],
-          logfile: current['logfile'],
-          syslogenabled: current['syslogenabled'],
-          syslogfacility: current['syslogfacility'],
-          masters: masters_with_defaults,
-          announce_ip: current['announce-ip'],
-          announce_port: current['announce-port'],
-          notification_script: current['notification-script'],
+          name:                   current['name'],
+          piddir:                 piddir,
+          version:                version_hash,
+          job_control:            node['redisio']['job_control'],
+          sentinel_bind:          current['sentinel_bind'],
+          sentinel_port:          current['sentinel_port'],
+          loglevel:               current['loglevel'],
+          logfile:                current['logfile'],
+          syslogenabled:          current['syslogenabled'],
+          syslogfacility:         current['syslogfacility'],
+          masters:                masters_with_defaults,
+          announce_ip:            current['announce-ip'],
+          announce_port:          current['announce-port'],
+          notification_script:    current['notification-script'],
           client_reconfig_script: current['client-reconfig-script']
         )
         not_if { ::File.exist?("#{current['configdir']}/#{sentinel_name}.conf.breadcrumb") }

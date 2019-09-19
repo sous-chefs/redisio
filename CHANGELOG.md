@@ -8,6 +8,7 @@
 - Minimum Chef is now 14
 - Removed tests for Debian 8
 - Added support for chef 15
+- configure recipe now sets `['redisio']['servers']` using override instead of normal in line with new chef best practices
 
 ## 3.0.0 (2018-11-27)
 

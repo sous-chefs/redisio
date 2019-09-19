@@ -16,34 +16,34 @@
 # limitations under the License.
 #
 
-config_dir = if node['platform_family'] == 'freebsd'
+config_dir = if platform_family?('freebsd')
                '/usr/local/etc/redis'
              else
                '/etc/redis'
              end
 
 default['redisio']['sentinel_defaults'] = {
-  'user' => 'redis',
-  'configdir' => config_dir,
-  'sentinel_bind' => nil,
-  'sentinel_port' => 26379,
-  'monitor' => nil,
+  'user'                    => 'redis',
+  'configdir'               => config_dir,
+  'sentinel_bind'           => nil,
+  'sentinel_port'           => 26379,
+  'monitor'                 => nil,
   'down_after_milliseconds' => 30000,
-  'can-failover' => 'yes',
-  'parallel-syncs' => 1,
-  'failover_timeout' => 900000,
-  'loglevel' => 'notice',
-  'logfile' => nil,
-  'syslogenabled' => 'yes',
-  'syslogfacility' => 'local0',
-  'quorum_count' => 2,
-  'data_bag_name' => nil,
-  'data_bag_item' => nil,
-  'data_bag_key' => nil,
-  'announce-ip' => nil,
-  'announce-port' => nil,
-  'notification-script' => nil,
-  'client-reconfig-script' => nil,
+  'can-failover'            => 'yes',
+  'parallel-syncs'          => 1,
+  'failover_timeout'        => 900000,
+  'loglevel'                => 'notice',
+  'logfile'                 => nil,
+  'syslogenabled'           => 'yes',
+  'syslogfacility'          => 'local0',
+  'quorum_count'            => 2,
+  'data_bag_name'           => nil,
+  'data_bag_item'           => nil,
+  'data_bag_key'            => nil,
+  'announce-ip'             => nil,
+  'announce-port'           => nil,
+  'notification-script'     => nil,
+  'client-reconfig-script'  => nil,
 }
 
 # Manage Sentinel Config File
