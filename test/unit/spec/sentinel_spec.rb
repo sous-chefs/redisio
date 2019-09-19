@@ -17,11 +17,11 @@ describe 'sentinel recipes' do
       sentinels: [
         {
           'sentinel_port' => '26379',
-          'name' => 'mycluster',
-          'masters' => [
+          'name'          => 'mycluster',
+          'masters'       => [
             {
               'master_name' => 'mycluster_master',
-              'master_ip' => '127.0.0.1',
+              'master_ip'   => '127.0.0.1',
               'master_port' => '6379',
             },
           ],
@@ -36,9 +36,9 @@ describe 'sentinel recipes' do
         {
           'sentinel_bind' => '0.0.0.0',
           'sentinel_port' => '1234',
-          'name' => 'sentinel-test-params',
-          'master_ip' => '5.6.7.8',
-          'master_port' => 9123,
+          'name'          => 'sentinel-test-params',
+          'master_ip'     => '5.6.7.8',
+          'master_port'   => 9123,
         },
       ]
     end.converge(*recipes) # *splat operator for array to vararg
@@ -47,9 +47,9 @@ describe 'sentinel recipes' do
         {
           'sentinel_bind' => '0.0.0.0',
           'sentinel_port' => '1234',
-          'name' => 'sentinel-test-params',
-          'master_ip' => '5.6.7.8',
-          'master_port' => 9123,
+          'name'          => 'sentinel-test-params',
+          'master_ip'     => '5.6.7.8',
+          'master_port'   => 9123,
         },
       ]
     )
