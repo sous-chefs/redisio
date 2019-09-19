@@ -3,48 +3,26 @@ driver:
   name: vagrant
 
 provisioner:
-  name: chef_solo
+  name: chef_zero
   product_name: chef
-  product_version: 13
+  product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
+  install_strategy: once
+  channel: unstable
 
+client_rb:
+  treat_deprecation_warnings_as_errors: true
+  resource_cloning: false
+
+verifier:
+  name: inspec
 
 platforms:
-<%
-  chef_versions = %w(
-    13.3.0
-    latest
-  )
-
-  # non RHEL OS's
-  test_platforms = %w(
-    centos-6
-    centos-7
-    debian-8
-    debian-9
-    fedora-28
-    freebsd-11
-    ubuntu-16.04
-    ubuntu-18.04
-  )
-%>
-
-<% test_platforms.product(chef_versions).each do |platform_version, chef_version| %>
-  - name: <%= platform_version %>-<%= chef_version %>
-    driver_config:
-      box: bento/<%= platform_version %>
-      product_name: chef
-      product_version: <%= chef_version %>
-    <% if platform_version == 'debian-7.11' %>
-    # Set due to https://github.com/test-kitchen/kitchen-vagrant/issues/293
-    driver:
-      kitchen_cache_directory: .kitchen/cache/debian
-    <% end %>
-    <% if platform_version.start_with?('centos') %>
-    run_list:
-      - recipe[yum-epel::default]
-      - recipe[yum-remi::default]
-    <% end %>
-<% end %>
+  - name: centos-7
+  - name: debian-9
+  - name: freebsd-10
+  - name: freebsd-11
+  - name: ubuntu-16.04
+  - name: ubuntu-18.04
 
 suites:
   - name: default
@@ -52,12 +30,13 @@ suites:
       - recipe[redisio::default]
       - recipe[redisio::enable]
     attributes:
-     redisio:
+      redisio:
         servers:
           - port: 6379
           - port: 16379
             name: 'savetest'
             save: "a\nb\nc"
+
   - name: redis-package
     run_list:
       - recipe[redisio::default]
@@ -66,12 +45,13 @@ suites:
       - recipe[redisio::configure]
       - recipe[redisio::enable]
     attributes:
-     redisio:
+      redisio:
         bypass_setup: true
         servers:
           - port: 6379
         package_install: true
         version:
+
   - name: sentinel
     run_list:
       - recipe[redisio::default]
@@ -79,9 +59,10 @@ suites:
       - recipe[redisio::sentinel]
       - recipe[redisio::sentinel_enable]
     attributes:
-     redisio:
+      redisio:
         servers:
           - port: 6379
+
   - name: multisentinel
     run_list:
       - recipe[redisio::default]
@@ -89,7 +70,7 @@ suites:
       - recipe[redisio::sentinel]
       - recipe[redisio::sentinel_enable]
     attributes:
-     redisio:
+      redisio:
         servers:
           - port: 6379
           - port: 6380
@@ -99,13 +80,13 @@ suites:
             sentinel_bind: 0.0.0.0
             sentinel_port: 26379
             masters:
-              -
-                name: 'sentinel6379'
-                master_name: 'master6379'
-                master_ip: '127.0.0.1'
-                master_port: 6379
-              -
-                name: 'sentinel6380'
-                master_name: 'master6380'
-                master_ip: '127.0.0.1'
-                master_port: 6380
+          -
+            name: 'sentinel6379'
+            master_name: 'master6379'
+            master_ip: '127.0.0.1'
+            master_port: 6379
+          -
+            name: 'sentinel6380'
+            master_name: 'master6380'
+            master_ip: '127.0.0.1'
+            master_port: 6380

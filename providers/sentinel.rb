@@ -135,7 +135,7 @@ def configure
       masters_with_defaults = []
       masters.each do |current_sentinel_master|
         default_sentinel_master = new_resource.sentinel_defaults.to_hash
-        sentinel_master = default_sentinel_master.merge(current_sentinel_master)
+        sentinel_master = default_sentinel_master.merge(current_sentinel_master || {})
         masters_with_defaults << sentinel_master
       end
 
@@ -156,20 +156,20 @@ def configure
         mode '0644'
         action :create
         variables(
-          name:                   current['name'],
-          piddir:                 piddir,
-          version:                version_hash,
-          job_control:            node['redisio']['job_control'],
-          sentinel_bind:          current['sentinel_bind'],
-          sentinel_port:          current['sentinel_port'],
-          loglevel:               current['loglevel'],
-          logfile:                current['logfile'],
-          syslogenabled:          current['syslogenabled'],
-          syslogfacility:         current['syslogfacility'],
-          masters:                masters_with_defaults,
-          announce_ip:            current['announce-ip'],
-          announce_port:          current['announce-port'],
-          notification_script:    current['notification-script'],
+          name: current['name'],
+          piddir: piddir,
+          version: version_hash,
+          job_control: node['redisio']['job_control'],
+          sentinel_bind: current['sentinel_bind'],
+          sentinel_port: current['sentinel_port'],
+          loglevel: current['loglevel'],
+          logfile: current['logfile'],
+          syslogenabled: current['syslogenabled'],
+          syslogfacility: current['syslogfacility'],
+          masters: masters_with_defaults,
+          announce_ip: current['announce-ip'],
+          announce_port: current['announce-port'],
+          notification_script: current['notification-script'],
           client_reconfig_script: current['client-reconfig-script']
         )
         not_if { ::File.exist?("#{current['configdir']}/#{sentinel_name}.conf.breadcrumb") }

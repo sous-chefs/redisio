@@ -4,10 +4,10 @@ maintainer_email  'help@sous-chefs.org'
 license           'Apache-2.0'
 description       'Installs and configures redis'
 long_description  IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version           '3.0.0'
+version           '4.0.0'
 source_url        'https://github.com/sous-chefs/redisio'
 issues_url        'https://github.com/sous-chefs/redisio/issues'
-chef_version      '>= 13.0'
+chef_version      '>= 14.0'
 
 %w(
   amazon
@@ -33,5 +33,4 @@ recipe 'redisio::redis_gem', 'this recipe will install the redis ruby gem into t
 recipe 'redisio::disable_os_default', 'This recipe is used to disable the default OS redis init script'
 
 depends 'ulimit', '>= 0.1.2'
-depends 'build-essential', '>= 5.0'
 depends 'selinux_policy'

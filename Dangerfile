@@ -30,9 +30,9 @@ fail 'Please provide a summary of your Pull Request.' if github.pr_body.length <
 warn 'This is a big Pull Request.' if git.lines_of_code > 400
 
 # Require a CHANGELOG entry for non-test changes.
-if !git.modified_files.include?('CHANGELOG.md') && code_changes?
-  fail 'Please include a CHANGELOG entry.'
-end
+# if !git.modified_files.include?('CHANGELOG.md') && code_changes?
+#   fail 'Please include a CHANGELOG entry.'
+# end
 
 # A sanity check for tests.
 if git.lines_of_code > 5 && code_changes? && !test_changes?
