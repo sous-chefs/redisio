@@ -1,108 +1,35 @@
-version: 2.1
+---
+lint_and_unit: &lint_and_unit
+  - delivery
+  - danger
+  - lint-yaml
+  - lint-markdown
 
+version: 2.1
 orbs:
-  kitchen: sous-chefs/kitchen@1.0.1
+  kitchen: sous-chefs/kitchen@2
 
 workflows:
   kitchen:
     jobs:
+      # Lint and Unit Test
+      - kitchen/yamllint:
+          name: lint-yaml
+      - kitchen/mdlint:
+          name: lint-markdown
       - kitchen/danger:
           name: danger
           context: Danger
-      - kitchen/lint:
-          name: lint
+      - kitchen/delivery:
+          name: delivery
+
       - kitchen/dokken-single:
-          name: default-centos-6
-          platform: centos-6
+          name: default
           suite: default
-          requires: [ lint, danger ]
+          requires:
+            *lint_and_unit
       - kitchen/dokken-single:
-          name: default-centos-7
-          platform: centos-7
-          suite: default
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: default-debian-8
-          platform: debian-8
-          suite: default
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: default-ubuntu-16.04
-          platform: ubuntu-1604
-          suite: default
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: redis-package-centos-6
-          platform: centos-6
+          name: redis-package
           suite: redis-package
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: redis-package-centos-7
-          platform: centos-7
-          suite: redis-package
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: redis-package-fedora-latest
-          platform: fedora-latest
-          suite: redis-package
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: redis-package-debian-8
-          platform: debian-8
-          suite: redis-package
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: redis-package-ubuntu-16.04
-          platform: ubuntu-1604
-          suite: redis-package
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: sentinel-centos-6
-          platform: centos-6
-          suite: sentinel
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: sentinel-centos-7
-          platform: centos-7
-          suite: sentinel
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: sentinel-fedora-latest
-          platform: fedora-latest
-          suite: sentinel
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: sentinel-debian-8
-          platform: debian-8
-          suite: sentinel
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: sentinel-ubuntu-16.04
-          platform: ubuntu-1604
-          suite: sentinel
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: multisentinel-centos-6
-          platform: centos-6
-          suite: multisentinel
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: multisentinel-centos-7
-          platform: centos-7
-          suite: multisentinel
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: multisentinel-fedora-latest
-          platform: fedora-latest
-          suite: multisentinel
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: multisentinel-debian-8
-          platform: debian-8
-          suite: multisentinel
-          requires: [ lint, danger ]
-      - kitchen/dokken-single:
-          name: multisentinel-ubuntu-16.04
-          platform: ubuntu-1604
-          suite: multisentinel
-          requires: [ lint, danger ]
+          requires:
+            *lint_and_unit
