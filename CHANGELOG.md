@@ -8,6 +8,7 @@
 - Minimum Chef is now 14
 - Removed tests for Debian 8
 - Added support for chef 15
+- Allow to overwrite daemonize property with systemd
 
 ## 3.0.0 (2018-11-27)
 
