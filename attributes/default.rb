@@ -78,7 +78,7 @@ default['redisio']['job_control'] = if node['init_package'] == 'systemd'
                                     else
                                       'initd'
                                     end
-
+default['redisio']['daemonize'] = %w(initd rcinit).include?(default['redisio']['job_control'])
 # Init.d script related options
 default['redisio']['init.d']['required_start'] = []
 default['redisio']['init.d']['required_stop'] = []

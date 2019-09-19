@@ -3,7 +3,7 @@ Description=Redis persistent key-value database
 After=network.target
 
 [Service]
-ExecStart=<%= @bin_path %>/redis-server /etc/redis/sentinel_%i.conf --sentinel --daemonize no
+ExecStart=<%= @bin_path %>/redis-server /etc/redis/sentinel_%i.conf --sentinel --daemonize <%= @daemonize %>
 User=redis
 Group=redis
 LimitNOFILE=<%= @limit_nofile %>
