@@ -60,7 +60,7 @@ def configure
       # Create the redis configuration directory
       directory current['configdir'] do
         owner 'root'
-        group node['platform_family'] == 'freebsd' ? 'wheel' : 'root'
+        group platform_family?('freebsd') ? 'wheel' : 'root'
         mode '0755'
         recursive true
         action :create
@@ -109,14 +109,14 @@ def configure
         # use old key names if newer key names aren't present (e.g. 'foo' || :foo)
         masters = [
           {
-            master_name: current['master_name'] || current[:mastername],
-            master_ip: current['master_ip'] || current[:masterip],
-            master_port: current['master_port'] || current[:masterport],
-            quorum_count: current['quorum_count'] || current[:quorum_count],
-            auth_pass: current['auth-pass'] || current[:authpass],
+            master_name:             current['master_name'] || current[:mastername],
+            master_ip:               current['master_ip'] || current[:masterip],
+            master_port:             current['master_port'] || current[:masterport],
+            quorum_count:            current['quorum_count'] || current[:quorum_count],
+            auth_pass:               current['auth-pass'] || current[:authpass],
             down_after_milliseconds: current['down-after-milliseconds'] || current[:downaftermil],
-            parallel_syncs: current['parallel-syncs'] || current[:parallelsyncs],
-            failover_timeout: current['failover-timeout'] || current[:failovertimeout],
+            parallel_syncs:          current['parallel-syncs'] || current[:parallelsyncs],
+            failover_timeout:        current['failover-timeout'] || current[:failovertimeout],
           },
         ]
       else
@@ -156,20 +156,20 @@ def configure
         mode '0644'
         action :create
         variables(
-          name: current['name'],
-          piddir: piddir,
-          version: version_hash,
-          job_control: node['redisio']['job_control'],
-          sentinel_bind: current['sentinel_bind'],
-          sentinel_port: current['sentinel_port'],
-          loglevel: current['loglevel'],
-          logfile: current['logfile'],
-          syslogenabled: current['syslogenabled'],
-          syslogfacility: current['syslogfacility'],
-          masters: masters_with_defaults,
-          announce_ip: current['announce-ip'],
-          announce_port: current['announce-port'],
-          notification_script: current['notification-script'],
+          name:                   current['name'],
+          piddir:                 piddir,
+          version:                version_hash,
+          job_control:            node['redisio']['job_control'],
+          sentinel_bind:          current['sentinel_bind'],
+          sentinel_port:          current['sentinel_port'],
+          loglevel:               current['loglevel'],
+          logfile:                current['logfile'],
+          syslogenabled:          current['syslogenabled'],
+          syslogfacility:         current['syslogfacility'],
+          masters:                masters_with_defaults,
+          announce_ip:            current['announce-ip'],
+          announce_port:          current['announce-port'],
+          notification_script:    current['notification-script'],
           client_reconfig_script: current['client-reconfig-script']
         )
         not_if { ::File.exist?("#{current['configdir']}/#{sentinel_name}.conf.breadcrumb") }
@@ -193,12 +193,12 @@ def configure
         group 'root'
         mode '0755'
         variables(
-          name: sentinel_name,
-          bin_path: bin_path,
-          user: current['user'],
+          name:      sentinel_name,
+          bin_path:  bin_path,
+          user:      current['user'],
           configdir: current['configdir'],
-          piddir: piddir,
-          platform: node['platform']
+          piddir:    piddir,
+          platform:  node['platform']
         )
         only_if { node['redisio']['job_control'] == 'initd' }
       end
@@ -210,12 +210,12 @@ def configure
         group current['group']
         mode '0644'
         variables(
-          name: sentinel_name,
-          bin_path: bin_path,
-          user: current['user'],
-          group: current['group'],
+          name:      sentinel_name,
+          bin_path:  bin_path,
+          user:      current['user'],
+          group:     current['group'],
           configdir: current['configdir'],
-          piddir: piddir
+          piddir:    piddir
         )
         only_if { node['redisio']['job_control'] == 'upstart' }
       end
@@ -227,11 +227,11 @@ def configure
         group current['group']
         mode '0755'
         variables(
-          name: sentinel_name,
-          bin_path: bin_path,
-          user: current['user'],
+          name:      sentinel_name,
+          bin_path:  bin_path,
+          user:      current['user'],
           configdir: current['configdir'],
-          piddir: piddir
+          piddir:    piddir
         )
         only_if { node['redisio']['job_control'] == 'rcinit' }
       end

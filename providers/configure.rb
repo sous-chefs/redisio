@@ -51,7 +51,7 @@ def configure
 
     node_memory_kb = node_memory_kb.sub('kB', '').to_i if node_memory_kb.is_a?(String)
 
-    # Here we determine what the logfile is.  It has these possible states
+    # Here we determine what the logfile is. It has these possible states
     #
     # Redis 2.6 and lower can be
     #   stdout
@@ -111,7 +111,7 @@ def configure
       # Create the redis configuration directory
       directory current['configdir'] do
         owner 'root'
-        group node['platform_family'] == 'freebsd' ? 'wheel' : 'root'
+        group platform_family?('freebsd') ? 'wheel' : 'root'
         mode '0755'
         recursive true
         action :create
@@ -223,76 +223,76 @@ def configure
         mode '0644'
         action :create
         variables(
-          version: version_hash,
-          piddir: piddir,
-          name: server_name,
-          job_control: node['redisio']['job_control'],
-          port: current['port'],
-          tcpbacklog: current['tcpbacklog'],
-          address: current['address'],
-          databases: current['databases'],
-          backuptype: current['backuptype'],
-          datadir: current['datadir'],
-          unixsocket: current['unixsocket'],
-          unixsocketperm: current['unixsocketperm'],
-          timeout: current['timeout'],
-          keepalive: current['keepalive'],
-          loglevel: current['loglevel'],
-          logfile: current['logfile'],
-          syslogenabled: current['syslogenabled'],
-          syslogfacility: current['syslogfacility'],
-          save: computed_save,
-          stopwritesonbgsaveerror: current['stopwritesonbgsaveerror'],
-          rdbcompression: current['rdbcompression'],
-          rdbchecksum: current['rdbchecksum'],
-          dbfilename: current['dbfilename'],
-          slaveof: current['slaveof'],
-          protected_mode: current['protected_mode'],
-          masterauth: current['masterauth'],
-          slaveservestaledata: current['slaveservestaledata'],
-          slavereadonly: current['slavereadonly'],
-          replpingslaveperiod: current['replpingslaveperiod'],
-          repltimeout: current['repltimeout'],
-          repldisabletcpnodelay: current['repldisabletcpnodelay'],
-          replbacklogsize: current['replbacklogsize'],
-          replbacklogttl: current['replbacklogttl'],
-          slavepriority: current['slavepriority'],
-          requirepass: current['requirepass'],
-          rename_commands: current['rename_commands'],
-          maxclients: current['maxclients'],
-          maxmemory: maxmemory,
-          maxmemorypolicy: current['maxmemorypolicy'],
-          maxmemorysamples: current['maxmemorysamples'],
-          appendfilename: current['appendfilename'],
-          appendfsync: current['appendfsync'],
-          noappendfsynconrewrite: current['noappendfsynconrewrite'],
-          aofrewritepercentage: current['aofrewritepercentage'],
-          aofrewriteminsize: current['aofrewriteminsize'],
-          aofloadtruncated: current['aofloadtruncated'],
-          luatimelimit: current['luatimelimit'],
-          slowloglogslowerthan: current['slowloglogslowerthan'],
-          slowlogmaxlen: current['slowlogmaxlen'],
-          notifykeyspaceevents: current['notifykeyspaceevents'],
-          hashmaxziplistentries: current['hashmaxziplistentries'],
-          hashmaxziplistvalue: current['hashmaxziplistvalue'],
-          listmaxziplistentries: current['listmaxziplistentries'],
-          listmaxziplistvalue: current['listmaxziplistvalue'],
-          setmaxintsetentries: current['setmaxintsetentries'],
-          zsetmaxziplistentries: current['zsetmaxziplistentries'],
-          zsetmaxziplistvalue: current['zsetmaxziplistvalue'],
-          hllsparsemaxbytes: current['hllsparsemaxbytes'],
-          activerehasing: current['activerehasing'],
-          clientoutputbufferlimit: current['clientoutputbufferlimit'],
-          hz: current['hz'],
+          version:                    version_hash,
+          piddir:                     piddir,
+          name:                       server_name,
+          job_control:                node['redisio']['job_control'],
+          port:                       current['port'],
+          tcpbacklog:                 current['tcpbacklog'],
+          address:                    current['address'],
+          databases:                  current['databases'],
+          backuptype:                 current['backuptype'],
+          datadir:                    current['datadir'],
+          unixsocket:                 current['unixsocket'],
+          unixsocketperm:             current['unixsocketperm'],
+          timeout:                    current['timeout'],
+          keepalive:                  current['keepalive'],
+          loglevel:                   current['loglevel'],
+          logfile:                    current['logfile'],
+          syslogenabled:              current['syslogenabled'],
+          syslogfacility:             current['syslogfacility'],
+          save:                       computed_save,
+          stopwritesonbgsaveerror:    current['stopwritesonbgsaveerror'],
+          rdbcompression:             current['rdbcompression'],
+          rdbchecksum:                current['rdbchecksum'],
+          dbfilename:                 current['dbfilename'],
+          slaveof:                    current['slaveof'],
+          protected_mode:             current['protected_mode'],
+          masterauth:                 current['masterauth'],
+          slaveservestaledata:        current['slaveservestaledata'],
+          slavereadonly:              current['slavereadonly'],
+          replpingslaveperiod:        current['replpingslaveperiod'],
+          repltimeout:                current['repltimeout'],
+          repldisabletcpnodelay:      current['repldisabletcpnodelay'],
+          replbacklogsize:            current['replbacklogsize'],
+          replbacklogttl:             current['replbacklogttl'],
+          slavepriority:              current['slavepriority'],
+          requirepass:                current['requirepass'],
+          rename_commands:            current['rename_commands'],
+          maxclients:                 current['maxclients'],
+          maxmemory:                  maxmemory,
+          maxmemorypolicy:            current['maxmemorypolicy'],
+          maxmemorysamples:           current['maxmemorysamples'],
+          appendfilename:             current['appendfilename'],
+          appendfsync:                current['appendfsync'],
+          noappendfsynconrewrite:     current['noappendfsynconrewrite'],
+          aofrewritepercentage:       current['aofrewritepercentage'],
+          aofrewriteminsize:          current['aofrewriteminsize'],
+          aofloadtruncated:           current['aofloadtruncated'],
+          luatimelimit:               current['luatimelimit'],
+          slowloglogslowerthan:       current['slowloglogslowerthan'],
+          slowlogmaxlen:              current['slowlogmaxlen'],
+          notifykeyspaceevents:       current['notifykeyspaceevents'],
+          hashmaxziplistentries:      current['hashmaxziplistentries'],
+          hashmaxziplistvalue:        current['hashmaxziplistvalue'],
+          listmaxziplistentries:      current['listmaxziplistentries'],
+          listmaxziplistvalue:        current['listmaxziplistvalue'],
+          setmaxintsetentries:        current['setmaxintsetentries'],
+          zsetmaxziplistentries:      current['zsetmaxziplistentries'],
+          zsetmaxziplistvalue:        current['zsetmaxziplistvalue'],
+          hllsparsemaxbytes:          current['hllsparsemaxbytes'],
+          activerehasing:             current['activerehasing'],
+          clientoutputbufferlimit:    current['clientoutputbufferlimit'],
+          hz:                         current['hz'],
           aofrewriteincrementalfsync: current['aofrewriteincrementalfsync'],
-          clusterenabled: current['clusterenabled'],
-          clusterconfigfile: current['clusterconfigfile'],
-          clusternodetimeout: current['clusternodetimeout'],
-          includes: current['includes'],
-          minslavestowrite: current['minslavestowrite'],
-          minslavesmaxlag: current['minslavesmaxlag'],
-          repldisklesssync: current['repldisklesssync'],
-          repldisklesssyncdelay: current['repldisklesssyncdelay']
+          clusterenabled:             current['clusterenabled'],
+          clusterconfigfile:          current['clusterconfigfile'],
+          clusternodetimeout:         current['clusternodetimeout'],
+          includes:                   current['includes'],
+          minslavestowrite:           current['minslavestowrite'],
+          minslavesmaxlag:            current['minslavesmaxlag'],
+          repldisklesssync:           current['repldisklesssync'],
+          repldisklesssyncdelay:      current['repldisklesssyncdelay']
         )
         not_if { ::File.exist?("#{current['configdir']}/#{server_name}.conf.breadcrumb") }
       end
@@ -319,20 +319,20 @@ def configure
           group 'root'
           mode '0755'
           variables(
-            name: server_name,
-            bin_path: bin_path,
-            port: current['port'],
-            address: current['address'],
-            user: current['user'],
-            configdir: current['configdir'],
-            piddir: piddir,
-            requirepass: current['requirepass'],
-            shutdown_save: current['shutdown_save'],
-            platform: node['platform'],
-            unixsocket: current['unixsocket'],
-            ulimit: descriptors,
+            name:           server_name,
+            bin_path:       bin_path,
+            port:           current['port'],
+            address:        current['address'],
+            user:           current['user'],
+            configdir:      current['configdir'],
+            piddir:         piddir,
+            requirepass:    current['requirepass'],
+            shutdown_save:  current['shutdown_save'],
+            platform:       node['platform'],
+            unixsocket:     current['unixsocket'],
+            ulimit:         descriptors,
             required_start: node['redisio']['init.d']['required_start'].join(' '),
-            required_stop: node['redisio']['init.d']['required_stop'].join(' ')
+            required_stop:  node['redisio']['init.d']['required_stop'].join(' ')
           )
         end
       when 'upstart'
@@ -343,13 +343,13 @@ def configure
           group current['group']
           mode '0644'
           variables(
-            name: server_name,
-            bin_path: bin_path,
-            port: current['port'],
-            user: current['user'],
-            group: current['group'],
+            name:      server_name,
+            bin_path:  bin_path,
+            port:      current['port'],
+            user:      current['user'],
+            group:     current['group'],
             configdir: current['configdir'],
-            piddir: piddir
+            piddir:    piddir
           )
         end
       when 'rcinit'
@@ -360,11 +360,11 @@ def configure
           group current['group']
           mode '0755'
           variables(
-            name: server_name,
-            bin_path: bin_path,
-            user: current['user'],
+            name:      server_name,
+            bin_path:  bin_path,
+            user:      current['user'],
             configdir: current['configdir'],
-            piddir: piddir
+            piddir:    piddir
           )
         end
       when 'systemd'
@@ -390,9 +390,9 @@ def configure
           group 'root'
           mode '0644'
           variables(
-            bin_path: bin_path,
-            user: current['user'],
-            group: current['group'],
+            bin_path:     bin_path,
+            user:         current['user'],
+            group:        current['group'],
             limit_nofile: descriptors
           )
           notifies :run, "execute[#{reload_name}]", :immediately

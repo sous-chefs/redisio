@@ -30,7 +30,7 @@ action :run do
     new_resource.updated_by_last_action(true) if package_resource.updated_by_last_action?
 
   # freeBSD does not support from source since ports does not support versioning (without a lot of hassle)
-  elsif node['platform_family'] == 'freebsd'
+  elsif platform_family?('freebsd')
     raise 'Source install not supported for freebsd'
   # Tarball install
   else

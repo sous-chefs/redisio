@@ -2,3 +2,6 @@
 AllCops:
   Exclude:
     - 'Dangerfile'
+Layout/AlignHash:
+  EnforcedColonStyle: table
+  EnforcedHashRocketStyle: table
