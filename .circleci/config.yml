@@ -1,18 +1,23 @@
 ---
+jobs:
+  final:
+    docker:
+      - image: bash:latest
+    steps:
+      - run:
+          name: Finish cooking
+          command: echo "Finished cooking"
 lint_and_unit: &lint_and_unit
   - delivery
   - danger
   - lint-yaml
   - lint-markdown
-
 version: 2.1
 orbs:
   kitchen: sous-chefs/kitchen@2
-
 workflows:
   kitchen:
     jobs:
-      # Lint and Unit Test
       - kitchen/yamllint:
           name: lint-yaml
       - kitchen/mdlint:
@@ -22,14 +27,85 @@ workflows:
           context: Danger
       - kitchen/delivery:
           name: delivery
-
       - kitchen/dokken-single:
-          name: default
-          suite: default
-          requires:
-            *lint_and_unit
+          name: default-centos-7
+          suite: default-centos-7
+          requires: *lint_and_unit
       - kitchen/dokken-single:
-          name: redis-package
-          suite: redis-package
+          name: default-debian-9
+          suite: default-debian-9
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: default-ubuntu-1604
+          suite: default-ubuntu-1604
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: default-ubuntu-1804
+          suite: default-ubuntu-1804
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: redis-package-centos-7
+          suite: redis-package-centos-7
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: redis-package-debian-9
+          suite: redis-package-debian-9
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: redis-package-ubuntu-1604
+          suite: redis-package-ubuntu-1604
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: redis-package-ubuntu-1804
+          suite: redis-package-ubuntu-1804
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: sentinel-centos-7
+          suite: sentinel-centos-7
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: sentinel-debian-9
+          suite: sentinel-debian-9
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: sentinel-ubuntu-1604
+          suite: sentinel-ubuntu-1604
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: sentinel-ubuntu-1804
+          suite: sentinel-ubuntu-1804
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: multisentinel-centos-7
+          suite: multisentinel-centos-7
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: multisentinel-debian-9
+          suite: multisentinel-debian-9
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: multisentinel-ubuntu-1604
+          suite: multisentinel-ubuntu-1604
+          requires: *lint_and_unit
+      - kitchen/dokken-single:
+          name: multisentinel-ubuntu-1804
+          suite: multisentinel-ubuntu-1804
+          requires: *lint_and_unit
+      - final:
           requires:
-            *lint_and_unit
+            - default-centos-7
+            - default-debian-9
+            - default-ubuntu-1604
+            - default-ubuntu-1804
+            - redis-package-centos-7
+            - redis-package-debian-9
+            - redis-package-ubuntu-1604
+            - redis-package-ubuntu-1804
+            - sentinel-centos-7
+            - sentinel-debian-9
+            - sentinel-ubuntu-1604
+            - sentinel-ubuntu-1804
+            - multisentinel-centos-7
+            - multisentinel-debian-9
+            - multisentinel-ubuntu-1604
+            - multisentinel-ubuntu-1804
