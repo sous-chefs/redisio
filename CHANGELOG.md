@@ -1,6 +1,11 @@
 
 # redisio
 
+## UNRELEASED
+
+- Simplify platform check logic
+- Remove the deprecated ChefSpec coverage report
+
 ## 4.0.0 (2019-09-19)
 
 - Enable testing in CircleCI

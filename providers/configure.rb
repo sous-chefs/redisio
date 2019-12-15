@@ -194,7 +194,7 @@ def configure
       # Setup the redis users descriptor limits
       # Pending response on https://github.com/brianbianco/redisio/commit/4ee9aad3b53029cc3b6c6cf741f5126755e712cd#diff-8ae42a59a6f4e8dc5b4e6dd2d6a34eab
       # TODO: ulimit cookbook v0.1.2 doesn't work with freeBSD
-      if current['ulimit'] && node['platform_family'] != 'freebsd' # ~FC023
+      if current['ulimit'] && !platform_family?('freebsd')
         user_ulimit current['user'] do
           filehandle_limit descriptors
         end
