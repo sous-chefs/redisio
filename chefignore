@@ -60,6 +60,7 @@ spec/*
 Rakefile
 .travis.yml
 .foodcritic
+.codeclimate.yml
 
 # SCM #
 #######
