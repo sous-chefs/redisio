@@ -1,7 +1,7 @@
 
 # redisio
 
-## UNRELEASED
+## 4.1.0 (2020-05-05)
 
 - Simplify platform check logic
 - Remove the deprecated ChefSpec coverage report
