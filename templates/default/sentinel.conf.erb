@@ -11,21 +11,6 @@ syslog-ident redis-<%= @name %>
 syslog-facility <%= @syslogfacility %>
 <%= "logfile #{@logfile}" unless @logfile.nil? %>
 
-# *** IMPORTANT ***
-#
-# By default Sentinel will not be reachable from interfaces different than
-# localhost, either use the 'bind' directive to bind to a list of network
-# interfaces, or disable protected mode with "protected-mode no" by
-# adding it to this configuration file.
-#
-# Before doing that MAKE SURE the instance is protected from the outside
-# world via firewalling or other means.
-#
-# For example you may use one of the following:
-#
-# bind 127.0.0.1 192.168.1.1
-#
-# protected-mode no
 <% if @sentinel_bind %>
 bind <%=@sentinel_bind%>
 <% end %>
