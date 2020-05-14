@@ -30,7 +30,9 @@ syslog-facility <%= @syslogfacility %>
 bind <%=@sentinel_bind%>
 <% end %>
 
-<%= "protected-mode #{@protected_mode}" unless @protected_mode.nil? %>
+ <% if @protected_mode %>
+<%= "protected-mode #{@protected_mode}" %>
+<% end %>
 
 # port <sentinel-port>
 # The port that this sentinel instance will run on
