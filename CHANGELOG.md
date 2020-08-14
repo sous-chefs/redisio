@@ -1,7 +1,7 @@
 
 # redisio
 
-## 4.1.1 (2020-08-14)
+## Unreleased
 
 - Properly perform version check when needed in redis.conf template
 
