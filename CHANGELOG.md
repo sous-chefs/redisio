@@ -3,7 +3,7 @@
 
 ## 4.1.1 (2020-08-14)
 
-- Properly perform version check when needed in redis.conf template 
+- Properly perform version check when needed in redis.conf template
 
 ## 4.1.0 (2020-05-05)
 
