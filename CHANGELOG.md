@@ -1,6 +1,12 @@
 
 # redisio
 
+## Unreleased
+
+- resolved cookstyle error: resources/configure.rb:20:1 refactor: `ChefRedundantCode/CustomResourceWithAllowedActions`
+- resolved cookstyle error: resources/install.rb:19:1 refactor: `ChefRedundantCode/CustomResourceWithAllowedActions`
+- resolved cookstyle error: resources/sentinel.rb:19:1 refactor: `ChefRedundantCode/CustomResourceWithAllowedActions`
+
 ## 4.1.1 (2020-08-14)
 
 - Properly perform version check when needed in redis.conf template
