@@ -87,6 +87,7 @@ default['redisio']['init.d']['required_stop'] = []
 default['redisio']['default_settings'] = {
   'user'                       => 'redis',
   'group'                      => 'redis',
+  'permissions'                => '0644',
   'homedir'                    => homedir,
   'shell'                      => shell,
   'systemuser'                 => true,
