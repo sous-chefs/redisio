@@ -220,7 +220,7 @@ def configure
         cookbook node['redisio']['redis_config']['template_cookbook']
         owner current['user']
         group current['group']
-        mode '0644'
+        mode current['permissions']
         action :create
         variables(
           version:                    version_hash,
