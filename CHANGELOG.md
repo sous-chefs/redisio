@@ -1,6 +1,10 @@
 
 # redisio
 
+## Unrealeased
+
+- New server option 'permissions' to override default (0644) unix permissions on config file
+
 ## 4.1.2 (2020-09-11)
 
 - Pull the disable_os_default recipe from the default one
