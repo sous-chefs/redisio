@@ -1,6 +1,10 @@
 
 # redisio
 
+## 4.1.2 (2020-09-11)
+
+- Pull the disable_os_default recipe from the default one
+
 ## 4.1.1 (2020-08-14)
 
 - Properly perform version check when needed in redis.conf template
