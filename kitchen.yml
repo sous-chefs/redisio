@@ -34,6 +34,7 @@ suites:
         servers:
           - port: 6379
           - port: 16379
+            permissions: '0640'
             name: 'savetest'
             save: "a\nb\nc"
 
