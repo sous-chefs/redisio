@@ -314,6 +314,7 @@ Available options and their defaults
 ```config
 'user'                    => 'redis' - the user to own the redis datadir, redis will also run under this user
 'group'                   => 'redis' - the group to own the redis datadir
+'permissions'             => '0644' - the unix permissions applied to the server config file
 'homedir'                 => Home directory of the user. Varies on distribution, check attributes file
 'shell'                   => Users shell. Varies on distribution, check attributes file
 'systemuser'              => true - Sets up the instances user as a system user
