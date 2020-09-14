@@ -1,7 +1,7 @@
 
 # redisio
 
-## Unrealeased
+## 4.2.0 (2020-09-14)
 
 - New server option 'permissions' to override default (0644) unix permissions on config file
 
