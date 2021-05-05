@@ -1,6 +1,7 @@
 [Unit]
 Description=Redis (%i) persistent key-value database
-After=network.target
+Wants=network-online.target
+After=network-online.target
 
 [Service]
 ExecStart=<%= @bin_path %>/redis-server /etc/redis/%i.conf --daemonize no
