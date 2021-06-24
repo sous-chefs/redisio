@@ -1038,6 +1038,7 @@ cluster-node-timeout <%= @clusternodetimeout %>
   <% end %>
 <% end %>
 
+<% if @version[:major].to_i >= 4 %>
 ################################## MODULES #####################################
 
 # Load modules at startup. If the server is not able to load modules
@@ -1049,4 +1050,5 @@ cluster-node-timeout <%= @clusternodetimeout %>
   <% @loadmodules.each do |loadmodule| %>
 <%= "loadmodule #{loadmodule}" %>
   <% end %>
+<% end %>
 <% end %>

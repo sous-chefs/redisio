@@ -386,6 +386,7 @@ Available options and their defaults
 'clusternodetimeout'         => 5000,
 'includes'                   => nil,
 'breadcrumb'                 => true # Defaults to create breadcrumb lock-file.
+'loadmodules'                => []   # Defaults to empty array
 ```
 
 * `redisio['servers']` - An array where each item is a set of key value pairs for redis instance specific settings.  The only required option is 'port'.  These settings will override the options in 'default_settings', if it is left `nil` it will default to `[{'port' => '6379'}]`. If set to `[]` (empty array), no instances will be created.
