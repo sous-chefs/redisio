@@ -292,7 +292,8 @@ def configure
           minslavestowrite:           current['minslavestowrite'],
           minslavesmaxlag:            current['minslavesmaxlag'],
           repldisklesssync:           current['repldisklesssync'],
-          repldisklesssyncdelay:      current['repldisklesssyncdelay']
+          repldisklesssyncdelay:      current['repldisklesssyncdelay'],
+          loadmodules:                current['loadmodules']
         )
         not_if { ::File.exist?("#{current['configdir']}/#{server_name}.conf.breadcrumb") }
       end

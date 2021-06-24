@@ -169,6 +169,7 @@ default['redisio']['default_settings'] = {
   'minslavestowrite'           => nil,
   'minslavesmaxlag'            => nil,
   'breadcrumb'                 => true,
+  'loadmodules'                => []
 }
 
 # The default for this is set inside of the "install" recipe. This is due to the way deep merge handles arrays
