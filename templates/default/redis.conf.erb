@@ -1045,7 +1045,7 @@ cluster-node-timeout <%= @clusternodetimeout %>
 #
 # loadmodule /path/to/my_module.so
 # loadmodule /path/to/other_module.so
-<% unless @loadmodule.nil? %>
+<% unless @loadmodules.nil? %>
   <% @loadmodules.each do |module| %>
     <%= "loadmodule #{module}" %>
   <% end %>
