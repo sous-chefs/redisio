@@ -3,6 +3,8 @@
 
 ## Unreleased
 
+- Add Redis load module support 
+
 ## 4.3.1 - *2021-06-01*
 
 ## 4.3.0 - *2021-05-19*
