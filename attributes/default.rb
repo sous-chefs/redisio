@@ -71,7 +71,7 @@ default['redisio']['version'] = if node['redisio']['package_install']
 default['redisio']['install_dir'] = nil
 
 # Job control related options (initd, upstart, or systemd)
-default['redisio']['job_control'] = if node['init_package'] == 'systemd'
+default['redisio']['job_control'] = if systemd?
                                       'systemd'
                                     elsif platform_family?('freebsd')
                                       'rcinit'

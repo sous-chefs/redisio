@@ -3,6 +3,7 @@
 
 ## Unreleased
 
+- resolved cookstyle error: attributes/default.rb:74:40 refactor: `Chef/Modernize/UseChefLanguageSystemdHelper`
 ## 4.3.2 - *2021-08-30*
 
 - Standardise files with files in sous-chefs/repo-management
