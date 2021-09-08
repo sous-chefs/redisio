@@ -6,7 +6,7 @@ description       'Installs and configures redis'
 version           '4.3.2'
 source_url        'https://github.com/sous-chefs/redisio'
 issues_url        'https://github.com/sous-chefs/redisio/issues'
-chef_version      '>= 14.0'
+chef_version      '>= 15.5'
 
 %w(
   amazon
