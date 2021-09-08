@@ -1,7 +1,7 @@
 
 # redisio
 
-## Unreleased
+## 5.0.0 - *2021-09-08*
 
 - resolved cookstyle error: attributes/default.rb:74:40 refactor: `Chef/Modernize/UseChefLanguageSystemdHelper`
 ## 4.3.2 - *2021-08-30*
