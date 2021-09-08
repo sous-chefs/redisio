@@ -21,5 +21,5 @@ chef_version      '>= 15.5'
   supports os
 end
 
-depends 'ulimit', '>= 0.1.2'
-depends 'selinux_policy', '>= 2.2.0'
+depends 'ulimit'
+depends 'selinux_policy'
