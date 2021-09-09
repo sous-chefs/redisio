@@ -3,7 +3,7 @@
 
 This file is used to list changes made in each version of the redisio cookbook.
 
-## Unreleased
+## 6.0.0 - *2021-09-09*
 
 - Set unified_mode true for Chef 17+ support
 - Require Chef 15.3+ for unified_mode
