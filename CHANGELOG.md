@@ -1,11 +1,22 @@
 
 # redisio
 
+This file is used to list changes made in each version of the redisio cookbook.
+
 ## Unreleased
+
+- Set unified_mode true for Chef 17+ support
+- Require Chef 15.3+ for unified_mode
+- Require Chef 16 for user_ulimit resource
+- Remove dependency on the ulimit cookbook
+- Switch from using the selinux_policy cookbook to the selinux cookbook
+  - The selinux_policy cookbook is now deprecated. The resources have been moved
+    to the selinux cookbook
 
 ## 5.0.0 - *2021-09-08*
 
 - resolved cookstyle error: attributes/default.rb:74:40 refactor: `Chef/Modernize/UseChefLanguageSystemdHelper`
+
 ## 4.3.2 - *2021-08-30*
 
 - Standardise files with files in sous-chefs/repo-management

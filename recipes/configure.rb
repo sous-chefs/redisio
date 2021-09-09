@@ -1,5 +1,5 @@
 include_recipe 'redisio::default'
-include_recipe 'ulimit::default'
+include_recipe 'redisio::ulimit'
 
 redis = node['redisio']
 

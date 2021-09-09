@@ -1,5 +1,5 @@
 actions :run
-
+unified_mode true
 default_action :run
 
 # Installation attributes

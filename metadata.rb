@@ -6,7 +6,7 @@ description       'Installs and configures redis'
 version           '5.0.0'
 source_url        'https://github.com/sous-chefs/redisio'
 issues_url        'https://github.com/sous-chefs/redisio/issues'
-chef_version      '>= 15.5'
+chef_version      '>= 16'
 
 %w(
   amazon
@@ -21,5 +21,4 @@ chef_version      '>= 15.5'
   supports os
 end
 
-depends 'ulimit', '>= 0.1.2'
-depends 'selinux_policy', '>= 2.2.0'
+depends 'selinux'
