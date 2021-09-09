@@ -22,4 +22,4 @@ chef_version      '>= 15.5'
 end
 
 depends 'ulimit'
-depends 'selinux_policy'
+depends 'selinux'
