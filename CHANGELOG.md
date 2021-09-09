@@ -1,6 +1,8 @@
 
 # redisio
 
+This file is used to list changes made in each version of the redisio cookbook.
+
 ## Unreleased
 
 - Set unified_mode true for Chef 17+ support
