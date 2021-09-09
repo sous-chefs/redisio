@@ -19,4 +19,4 @@ else
   end
 end
 
-include_recipe 'ulimit::default'
+include_recipe 'redisio::ulimit'

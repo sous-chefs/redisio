@@ -1,6 +1,6 @@
 include_recipe 'redisio::_install_prereqs'
 include_recipe 'redisio::install'
-include_recipe 'ulimit::default'
+include_recipe 'redisio::ulimit'
 
 redis = node['redisio']
 
