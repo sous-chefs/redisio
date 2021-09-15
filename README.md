@@ -413,7 +413,8 @@ The sentinel recipe's use their own attribute file.
 'logfile'                 => nil,
 'syslogenabled'           => 'yes',
 'syslogfacility'          => 'local0',
-'quorum_count'            => 2
+'quorum_count'            => 2,
+'protected-mode'          => nil,
 ```
 
 * `redisio['redisio']['sentinel']['manage_config']` - Should the cookbook manage the redis and redis sentinel config files.  This is best set to false when using redis_sentinel as it will write state into both configuration files.
