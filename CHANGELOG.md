@@ -5,7 +5,7 @@ This file is used to list changes made in each version of the redisio cookbook.
 
 ## Unreleased
 
-Standardise files with files in sous-chefs/repo-management
+- Remove delivery and move to calling RSpec directly via a reusable workflow
 
 ## 6.1.0 - *2021-09-15*
 
