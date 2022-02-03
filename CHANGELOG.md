@@ -3,6 +3,8 @@
 
 This file is used to list changes made in each version of the redisio cookbook.
 
+## Unreleased
+
 ## 6.1.1 - *2022-02-03*
 
 - Remove delivery and move to calling RSpec directly via a reusable workflow
