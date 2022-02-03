@@ -3,7 +3,7 @@
 
 This file is used to list changes made in each version of the redisio cookbook.
 
-## Unreleased
+## 6.1.2 - *2022-02-03*
 
 - Fixes configdir permissions preventing Sentinel to update the config file
 
