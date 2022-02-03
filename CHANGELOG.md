@@ -5,6 +5,8 @@ This file is used to list changes made in each version of the redisio cookbook.
 
 ## Unreleased
 
+- Remove delivery and move to calling RSpec directly via a reusable workflow
+
 ## 6.1.0 - *2021-09-15*
 
 - Add protected mode to sentinel configuration file
