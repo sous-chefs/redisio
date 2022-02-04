@@ -18,7 +18,7 @@ jobs:
       matrix:
         os:
           - 'debian-9'
-          - 'centos-7'
+          - 'rockylinux-8'
           - 'ubuntu-1604'
           - 'ubuntu-1804'
         suite:
