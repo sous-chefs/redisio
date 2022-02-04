@@ -126,19 +126,19 @@ def configure
       extend Chef::Util::Selinux
 
       if selinux_enabled?
-        selinux_policy_install 'install'
+        selinux_install 'install'
 
-        selinux_policy_fcontext "#{current['configdir']}(/.*)?" do
+        selinux_fcontext "#{current['configdir']}(/.*)?" do
           secontext 'redis_conf_t'
         end
-        selinux_policy_fcontext "#{current['datadir']}(/.*)?" do
+        selinux_fcontext "#{current['datadir']}(/.*)?" do
           secontext 'redis_var_lib_t'
         end
-        selinux_policy_fcontext "#{piddir}(/.*)?" do
+        selinux_fcontext "#{piddir}(/.*)?" do
           secontext 'redis_var_run_t'
         end
         if log_directory
-          selinux_policy_fcontext "#{log_directory}(/.*)?" do
+          selinux_fcontext "#{log_directory}(/.*)?" do
             secontext 'redis_log_t'
           end
         end
