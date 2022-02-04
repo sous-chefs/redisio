@@ -2,7 +2,7 @@
 service_name = case node['platform']
                when 'debian', 'ubuntu'
                  'redis-server'
-               when 'redhat', 'centos', 'fedora', 'scientific', 'suse', 'amazon'
+               when 'redhat', 'centos', 'fedora', 'scientific', 'suse', 'amazon', 'rocky'
                  'redis'
                end
 

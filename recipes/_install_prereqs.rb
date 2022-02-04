@@ -3,7 +3,7 @@ packages_to_install = case node['platform']
                         %w(
                           tar
                         )
-                      when 'redhat', 'centos', 'fedora', 'scientific', 'suse', 'amazon'
+                      when 'redhat', 'centos', 'fedora', 'scientific', 'suse', 'amazon', 'rocky'
                         %w(
                           tar
                         )
