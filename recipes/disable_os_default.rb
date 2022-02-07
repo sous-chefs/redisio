@@ -1,8 +1,8 @@
 # disable the default OS redis init script
-service_name = case node['platform']
-               when 'debian', 'ubuntu'
+service_name = case node['platform_family']
+               when 'debian'
                  'redis-server'
-               when 'redhat', 'centos', 'fedora', 'scientific', 'suse', 'amazon', 'rocky'
+               when 'rhel', 'fedora'
                  'redis'
                end
 
