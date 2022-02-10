@@ -22,7 +22,7 @@ platforms:
       pid_one_command: /usr/lib/systemd/systemd
     run_list:
       - recipe[yum-epel::default]
-      - recipe[yum-remi::default]
+      - recipe[yum-remi-chef::remi]
 
   - name: debian-9
     driver:
@@ -37,7 +37,7 @@ platforms:
       pid_one_command: /usr/lib/systemd/systemd
     run_list:
       - recipe[yum-epel::default]
-      - recipe[yum-remi::default]
+      - recipe[yum-remi-chef::remi]
 
   - name: ubuntu-16.04
     driver:
