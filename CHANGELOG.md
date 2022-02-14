@@ -3,6 +3,8 @@
 
 This file is used to list changes made in each version of the redisio cookbook.
 
+## Unreleased
+
 ## 6.2.0 - *2022-02-14*
 
 - Adds support for Rocky Linux
