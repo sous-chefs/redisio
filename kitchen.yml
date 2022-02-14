@@ -3,15 +3,13 @@ driver:
   name: vagrant
 
 provisioner:
-  name: chef_zero
+  name: chef_infra
   product_name: chef
   product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
   install_strategy: once
-  channel: unstable
 
 client_rb:
   treat_deprecation_warnings_as_errors: true
-  resource_cloning: false
 
 verifier:
   name: inspec
@@ -21,6 +19,7 @@ platforms:
   - name: debian-9
   - name: freebsd-10
   - name: freebsd-11
+  - name: rockylinux-8
   - name: ubuntu-16.04
   - name: ubuntu-18.04
 

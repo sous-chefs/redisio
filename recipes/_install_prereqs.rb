@@ -1,9 +1,9 @@
-packages_to_install = case node['platform']
-                      when 'debian', 'ubuntu'
+packages_to_install = case node['platform_family']
+                      when 'debian'
                         %w(
                           tar
                         )
-                      when 'redhat', 'centos', 'fedora', 'scientific', 'suse', 'amazon'
+                      when 'rhel', 'fedora'
                         %w(
                           tar
                         )

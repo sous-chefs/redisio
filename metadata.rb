@@ -14,6 +14,7 @@ chef_version      '>= 16'
   debian
   fedora
   redhat
+  rocky
   scientific
   suse
   ubuntu

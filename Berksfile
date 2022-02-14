@@ -4,5 +4,5 @@ metadata
 
 group :integration do
   cookbook 'yum-epel'
-  cookbook 'yum-remi'
+  cookbook 'yum-remi-chef'
 end

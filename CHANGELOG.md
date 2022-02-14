@@ -5,6 +5,8 @@ This file is used to list changes made in each version of the redisio cookbook.
 
 ## Unreleased
 
+- Adds support for Rocky Linux
+
 ## 6.1.3 - *2022-02-04*
 
 - Remove references to selinux_policy cookbook
