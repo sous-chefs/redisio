@@ -5,6 +5,8 @@ This file is used to list changes made in each version of the redisio cookbook.
 
 ## Unreleased
 
+- Fixes configdir permissions. Similar to [451](https://github.com/sous-chefs/redisio/pull/451)
+
 ## 6.2.0 - *2022-02-14*
 
 - Adds support for Rocky Linux
