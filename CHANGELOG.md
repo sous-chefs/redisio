@@ -5,6 +5,8 @@ This file is used to list changes made in each version of the redisio cookbook.
 
 ## Unreleased
 
+- Standardise files with files in sous-chefs/repo-management
+
 ## 6.2.1 - *2022-04-25*
 
 - Fixes configdir permissions. Similar to [451](https://github.com/sous-chefs/redisio/pull/451)
