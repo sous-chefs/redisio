@@ -3,6 +3,8 @@
 
 This file is used to list changes made in each version of the redisio cookbook.
 
+## Unreleased
+
 ## 6.2.1 - *2022-04-25*
 
 - Fixes configdir permissions. Similar to [451](https://github.com/sous-chefs/redisio/pull/451)
