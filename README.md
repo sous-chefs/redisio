@@ -49,7 +49,7 @@ Tested on:
 
 The redisio cookbook contains LWRP for installing, configuring and managing redis and redis_sentinel.
 
-The install recipe can build, compile and install redis from sources or install from packages. The configure recipe will configure redis and setup service resources.  These resources will be named for the port of the redis server, unless a "name" attribute was specified.  Example names would be: service["redis6379"] or service["redismaster"] if the name attribute was "master".
+The install recipe can build, compile and install redis from sources or install from packages. The configure recipe will configure redis and set up service resources.  These resources will be named for the port of the redis server, unless a "name" attribute was specified.  Example names would be: service["redis6379"] or service["redismaster"] if the name attribute was "master".
 _NOTE: currently installation from source is not supported for FreeBSD_
 
 The most common use case for the redisio cookbook is to use the default recipe, followed by the enable recipe.
@@ -81,7 +81,7 @@ Redis-sentinel will write configuration and state data back into its configurati
 
 ### Role File Examples
 
-#### Install redis and setup an instance with default settings on default port, and start the service through a role file
+#### Install redis and set up an instance with default settings on default port, and start the service through a role file
 
 ```ruby
 run_list *%w[
@@ -92,7 +92,7 @@ run_list *%w[
 default_attributes({})
 ```
 
-##### Install redis with packages and setup an instance with default settings on default port, and start the service through a role file
+##### Install redis with packages and set up an instance with default settings on default port, and start the service through a role file
 
 ```ruby
 run_list *%w[
@@ -151,7 +151,7 @@ default_attributes({
 }
 ```
 
-##### Install redis and setup two instances on the same server, on different ports, with one slaved to the other through a role file
+##### Install redis and set up two instances on the same server, on different ports, with one slaved to the other through a role file
 
 ```ruby
 run_list *%w[
@@ -169,7 +169,7 @@ default_attributes({
 })
 ```
 
-##### Install redis and setup two instances, on the same server, on different ports, with the default data directory changed to /mnt/redis, and the second instance named
+##### Install redis and set up two instances, on the same server, on different ports, with the default data directory changed to /mnt/redis, and the second instance named
 
 ```ruby
 run_list *%w[
@@ -185,7 +185,7 @@ default_attributes({
 })
 ```
 
-##### Install redis and setup three instances on the same server, changing the default data directory to /mnt/redis, each instance will use a different backup type, and one instance will use a different data dir
+##### Install redis and set up three instances on the same server, changing the default data directory to /mnt/redis, each instance will use a different backup type, and one instance will use a different data dir
 
 ```ruby
 run_list *%w[
@@ -230,7 +230,7 @@ run_list *%w[
 ]
 ```
 
-#### Install redis and setup two instances, on the same server, on different ports, the second instance configuration file will be overwriten by chef
+#### Install redis and set up two instances, on the same server, on different ports, the second instance configuration file will be overwriten by chef
 
 ```ruby
 run_list *%w[
