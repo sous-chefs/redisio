@@ -3,7 +3,7 @@
 
 This file is used to list changes made in each version of the redisio cookbook.
 
-## Unreleased
+## 6.2.3 - *2022-08-12*
 
 - Fix grammar in README.md
 - Use latest instead of current channel with dokken
