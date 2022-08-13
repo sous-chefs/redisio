@@ -5,6 +5,8 @@ This file is used to list changes made in each version of the redisio cookbook.
 
 ## Unreleased
 
+- Fix systemd entry to ensure listening on all network interfaces ([#440](https://github.com/brianbianco/redisio/pull/440))
+
 ## 6.2.3 - *2022-08-12*
 
 - Fix grammar in README.md
