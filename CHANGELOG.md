@@ -5,6 +5,8 @@ This file is used to list changes made in each version of the redisio cookbook.
 
 ## Unreleased
 
+- Version check fix for some Redis default settings to support Redis v4 and above.
+
 ## 6.2.4 - *2022-08-13*
 
 - Fix systemd entry to ensure listening on all network interfaces ([#440](https://github.com/brianbianco/redisio/pull/440))
