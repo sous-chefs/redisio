@@ -26,7 +26,7 @@ pidfile <%= @piddir %>/redis_<%=@name%>.pid
 # If port 0 is specified Redis will not listen on a TCP socket.
 port <%=@port%>
 
-<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 8 && @version[:patch].to_i >= 5 || @version[:major].to_i == 3 %>
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 8 && @version[:patch].to_i >= 5 || @version[:major].to_i >= 3 %>
 # TCP listen() backlog.
 #
 # In high requests-per-second environments you need an high backlog in order
@@ -185,7 +185,7 @@ stop-writes-on-bgsave-error <%= @stopwritesonbgsaveerror %>
 # the dataset will likely be bigger if you have compressible values or keys.
 rdbcompression <%= @rdbcompression %>
 
-<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 6 || @version[:major].to_i == 3 %>
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 6 || @version[:major].to_i >= 3 %>
 # Since version 5 of RDB a CRC64 checksum is placed at the end of the file.
 # This makes the format more resistant to corruption but there is a performance
 # hit to pay (around 10%) when saving and loading RDB files, so you can disable it
@@ -320,7 +320,7 @@ repl-diskless-sync <%=@repldisklesssync%>
 repl-diskless-sync-delay <%=@repldisklesssyncdelay%>
 <% end %>
 
-<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 6 || @version[:major].to_i == 3 %>
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 6 || @version[:major].to_i >= 3 %>
 # You can configure a slave instance to accept writes or not. Writing against
 # a slave instance may be useful to store some ephemeral data (because data
 # written on a slave will be easily deleted after resync with the master) but
@@ -353,7 +353,7 @@ repl-ping-slave-period <%=@replpingslaveperiod%>
 #
 repl-timeout <%=@repltimeout%>
 
-<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 6 || @version[:major].to_i == 3 %>
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 6 || @version[:major].to_i >= 3 %>
 # Disable TCP_NODELAY on the slave socket after SYNC?
 #
 # If you select "yes" Redis will use a smaller number of TCP packets and
@@ -906,7 +906,7 @@ set-max-intset-entries <%= @setmaxintsetentries %>
 zset-max-ziplist-entries <%= @zsetmaxziplistentries %>
 zset-max-ziplist-value <%= @zsetmaxziplistvalue %>
 
-<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 8 && @version[:patch].to_i >= 9 || @version[:major].to_i == 3 %>
+<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 8 && @version[:patch].to_i >= 9 || @version[:major].to_i >= 3 %>
 # HyperLogLog sparse representation bytes limit. The limit includes the
 # 16 bytes header. When an HyperLogLog using the sparse representation crosses
 # this limit, it is converted into the dense representation.
