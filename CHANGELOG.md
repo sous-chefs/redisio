@@ -3,7 +3,7 @@
 
 This file is used to list changes made in each version of the redisio cookbook.
 
-## Unreleased
+## 6.3.0 - *2022-09-10*
 
 - Version check fix for some Redis default settings to support Redis v4 and above.
 
