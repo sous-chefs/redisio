@@ -3,7 +3,7 @@
 
 This file is used to list changes made in each version of the redisio cookbook.
 
-## Unreleased
+## 6.3.2 - *2023-02-14*
 
 Standardise files with files in sous-chefs/repo-management
 
