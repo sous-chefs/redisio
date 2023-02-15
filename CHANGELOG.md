@@ -3,6 +3,8 @@
 
 This file is used to list changes made in each version of the redisio cookbook.
 
+## Unreleased
+
 ## 6.3.3 - *2023-02-15*
 
 ## 6.3.2 - *2023-02-14*
