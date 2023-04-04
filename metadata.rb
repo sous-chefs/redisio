@@ -8,18 +8,14 @@ source_url        'https://github.com/sous-chefs/redisio'
 issues_url        'https://github.com/sous-chefs/redisio/issues'
 chef_version      '>= 16'
 
-%w(
-  amazon
-  centos
-  debian
-  fedora
-  redhat
-  rocky
-  scientific
-  suse
-  ubuntu
-).each do |os|
-  supports os
-end
+suports 'amazon'
+supports 'centos'
+supports 'debian'
+supports 'fedora'
+supports 'redhat'
+supports 'rocky'
+supports 'scientific'
+supports 'suse'
+supports 'ubuntu'
 
 depends 'selinux'

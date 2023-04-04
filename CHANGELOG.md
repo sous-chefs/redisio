@@ -5,6 +5,8 @@ This file is used to list changes made in each version of the redisio cookbook.
 
 ## Unreleased
 
+Standardise files with files in sous-chefs/repo-management
+
 ## 6.3.5 - *2023-04-01*
 
 Standardise files with files in sous-chefs/repo-management
@@ -13,15 +15,9 @@ Standardise files with files in sous-chefs/repo-management
 
 Standardise files with files in sous-chefs/repo-management
 
-Standardise files with files in sous-chefs/repo-management
-
-Standardise files with files in sous-chefs/repo-management
-
-Standardise files with files in sous-chefs/repo-management
-
-Standardise files with files in sous-chefs/repo-management
-
 ## 6.3.3 - *2023-02-15*
+
+Standardise files with files in sous-chefs/repo-management
 
 ## 6.3.2 - *2023-02-14*
 
