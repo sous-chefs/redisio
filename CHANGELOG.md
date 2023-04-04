@@ -7,7 +7,6 @@ This file is used to list changes made in each version of the redisio cookbook.
 
 Standardise files with files in sous-chefs/repo-management
 
-<<<<<<< HEAD
 ## 6.3.5 - *2023-04-01*
 
 Standardise files with files in sous-chefs/repo-management
@@ -16,8 +15,6 @@ Standardise files with files in sous-chefs/repo-management
 
 Standardise files with files in sous-chefs/repo-management
 
-=======
->>>>>>> 2099a51 (Update workflows)
 ## 6.3.3 - *2023-02-15*
 
 Standardise files with files in sous-chefs/repo-management
