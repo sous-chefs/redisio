@@ -9,6 +9,10 @@ This file is used to list changes made in each version of the redisio cookbook.
 
 ## 6.3.6 - *2023-04-04*
 
+- Standardise files with files in sous-chefs/repo-management
+
+## 6.3.5 - *2023-04-01*
+
 - Update workflows
 
 ## 6.3.5 - *2023-04-01*
