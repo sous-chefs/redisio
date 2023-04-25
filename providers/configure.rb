@@ -150,7 +150,7 @@ def configure
           group current['group']
           mode '0644'
           backup false
-          action :touch
+          action :create
           # in version 2.8 or higher the empty string is used instead of stdout
           only_if { !log_file.empty? && log_file != 'stdout' }
         end
