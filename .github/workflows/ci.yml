@@ -23,10 +23,14 @@ jobs:
     strategy:
       matrix:
         os:
-          - "debian-9"
-          - "rockylinux-8"
-          - "ubuntu-1604"
-          - "ubuntu-1804"
+          - almalinux-8
+          - centos-stream-8
+          - debian-10
+          - debian-11
+          - rockylinux-8
+          - ubuntu-1804
+          - ubuntu-2004
+          - ubuntu-2204
         suite:
           - "default"
           - "redis-package"

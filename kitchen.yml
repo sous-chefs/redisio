@@ -15,13 +15,15 @@ verifier:
   name: inspec
 
 platforms:
-  - name: centos-7
-  - name: debian-9
+  - name: almalinux-8
+  - name: debian-10
+  - name: debian-11
   - name: freebsd-10
   - name: freebsd-11
   - name: rockylinux-8
-  - name: ubuntu-16.04
   - name: ubuntu-18.04
+  - name: ubuntu-20.04
+  - name: ubuntu-22.04
 
 suites:
   - name: default
