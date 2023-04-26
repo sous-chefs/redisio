@@ -3,7 +3,7 @@
 
 This file is used to list changes made in each version of the redisio cookbook.
 
-## Unreleased
+## 6.4.0 - *2023-04-26*
 
 - Simplify `configure` and `sentinel` resources, making them idempotent
 
