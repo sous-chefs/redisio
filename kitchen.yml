@@ -6,10 +6,10 @@ provisioner:
   name: chef_infra
   product_name: chef
   product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
-  install_strategy: once
-
-client_rb:
-  treat_deprecation_warnings_as_errors: true
+  chef_license: accept-no-persist
+  multiple_converge: 2
+  enforce_idempotency: true
+  deprecations_as_errors: true
 
 verifier:
   name: inspec
@@ -38,6 +38,7 @@ suites:
             permissions: '0640'
             name: 'savetest'
             save: "a\nb\nc"
+            logfile: '/var/log/redis/redis-16379.log'
 
   - name: redis-package
     run_list:

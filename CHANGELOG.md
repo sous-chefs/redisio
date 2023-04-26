@@ -5,6 +5,8 @@ This file is used to list changes made in each version of the redisio cookbook.
 
 ## Unreleased
 
+- Simplify `configure` and `sentinel` resources, making them idempotent
+
 ## 6.3.7 - *2023-04-25*
 
 - Standardise files with files in sous-chefs/repo-management
