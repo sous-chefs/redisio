@@ -5,6 +5,8 @@ This file is used to list changes made in each version of the redisio cookbook.
 
 ## Unreleased
 
+- Add `maxclients` option to sentinel configuration file.
+
 ## 6.4.4 - *2023-09-28*
 
 ## 6.4.3 - *2023-09-04*

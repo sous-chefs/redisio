@@ -9,6 +9,7 @@ loglevel <%=@loglevel%>
 syslog-enabled <%= @syslogenabled %>
 syslog-ident redis-<%= @name %>
 syslog-facility <%= @syslogfacility %>
+maxclients <%= @maxclients %>
 <%= "logfile #{@logfile}" unless @logfile.nil? %>
 
 <% if @sentinel_bind %>
