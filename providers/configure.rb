@@ -263,6 +263,7 @@ action :run do
         clusterconfigfile:          current['clusterconfigfile'],
         clusternodetimeout:         current['clusternodetimeout'],
         includes:                   current['includes'],
+        aclfile:                    current['aclfile'],
         minslavestowrite:           current['minslavestowrite'],
         minslavesmaxlag:            current['minslavesmaxlag'],
         repldisklesssync:           current['repldisklesssync'],
