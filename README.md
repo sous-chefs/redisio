@@ -385,6 +385,7 @@ Available options and their defaults
 'clusterconfigfile'          => nil, # Defaults to redis instance name inside of template if cluster is enabled.
 'clusternodetimeout'         => 5000,
 'includes'                   => nil,
+'aclfile'                    => nil, # Requires redis 6+
 'breadcrumb'                 => true # Defaults to create breadcrumb lock-file.
 ```
 
