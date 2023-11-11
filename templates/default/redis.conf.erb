@@ -771,21 +771,8 @@ notify-keyspace-events "<%= @notifykeyspaceevents %>"
 # Hashes are encoded using a memory efficient data structure when they have a
 # small number of entries, and the biggest entry does not exceed a given
 # threshold. These thresholds can be configured using the following directives.
-
-# Similarly to hashes, small lists are also encoded in a special way in order
-# to save a lot of space. The special representation is only used when
-# you are under the following limits:
-
-<% if @version[:major].to_i == 2 && @version[:minor].to_i >= 6 || @version[:major].to_i >= 3 %>
-<% ######## Redis 2.6 and higher ######## %>
 hash-max-ziplist-entries <%= @hashmaxziplistentries %>
 hash-max-ziplist-value <%= @hashmaxziplistvalue %>
-
-# Similarly to hashes, small lists are also encoded in a special way in order
-# # to save a lot of space. The special representation is only used when
-# # you are under the following limits:
-list-max-ziplist-entries <%= @listmaxziplistentries %>
-list-max-ziplist-value <%= @listmaxziplistvalue %>
 
 # Sets have a special encoding in just one case: when a set is composed
 # of just strings that happen to be integers in radix 10 in the range
@@ -833,12 +820,6 @@ hll-sparse-max-bytes <%= @hllsparsemaxbytes %>
 # use "activerehashing yes" if you don't have such hard requirements but
 # want to free memory asap when possible.
 activerehashing <%= @activerehasing %>
-
-<% elsif @version[:major].to_i == 2 && @version[:minor].to_i == 4 %>
-<%  ######## Redis 2.4 ######## %>
-  hash-max-zipmap-entries 512
-  hash-max-zipmap-value 64
-<% end %>
 
 # The client output buffer limits can be used to force disconnection of clients
 # that are not reading data from the server fast enough for some reason (a

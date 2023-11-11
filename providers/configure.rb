@@ -249,8 +249,6 @@ action :run do
         notifykeyspaceevents:       current['notifykeyspaceevents'],
         hashmaxziplistentries:      current['hashmaxziplistentries'],
         hashmaxziplistvalue:        current['hashmaxziplistvalue'],
-        listmaxziplistentries:      current['listmaxziplistentries'],
-        listmaxziplistvalue:        current['listmaxziplistvalue'],
         setmaxintsetentries:        current['setmaxintsetentries'],
         zsetmaxziplistentries:      current['zsetmaxziplistentries'],
         zsetmaxziplistvalue:        current['zsetmaxziplistvalue'],
