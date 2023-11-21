@@ -163,7 +163,7 @@ default_attributes({
   'redisio' => {
     'servers' => [
       {'port' => '6379'},
-      {'port' => '6380', 'slaveof' => { 'address' => '127.0.0.1', 'port' => '6379' }}
+      {'port' => '6380', 'replicaof' => { 'address' => '127.0.0.1', 'port' => '6379' }}
     ]
   }
 })
@@ -340,16 +340,16 @@ Available options and their defaults
 'rdbcompression'          => 'yes',
 'rdbchecksum'             => 'yes',
 'dbfilename'              => nil,
-'slaveof'                 => nil,
+'replicaof'               => nil,
 'masterauth'              => nil,
-'slaveservestaledata'     => 'yes',
-'slavereadonly'           => 'yes',
+'replicaservestaledata'   => 'yes',
+'replicareadonly'         => 'yes',
 'repldisklesssync'        => 'no', # Requires redis 2.8.18+
 'repldisklesssyncdelay'   => '5', # Requires redis 2.8.18+
-'replpingslaveperiod'     => '10',
+'replpingreplicaperiod'   => '10',
 'repltimeout'             => '60',
 'repldisabletcpnodelay    => 'no',
-'slavepriority'           => '100',
+'replicapriority'         => '100',
 'requirepass'             => nil,
 'rename_commands'         => nil, or a hash where each key is a redis command and the value is the command's new name.
 'maxclients'              => 10000,
@@ -376,7 +376,7 @@ Available options and their defaults
 'activerehasing'          => 'yes',
 'clientoutputbufferlimit' => [
   %w(normal 0 0 0),
-  %w(slave 256mb 64mb 60),
+  %w(replica 256mb 64mb 60),
   %w(pubsub 32mb 8mb 60)
 ],
 'hz'                         => '10',
