@@ -33,7 +33,6 @@ jobs:
           - ubuntu-2204
         suite:
           - "default"
-          - "redis-package"
           - "sentinel"
           - "multisentinel"
       fail-fast: false

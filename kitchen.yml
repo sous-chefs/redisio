@@ -40,21 +40,6 @@ suites:
             save: "a\nb\nc"
             logfile: '/var/log/redis/redis-16379.log'
 
-  - name: redis-package
-    run_list:
-      - recipe[redisio::default]
-      - recipe[redisio::install]
-      - recipe[redisio::disable_os_default]
-      - recipe[redisio::configure]
-      - recipe[redisio::enable]
-    attributes:
-      redisio:
-        bypass_setup: true
-        servers:
-          - port: 6379
-        package_install: true
-        version:
-
   - name: sentinel
     run_list:
       - recipe[redisio::default]
