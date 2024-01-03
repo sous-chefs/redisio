@@ -28,6 +28,7 @@ default['redisio']['sentinel_defaults'] = {
   'client-reconfig-script'  => nil,
   'protected_mode'          => nil,
   'maxclients'              => 10000,
+  'aclfile'                 => nil,
 }
 
 # Manage Sentinel Config File
