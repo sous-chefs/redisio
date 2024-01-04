@@ -6,6 +6,7 @@ This file is used to list changes made in each version of the redisio cookbook.
 ## Unreleased
 
 - Add `aclfile` option to sentinel configuration file.
+- Update Github Actions
 
 ## 6.6.0 - *2023-11-11*
 
