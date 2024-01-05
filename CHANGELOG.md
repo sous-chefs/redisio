@@ -5,6 +5,8 @@ This file is used to list changes made in each version of the redisio cookbook.
 
 ## Unreleased
 
+- Add `includes` option to sentinel configuration file.
+
 ## 6.7.0 - *2024-01-04*
 
 - Add `aclfile` option to sentinel configuration file.

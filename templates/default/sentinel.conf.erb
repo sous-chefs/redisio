@@ -220,3 +220,18 @@ aclfile <%= @aclfile %>
 # sentinel client-reconfig-script mymaster /var/redis/reconfig.sh
 <%= "sentinel client-reconfig-script #{@name} #{@client_reconfig_script}" unless @client_reconfig_script.nil? %>
 <% end %>
+
+################################## INCLUDES ###################################
+
+# Include one or more other config files here.  This is useful if you
+# have a standard template that goes to all redis server but also need
+# to customize a few per-server settings.  Include files can include
+# other files, so use this wisely.
+#
+# include /path/to/local.conf
+# include /path/to/other.conf
+<% unless @includes.nil? %>
+  <% @includes.each do |include_option| %>
+    <%= "include #{include_option}" %>
+  <% end %>
+<% end %>
