@@ -32,6 +32,7 @@ suites:
       - recipe[redisio::enable]
     attributes:
       redisio:
+        version: "<%= ENV['REDIS_VERSION'] || '6.2.3' %>"
         servers:
           - port: 6379
           - port: 16379
@@ -48,6 +49,7 @@ suites:
       - recipe[redisio::sentinel_enable]
     attributes:
       redisio:
+        version: "<%= ENV['REDIS_VERSION'] || '6.2.3' %>"
         servers:
           - port: 6379
 
@@ -59,6 +61,7 @@ suites:
       - recipe[redisio::sentinel_enable]
     attributes:
       redisio:
+        version: "<%= ENV['REDIS_VERSION'] || '6.2.3' %>"
         servers:
           - port: 6379
           - port: 6380
