@@ -38,7 +38,7 @@ suites:
           - port: 16379
             permissions: '0640'
             name: 'savetest'
-            save: "a\nb\nc"
+            save: "3600 1\n300 100\n60 10000"
             logfile: '/var/log/redis/redis-16379.log'
 
   - name: sentinel

@@ -10,7 +10,7 @@ describe file("#{prefix}/etc/redis/savetest.conf") do
   it { should be_file }
   its('mode') { should cmp '0640' }
 
-  ['save a', 'save b', 'save c'].each do |m|
+  ['save 3600 1', '300 200', '60 30000'].each do |m|
     its(:content) { should match(m) }
   end
 end
