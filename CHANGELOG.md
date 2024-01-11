@@ -3,6 +3,8 @@
 
 This file is used to list changes made in each version of the redisio cookbook.
 
+## Unreleased
+
 ## 6.7.1 - *2024-01-11*
 
 - Add `includes` option to sentinel configuration file.
