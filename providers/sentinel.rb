@@ -148,7 +148,8 @@ action :run do
         client_reconfig_script: current['client-reconfig-script'],
         protected_mode:         current['protected_mode'],
         maxclients:             current['maxclients'],
-        aclfile:                current['aclfile']
+        aclfile:                current['aclfile'],
+        includes:               current['includes']
       )
       not_if { ::File.exist?("#{current['configdir']}/#{sentinel_name}.conf.breadcrumb") }
     end

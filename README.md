@@ -418,6 +418,7 @@ The sentinel recipe's use their own attribute file.
 'protected-mode'          => nil,
 'maxclients'              => 10000,
 'aclfile'                 => nil, # Requires redis 6+
+'includes'                => nil,
 ```
 
 * `redisio['redisio']['sentinel']['manage_config']` - Should the cookbook manage the redis and redis sentinel config files.  This is best set to false when using redis_sentinel as it will write state into both configuration files.
