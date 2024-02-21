@@ -32,28 +32,14 @@ suites:
       - recipe[redisio::enable]
     attributes:
       redisio:
+        version: "<%= ENV['REDIS_VERSION'] || '6.2.3' %>"
         servers:
           - port: 6379
           - port: 16379
             permissions: '0640'
             name: 'savetest'
-            save: "a\nb\nc"
+            save: "3600 1\n300 100\n60 10000"
             logfile: '/var/log/redis/redis-16379.log'
-
-  - name: redis-package
-    run_list:
-      - recipe[redisio::default]
-      - recipe[redisio::install]
-      - recipe[redisio::disable_os_default]
-      - recipe[redisio::configure]
-      - recipe[redisio::enable]
-    attributes:
-      redisio:
-        bypass_setup: true
-        servers:
-          - port: 6379
-        package_install: true
-        version:
 
   - name: sentinel
     run_list:
@@ -63,6 +49,7 @@ suites:
       - recipe[redisio::sentinel_enable]
     attributes:
       redisio:
+        version: "<%= ENV['REDIS_VERSION'] || '6.2.3' %>"
         servers:
           - port: 6379
 
@@ -74,6 +61,7 @@ suites:
       - recipe[redisio::sentinel_enable]
     attributes:
       redisio:
+        version: "<%= ENV['REDIS_VERSION'] || '6.2.3' %>"
         servers:
           - port: 6379
           - port: 6380
