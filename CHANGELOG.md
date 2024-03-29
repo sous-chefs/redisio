@@ -13,6 +13,11 @@ This file is used to list changes made in each version of the redisio cookbook.
   - Removed redis-package test suite, most of Linux distributions does not provide packages for Redis v6+
   - Set default Redis version to 6.2.14
 - Extend CI workflow to verify multiple Redis versions
+- Upgrade suidelines:
+  - Ensure all Redis instances are upgraded to version 6.2.14 or higher.
+  - Update configuration files to reflect the terminology change from "slave" to "replica."
+  - Remove any references to deprecated options `list-max-ziplist-entries` and `list-max-ziplist-value`.
+  - Test the compatibility of your Chef cookbook with Redis v6+ before deploying the upgrade.
 
 ## 6.7.1 - *2024-01-11*
 
