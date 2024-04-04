@@ -3,7 +3,7 @@
 
 This file is used to list changes made in each version of the redisio cookbook.
 
-## Unreleased
+## 7.0.0 - *2024-04-04*
 
 - Breaking: support only Redis v6+
   - Removed obsolete version checks
