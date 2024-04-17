@@ -387,6 +387,26 @@ Available options and their defaults
 'includes'                   => nil,
 'aclfile'                    => nil, # Requires redis 6+
 'breadcrumb'                 => true # Defaults to create breadcrumb lock-file.
+'tlsport'                    => nil,
+'tlscertfile'                => nil,
+'tlskeyfile'                 => nil,
+'tlskeyfilepass'             => nil,
+'tlsclientcertfile'          => nil,
+'tlsclientkeyfile'           => nil,
+'tlsclientkeyfilepass'       => nil,
+'tlsdhparamsfile'            => nil,
+'tlscacertfile'              => nil,
+'tlscacertdir'               => nil,
+'tlsauthclients'             => nil,
+'tlsreplication'             => nil,
+'tlscluster'                 => nil,
+'tlsprotocols'               => nil,
+'tlsciphers'                 => nil,
+'tlsciphersuites'            => nil,
+'tlspreferserverciphers'     => nil,
+'tlssessioncaching'          => nil,
+'tlssessioncachesize'        => nil,
+'tlssessioncachetimeout'     => nil,
 ```
 
 * `redisio['servers']` - An array where each item is a set of key value pairs for redis instance specific settings.  The only required option is 'port'.  These settings will override the options in 'default_settings', if it is left `nil` it will default to `[{'port' => '6379'}]`. If set to `[]` (empty array), no instances will be created.
