@@ -225,6 +225,142 @@ aclfile <%= @aclfile %>
 # sentinel client-reconfig-script mymaster /var/redis/reconfig.sh
 <%= "sentinel client-reconfig-script #{@name} #{@client_reconfig_script}" unless @client_reconfig_script.nil? %>
 
+################################# TLS/SSL #####################################
+
+# By default, TLS/SSL is disabled. To enable it, the "tls-port" configuration
+# directive can be used to define TLS-listening ports. To enable TLS on the
+# default port, use:
+#
+# port 0
+# tls-port 6379
+<%= "tls-port #{@tlsport}" unless @tlsport.nil? %>
+
+# Configure a X.509 certificate and private key to use for authenticating the
+# server to connected clients, masters or cluster peers.  These files should be
+# PEM formatted.
+#
+# tls-cert-file redis.crt
+# tls-key-file redis.key
+<%= "tls-cert-file #{@tlscertfile}" unless @tlscertfile.nil? %>
+<%= "tls-key-file #{@tlskeyfile}" unless @tlskeyfile.nil? %>
+#
+# If the key file is encrypted using a passphrase, it can be included here
+# as well.
+#
+# tls-key-file-pass secret
+<%= "tls-key-file-pass #{@tlskeyfilepass}" unless @tlskeyfilepass.nil? %>
+
+# Normally Redis uses the same certificate for both server functions (accepting
+# connections) and client functions (replicating from a master, establishing
+# cluster bus connections, etc.).
+#
+# Sometimes certificates are issued with attributes that designate them as
+# client-only or server-only certificates. In that case it may be desired to use
+# different certificates for incoming (server) and outgoing (client)
+# connections. To do that, use the following directives:
+#
+# tls-client-cert-file client.crt
+# tls-client-key-file client.key
+<%= "tls-client-cert-file #{@tlsclientcertfile}" unless @tlsclientcertfile.nil? %>
+<%= "tls-client-key-file #{@tlsclientkeyfile}" unless @tlsclientkeyfile.nil? %>
+#
+# If the key file is encrypted using a passphrase, it can be included here
+# as well.
+#
+# tls-client-key-file-pass secret
+<%= "tls-client-key-file-pass #{@tlsclientkeyfilepass}" unless @tlsclientkeyfilepass.nil? %>
+
+# Configure a DH parameters file to enable Diffie-Hellman (DH) key exchange,
+# required by older versions of OpenSSL (<3.0). Newer versions do not require
+# this configuration and recommend against it.
+#
+# tls-dh-params-file redis.dh
+<%= "tls-dh-params-file #{@tlsdhparamsfile}" unless @tlsdhparamsfile.nil? %>
+
+# Configure a CA certificate(s) bundle or directory to authenticate TLS/SSL
+# clients and peers.  Redis requires an explicit configuration of at least one
+# of these, and will not implicitly use the system wide configuration.
+#
+# tls-ca-cert-file ca.crt
+# tls-ca-cert-dir /etc/ssl/certs
+<%= "tls-ca-cert-file #{@tlscacertfile}" unless @tlscacertfile.nil? %>
+<%= "tls-ca-cert-dir #{@tlscacertdir}" unless @tlscacertdir.nil? %>
+
+# By default, clients (including replica servers) on a TLS port are required
+# to authenticate using valid client side certificates.
+#
+# If "no" is specified, client certificates are not required and not accepted.
+# If "optional" is specified, client certificates are accepted and must be
+# valid if provided, but are not required.
+#
+# tls-auth-clients no
+# tls-auth-clients optional
+<%= "tls-auth-clients #{@tlsauthclients}" unless @tlsauthclients.nil? %>
+
+# By default, a Redis replica does not attempt to establish a TLS connection
+# with its master.
+#
+# Use the following directive to enable TLS on replication links.
+#
+# tls-replication yes
+<%= "tls-replication #{@tlsreplication}" unless @tlsreplication.nil? %>
+
+# By default, the Redis Cluster bus uses a plain TCP connection. To enable
+# TLS for the bus protocol, use the following directive:
+#
+# tls-cluster yes
+<%= "tls-cluster #{@tlscluster}" unless @tlscluster.nil? %>
+
+# By default, only TLSv1.2 and TLSv1.3 are enabled and it is highly recommended
+# that older formally deprecated versions are kept disabled to reduce the attack surface.
+# You can explicitly specify TLS versions to support.
+# Allowed values are case insensitive and include "TLSv1", "TLSv1.1", "TLSv1.2",
+# "TLSv1.3" (OpenSSL >= 1.1.1) or any combination.
+# To enable only TLSv1.2 and TLSv1.3, use:
+#
+# tls-protocols "TLSv1.2 TLSv1.3"
+<%= "tls-protocols #{@tlsprotocols}" unless @tlsprotocols.nil? %>
+
+# Configure allowed ciphers.  See the ciphers(1ssl) manpage for more information
+# about the syntax of this string.
+#
+# Note: this configuration applies only to <= TLSv1.2.
+#
+# tls-ciphers DEFAULT:!MEDIUM
+<%= "tls-ciphers #{@tlsciphers}" unless @tlsciphers.nil? %>
+
+# Configure allowed TLSv1.3 ciphersuites.  See the ciphers(1ssl) manpage for more
+# information about the syntax of this string, and specifically for TLSv1.3
+# ciphersuites.
+#
+# tls-ciphersuites TLS_CHACHA20_POLY1305_SHA256
+<%= "tls-ciphersuites #{@tlsciphersuites}" unless @tlsciphersuites.nil? %>
+
+# When choosing a cipher, use the server's preference instead of the client
+# preference. By default, the server follows the client's preference.
+#
+# tls-prefer-server-ciphers yes
+<%= "tls-prefer-server-ciphers #{@tlspreferserverciphers}" unless @tlspreferserverciphers.nil? %>
+
+# By default, TLS session caching is enabled to allow faster and less expensive
+# reconnections by clients that support it. Use the following directive to disable
+# caching.
+#
+# tls-session-caching no
+<%= "tls-session-caching #{@tlssessioncaching}" unless @tlssessioncaching.nil? %>
+
+# Change the default number of TLS sessions cached. A zero value sets the cache
+# to unlimited size. The default size is 20480.
+#
+# tls-session-cache-size 5000
+<%= "tls-session-cache-size #{@tlssessioncachesize}" unless @tlssessioncachesize.nil? %>
+
+# Change the default timeout of cached TLS sessions. The default timeout is 300
+# seconds.
+#
+# tls-session-cache-timeout 60
+<%= "tls-session-cache-timeout #{@tlssessioncachetimeout}" unless @tlssessioncachetimeout.nil? %>
+
 ################################## INCLUDES ###################################
 
 # Include one or more other config files here.  This is useful if you
