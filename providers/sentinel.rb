@@ -149,7 +149,27 @@ action :run do
         protected_mode:         current['protected_mode'],
         maxclients:             current['maxclients'],
         aclfile:                current['aclfile'],
-        includes:               current['includes']
+        includes:               current['includes'],
+        tlsport:                current['tlsport'],
+        tlscertfile:            current['tlscertfile'],
+        tlskeyfile:             current['tlskeyfile'],
+        tlskeyfilepass:         current['tlskeyfilepass'],
+        tlsclientcertfile:      current['tlsclientcertfile'],
+        tlsclientkeyfile:       current['tlsclientkeyfile'],
+        tlsclientkeyfilepass:   current['tlsclientkeyfilepass'],
+        tlsdhparamsfile:        current['tlsdhparamsfile'],
+        tlscacertfile:          current['tlscacertfile'],
+        tlscacertdir:           current['tlscacertdir'],
+        tlsauthclients:         current['tlsauthclients'],
+        tlsreplication:         current['tlsreplication'],
+        tlscluster:             current['tlscluster'],
+        tlsprotocols:           current['tlsprotocols'],
+        tlsciphers:             current['tlsciphers'],
+        tlsciphersuites:        current['tlsciphersuites'],
+        tlspreferserverciphers: current['tlspreferserverciphers'],
+        tlssessioncaching:      current['tlssessioncaching'],
+        tlssessioncachesize:    current['tlssessioncachesize'],
+        tlssessioncachetimeout: current['tlssessioncachetimeout']
       )
       not_if { ::File.exist?("#{current['configdir']}/#{sentinel_name}.conf.breadcrumb") }
     end

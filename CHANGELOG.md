@@ -5,6 +5,8 @@ This file is used to list changes made in each version of the redisio cookbook.
 
 ## Unreleased
 
+- Add an option to manage all TLS related attributes
+
 ## 7.0.1 - *2024-04-04*
 
 ## 7.0.0 - *2024-04-04*

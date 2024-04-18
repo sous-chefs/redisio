@@ -265,7 +265,27 @@ action :run do
         minreplicastowrite:         current['minreplicastowrite'],
         minreplicasmaxlag:          current['minreplicasmaxlag'],
         repldisklesssync:           current['repldisklesssync'],
-        repldisklesssyncdelay:      current['repldisklesssyncdelay']
+        repldisklesssyncdelay:      current['repldisklesssyncdelay'],
+        tlsport:                    current['tlsport'],
+        tlscertfile:                current['tlscertfile'],
+        tlskeyfile:                 current['tlskeyfile'],
+        tlskeyfilepass:             current['tlskeyfilepass'],
+        tlsclientcertfile:          current['tlsclientcertfile'],
+        tlsclientkeyfile:           current['tlsclientkeyfile'],
+        tlsclientkeyfilepass:       current['tlsclientkeyfilepass'],
+        tlsdhparamsfile:            current['tlsdhparamsfile'],
+        tlscacertfile:              current['tlscacertfile'],
+        tlscacertdir:               current['tlscacertdir'],
+        tlsauthclients:             current['tlsauthclients'],
+        tlsreplication:             current['tlsreplication'],
+        tlscluster:                 current['tlscluster'],
+        tlsprotocols:               current['tlsprotocols'],
+        tlsciphers:                 current['tlsciphers'],
+        tlsciphersuites:            current['tlsciphersuites'],
+        tlspreferserverciphers:     current['tlspreferserverciphers'],
+        tlssessioncaching:          current['tlssessioncaching'],
+        tlssessioncachesize:        current['tlssessioncachesize'],
+        tlssessioncachetimeout:     current['tlssessioncachetimeout']
       )
       not_if { ::File.exist?("#{current['configdir']}/#{server_name}.conf.breadcrumb") }
     end
