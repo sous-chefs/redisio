@@ -1033,6 +1033,7 @@ aof-rewrite-incremental-fsync <%= @aofrewriteincrementalfsync %>
 cluster-enabled yes
 cluster-config-file <%= @clusterconfigfile || "nodes-#{@name}.conf" %>
 cluster-node-timeout <%= @clusternodetimeout %>
+<%= "cluster-port #{@clusterport}" unless @clusterport.nil? %>
 <%end%>
 
 <% if @version[:major].to_i >= 6 %>

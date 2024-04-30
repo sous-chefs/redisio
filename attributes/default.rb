@@ -142,6 +142,7 @@ default['redisio']['default_settings'] = {
   'clusterenabled'             => 'no',
   'clusterconfigfile'          => nil, # Defaults to redis instance name inside of template if cluster is enabled.
   'clusternodetimeout'         => 5000,
+  'clusterport'                => nil,
   'includes'                   => nil,
   'aclfile'                    => nil,
   'data_bag_name'              => nil,

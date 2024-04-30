@@ -5,6 +5,8 @@ This file is used to list changes made in each version of the redisio cookbook.
 
 ## Unreleased
 
+- Add option to specify `cluster-port`
+
 ## 7.1.1 - *2024-04-21*
 
 - Fix default `tls*` attribute names
