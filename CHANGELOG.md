@@ -3,7 +3,7 @@
 
 This file is used to list changes made in each version of the redisio cookbook.
 
-## Unreleased
+## 7.2.0 - *2024-04-30*
 
 - Add option to specify `cluster-port`
 
