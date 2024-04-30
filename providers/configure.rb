@@ -260,6 +260,7 @@ action :run do
         clusterenabled:             current['clusterenabled'],
         clusterconfigfile:          current['clusterconfigfile'],
         clusternodetimeout:         current['clusternodetimeout'],
+        clusterport:                current['clusterport'],
         includes:                   current['includes'],
         aclfile:                    current['aclfile'],
         minreplicastowrite:         current['minreplicastowrite'],
