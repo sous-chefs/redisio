@@ -1,11 +1,11 @@
 packages_to_install = case node['platform_family']
                       when 'debian'
                         %w(
-                          tar
+                          libssl-dev tar
                         )
                       when 'rhel', 'fedora'
                         %w(
-                          tar
+                          openssl-devel tar
                         )
                       else
                         %w()

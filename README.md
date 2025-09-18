@@ -303,6 +303,7 @@ Configuration options, each option corresponds to the same-named configuration o
 * `redisio['base_piddir']` - This is the directory that redis pidfile directories and pidfiles will be placed in.  Since redis can run as non root, it needs to have proper
                            permissions to the directory to create its pid.  Since each instance can run as a different user, these directories will all be nested inside this base one.
 * `redisio['bypass_setup']` - This attribute allows users to prevent the default recipe from calling the install and configure recipes.
+* `redisio['enable_tls']` - When building from source, enable TLS support.
 * `redisio['job_control']` - This deteremines what job control type will be used.  Currently supports 'initd' or 'upstart' options.  Defaults to 'initd'.
 
 Default settings is a hash of default settings to be applied to to ALL instances.  These can be overridden for each individual server in the servers attribute.  If you are going to set logfile to a specific file, make sure to set syslog-enabled to no.
@@ -477,6 +478,7 @@ Attribute Parameters
 * `artifact_type` - the file extension of the package
 * `base_name` - the name of the package minus the extension and version number
 * `safe_install` - a true or false value which determines if a version of redis will be installed if one already exists, defaults to true
+* `enable_tls` - enable TLS support when building from source
 
 This resource expects the following naming conventions:
 

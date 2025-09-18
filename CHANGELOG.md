@@ -5,7 +5,8 @@ This file is used to list changes made in each version of the redisio cookbook.
 
 ## Unreleased
 
-Standardise files with files in sous-chefs/repo-management
+- Standardise files with files in sous-chefs/repo-management
+- Add ability to enable TLS support when installing from source
 
 ## 7.2.4 - *2025-09-04*
 
