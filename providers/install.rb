@@ -46,7 +46,12 @@ def unpack
 end
 
 def build
-  execute "cd #{new_resource.download_dir}/#{new_resource.base_name}#{new_resource.version} && make clean && make"
+  build_tls = if new_resource.enable_tls
+                'BUILD_TLS=yes'
+              else
+                'BUILD_TLS=no'
+              end
+  execute "cd #{new_resource.download_dir}/#{new_resource.base_name}#{new_resource.version} && make clean && make #{build_tls}"
 end
 
 def install

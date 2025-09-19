@@ -41,6 +41,23 @@ suites:
             save: "3600 1\n300 100\n60 10000"
             logfile: '/var/log/redis/redis-16379.log'
 
+  - name: default_tls
+    run_list:
+      - recipe[redisio::default]
+      - recipe[test::default_tls]
+      - recipe[redisio::enable]
+    attributes:
+      redisio:
+        version: "<%= ENV['REDIS_VERSION'] || '6.2.3' %>"
+        enable_tls: true
+        servers:
+          - name: '6379-tls'
+            port: 0
+            tlsport: 6379
+            tlscertfile: '/etc/redis/ssl/redis.crt'
+            tlskeyfile: '/etc/redis/ssl/redis.key'
+            tlscacertfile: '/etc/redis/ssl/redis-ca.crt'
+
   - name: sentinel
     run_list:
       - recipe[redisio::default]

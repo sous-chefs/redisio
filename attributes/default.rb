@@ -33,6 +33,7 @@ default['redisio']['safe_install'] = true
 default['redisio']['package_install'] = default_package_install
 default['redisio']['package_name'] =  package_name
 default['redisio']['bypass_setup'] = false
+default['redisio']['enable_tls'] = false
 
 # Tarball and download related defaults
 default['redisio']['mirror'] = 'http://download.redis.io/releases/'
