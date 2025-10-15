@@ -9,5 +9,5 @@ redis['servers'].each do |current_server|
                   end
   resource = resources(resource_name)
   resource.action Array(resource.action)
-  resource.action.concat [:start, :enable]
+  resource.action.push :start, :enable
 end
