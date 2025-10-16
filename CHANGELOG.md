@@ -1,10 +1,16 @@
-
 # redisio
 
 This file is used to list changes made in each version of the redisio cookbook.
 
 Standardise files with files in sous-chefs/repo-management
 Standardise files with files in sous-chefs/repo-management
+
+## [7.2.5](https://github.com/sous-chefs/redisio/compare/7.2.4...v7.2.5) (2025-10-16)
+
+
+### Bug Fixes
+
+* **ci:** Update workflows to use release pipeline ([#514](https://github.com/sous-chefs/redisio/issues/514)) ([5703855](https://github.com/sous-chefs/redisio/commit/570385541ab982d92c9ea0d4ff385bd6fd14082e))
 
 ## 7.2.3 - *2024-11-18*
 
