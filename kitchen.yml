@@ -1,9 +1,12 @@
 ---
 driver:
-  name: vagrant
+  name: dokken
+  privileged: true
+  chef_image: chef/chef
+  chef_version: current
 
 provisioner:
-  name: chef_infra
+  name: dokken
   product_name: chef
   product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
   chef_license: accept-no-persist
@@ -14,70 +17,61 @@ provisioner:
 verifier:
   name: inspec
 
+transport:
+  name: dokken
+
 platforms:
-  - name: almalinux-8
-  - name: debian-10
-  - name: debian-11
-  - name: freebsd-10
-  - name: freebsd-11
-  - name: rockylinux-8
-  - name: ubuntu-18.04
-  - name: ubuntu-20.04
+  - name: amazonlinux-2023
+    driver:
+      image: dokken/amazonlinux-2023
+      pid_one_command: /usr/lib/systemd/systemd
+  - name: debian-12
+    driver:
+      image: dokken/debian-12
+      pid_one_command: /bin/systemd
+  - name: debian-13
+    driver:
+      image: dokken/debian-13
+      pid_one_command: /usr/lib/systemd/systemd
+  - name: rockylinux-9
+    driver:
+      image: dokken/rockylinux-9
+      pid_one_command: /usr/lib/systemd/systemd
   - name: ubuntu-22.04
+    driver:
+      image: dokken/ubuntu-22.04
+      pid_one_command: /bin/systemd
+  - name: ubuntu-24.04
+    driver:
+      image: dokken/ubuntu-24.04
+      pid_one_command: /bin/systemd
+
+x-run_lists:
+  default: &default_run_list
+    - recipe[test::default]
+  sentinel: &sentinel_run_list
+    - recipe[test::sentinel]
+  multisentinel: &multisentinel_run_list
+    - recipe[test::multisentinel]
+
+x-verifiers:
+  default: &default_verifier
+    inspec_tests:
+      - path: test/integration/default
+  sentinel: &sentinel_verifier
+    inspec_tests:
+      - path: test/integration/sentinel
+  multisentinel: &multisentinel_verifier
+    inspec_tests:
+      - path: test/integration/multisentinel
 
 suites:
   - name: default
-    run_list:
-      - recipe[redisio::default]
-      - recipe[redisio::enable]
-    attributes:
-      redisio:
-        version: "<%= ENV['REDIS_VERSION'] || '6.2.3' %>"
-        servers:
-          - port: 6379
-          - port: 16379
-            permissions: '0640'
-            name: 'savetest'
-            save: "3600 1\n300 100\n60 10000"
-            logfile: '/var/log/redis/redis-16379.log'
-
+    run_list: *default_run_list
+    verifier: *default_verifier
   - name: sentinel
-    run_list:
-      - recipe[redisio::default]
-      - recipe[redisio::enable]
-      - recipe[redisio::sentinel]
-      - recipe[redisio::sentinel_enable]
-    attributes:
-      redisio:
-        version: "<%= ENV['REDIS_VERSION'] || '6.2.3' %>"
-        servers:
-          - port: 6379
-
+    run_list: *sentinel_run_list
+    verifier: *sentinel_verifier
   - name: multisentinel
-    run_list:
-      - recipe[redisio::default]
-      - recipe[redisio::enable]
-      - recipe[redisio::sentinel]
-      - recipe[redisio::sentinel_enable]
-    attributes:
-      redisio:
-        version: "<%= ENV['REDIS_VERSION'] || '6.2.3' %>"
-        servers:
-          - port: 6379
-          - port: 6380
-        sentinels:
-          -
-            name: 'cluster'
-            sentinel_bind: 0.0.0.0
-            sentinel_port: 26379
-            masters:
-              -
-                name: 'sentinel6379'
-                master_name: 'master6379'
-                master_ip: '127.0.0.1'
-                master_port: 6379
-              -
-                name: 'sentinel6380'
-                master_name: 'master6380'
-                master_ip: '127.0.0.1'
-                master_port: 6380
+    run_list: *multisentinel_run_list
+    verifier: *multisentinel_verifier

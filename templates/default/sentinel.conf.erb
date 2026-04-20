@@ -4,6 +4,9 @@
 <% if @job_control == 'initd' || @job_control == 'rcinit' %>
 daemonize yes
 <% end %>
+<% if @job_control == 'systemd' %>
+supervised systemd
+<% end %>
 pidfile <%= @piddir %>/sentinel_<%=@name%>.pid
 loglevel <%=@loglevel%>
 syslog-enabled <%= @syslogenabled %>

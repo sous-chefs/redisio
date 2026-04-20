@@ -1,7 +1,12 @@
 ---
 driver: { name: exec }
 transport: { name: exec }
+provisioner:
+  name: chef_infra
+  chef_omnibus_install: false
+  chef_license: accept-no-persist
+verifier:
+  name: inspec
 
 platforms:
-  - name: macos-latest
-  - name: windows-latest
+  - name: ubuntu-latest

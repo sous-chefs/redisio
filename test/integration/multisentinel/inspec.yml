@@ -1,0 +1,7 @@
+---
+name: multisentinel
+title: Multi-sentinel suite tests
+maintainer: Sous Chefs
+license: Apache-2.0
+summary: Verifies multiple sentinel master definitions
+version: 1.0.0
