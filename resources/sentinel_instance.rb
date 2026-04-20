@@ -4,9 +4,24 @@ provides :redisio_sentinel_instance
 unified_mode true
 
 use '_partial/_base'
-use '_partial/_sentinel'
 
 property :instance_name, String, name_property: true
+property :name_override, String
+property :sentinel_bind, [String, Array, nil], default: nil
+property :sentinel_port, [String, Integer], default: 26_379
+property :masters, Array, default: []
+property :master_name, String
+property :master_ip, String
+property :master_port, [String, Integer, nil], default: nil
+property :quorum_count, [String, Integer], default: 2
+property :auth_pass, String
+property :down_after_milliseconds, [String, Integer], default: 30_000
+property :parallel_syncs, [String, Integer], default: 1
+property :failover_timeout, [String, Integer], default: 900_000
+property :announce_ip, String
+property :announce_port, [String, Integer, nil], default: nil
+property :notification_script, String
+property :client_reconfig_script, String
 
 action_class do
   include RedisioCookbook::Helpers
