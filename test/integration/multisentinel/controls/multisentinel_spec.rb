@@ -29,13 +29,7 @@ control 'redisio-multisentinel-config-01' do
   describe file('/etc/redis/sentinel_cluster.conf') do
     it { should exist }
     its('content') { should match(/sentinel monitor master6379 127.0.0.1 6379 2/) }
-    its('content') { should match(/sentinel down-after-milliseconds master6379 30000/) }
-    its('content') { should match(/sentinel parallel-syncs master6379 1/) }
-    its('content') { should match(/sentinel failover-timeout master6379 900000/) }
     its('content') { should match(/sentinel monitor master6380 127.0.0.1 6380 2/) }
-    its('content') { should match(/sentinel down-after-milliseconds master6380 30000/) }
-    its('content') { should match(/sentinel parallel-syncs master6380 1/) }
-    its('content') { should match(/sentinel failover-timeout master6380 900000/) }
   end
 end
 
@@ -47,7 +41,11 @@ control 'redisio-multisentinel-runtime-01' do
     its('stdout') { should match(/master6379/) }
     its('stdout') { should match(/127.0.0.1/) }
     its('stdout') { should match(/6379/) }
+    its('stdout') { should match(/down-after-milliseconds/) }
+    its('stdout') { should match(/30000/) }
     its('stdout') { should match(/parallel-syncs/) }
+    its('stdout') { should match(/\n1\n/) }
+    its('stdout') { should match(/failover-timeout/) }
     its('stdout') { should match(/900000/) }
   end
 
@@ -55,7 +53,11 @@ control 'redisio-multisentinel-runtime-01' do
     its('stdout') { should match(/master6380/) }
     its('stdout') { should match(/127.0.0.1/) }
     its('stdout') { should match(/6380/) }
+    its('stdout') { should match(/down-after-milliseconds/) }
+    its('stdout') { should match(/30000/) }
     its('stdout') { should match(/parallel-syncs/) }
+    its('stdout') { should match(/\n1\n/) }
+    its('stdout') { should match(/failover-timeout/) }
     its('stdout') { should match(/900000/) }
   end
 end
