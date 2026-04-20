@@ -1,6 +1,6 @@
 # redisio_server
 
-Manages a single Redis server instance, including config, systemd unit, runtime directories, and service state.
+Manages a single Redis or Valkey server instance, including config, systemd unit, runtime directories, and service state.
 
 ## Actions
 
@@ -11,14 +11,15 @@ Manages a single Redis server instance, including config, systemd unit, runtime 
 
 - `instance_name` (`String`, default: name): Instance identifier used in service/config naming
 - `package_install` (`Boolean`, default: `false`): Whether package install conventions should be used for binaries
+- `server_implementation` (`String`, default: `redis`): Select `redis` or `valkey`
 - `install_dir` (`String`, default: `nil`): Alternate source install prefix
 - `bin_path` (`String`, default: derived): Binary directory override
 - `port` (`String`, `Integer`, default: `6379`): Listening port
 - `name_override` (`String`, default: `nil`): Alternate config/service name when needed for compatibility
-- `configdir` (`String`, default: `/etc/redis`): Config directory
-- `datadir` (`String`, default: `/var/lib/redis`): Data directory
-- `user` (`String`, default: `redis`): Service user
-- `group` (`String`, default: `redis`): Service group
+- `configdir` (`String`, default: implementation specific): Config directory
+- `datadir` (`String`, default: implementation specific): Data directory
+- `user` (`String`, default: implementation specific): Service user
+- `group` (`String`, default: implementation specific): Service group
 - `permissions` (`String`, default: `0644`): Mode for the rendered config file
 - `save` (`Array`, `String`, default: `nil`): Save directives for the instance
 - `logfile` (`String`, default: `nil`): Optional log file path
@@ -36,6 +37,15 @@ Manages a single Redis server instance, including config, systemd unit, runtime 
 ```ruby
 redisio_server '6379' do
   package_install true
+end
+```
+
+### Create a Valkey instance
+
+```ruby
+redisio_server '6379' do
+  package_install true
+  server_implementation 'valkey'
 end
 ```
 

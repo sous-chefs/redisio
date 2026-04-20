@@ -9,10 +9,11 @@ Compatibility wrapper that expands the legacy `sentinel_defaults` plus `sentinel
 
 ## Properties
 
-- `version` (`String`, default: `nil`): Redis version override
-- `base_piddir` (`String`, default: `/var/run/redis`): Base pid directory
-- `user` (`String`, default: `redis`): Default user fallback
-- `group` (`String`, default: `redis`): Default group fallback
+- `version` (`String`, default: `nil`): Redis or Valkey version override
+- `server_implementation` (`String`, default: `redis`): Select `redis` or `valkey`
+- `base_piddir` (`String`, default: implementation specific): Base pid directory
+- `user` (`String`, default: implementation specific): Default user fallback
+- `group` (`String`, default: implementation specific): Default group fallback
 - `sentinel_defaults` (`Hash`, default: `{}`): Shared settings merged into every sentinel definition
 - `sentinels` (`Array`, default: `nil`): Sentinel definitions; `nil` creates the historic default `mycluster` definition
 - `package_install` (`Boolean`, default: `false`): Package install compatibility hint

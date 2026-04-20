@@ -19,6 +19,25 @@ describe 'redisio_install' do
     it { is_expected.to stop_service('redis-server') }
   end
 
+  context 'with valkey package install on ubuntu' do
+    platform 'ubuntu', '24.04'
+
+    recipe do
+      redisio_install 'default' do
+        package_install true
+        server_implementation 'valkey'
+      end
+    end
+
+    it { is_expected.to install_package('valkey-server') }
+    it { is_expected.to install_package('valkey-tools') }
+    it { is_expected.to install_package('valkey-sentinel') }
+    it { is_expected.to disable_service('valkey') }
+    it { is_expected.to stop_service('valkey') }
+    it { is_expected.to disable_service('valkey-sentinel') }
+    it { is_expected.to stop_service('valkey-sentinel') }
+  end
+
   context 'with package install on amazon linux 2023' do
     platform 'amazon', '2023'
 
@@ -30,6 +49,21 @@ describe 'redisio_install' do
 
     it { is_expected.to install_package('redis6') }
     it { is_expected.to disable_service('redis6') }
+  end
+
+  context 'with valkey package install on rocky linux 9' do
+    platform 'rocky', '9'
+
+    recipe do
+      redisio_install 'default' do
+        package_install true
+        server_implementation 'valkey'
+      end
+    end
+
+    it { is_expected.to install_package('valkey') }
+    it { is_expected.to disable_service('valkey') }
+    it { is_expected.to disable_service('valkey-sentinel') }
   end
 
   context 'with source install' do

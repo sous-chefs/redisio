@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 property :version
-property :base_piddir, String, default: '/var/run/redis'
-property :user, String, default: 'redis'
-property :group, String, default: 'redis'
+property :server_implementation, String, equal_to: %w(redis valkey), default: 'redis'
+property :base_piddir, String, default: lazy { server_implementation == 'valkey' ? '/var/run/valkey' : '/var/run/redis' }
+property :user, String, default: lazy { server_implementation == 'valkey' ? 'valkey' : 'redis' }
+property :group, String, default: lazy { server_implementation == 'valkey' ? 'valkey' : 'redis' }
 property :uid
 property :systemuser, [true, false], default: true
 property :homedir

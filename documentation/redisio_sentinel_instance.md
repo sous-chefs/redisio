@@ -1,6 +1,6 @@
 # redisio_sentinel_instance
 
-Manages a single Redis Sentinel instance, including config, systemd unit, and service state.
+Manages a single Redis or Valkey Sentinel instance, including config, systemd unit, and service state.
 
 ## Actions
 
@@ -11,6 +11,7 @@ Manages a single Redis Sentinel instance, including config, systemd unit, and se
 
 - `instance_name` (`String`, default: name): Sentinel instance identifier
 - `package_install` (`Boolean`, default: `false`): Whether package install conventions should be used for binaries
+- `server_implementation` (`String`, default: `redis`): Select `redis` or `valkey`
 - `install_dir` (`String`, default: `nil`): Alternate source install prefix
 - `bin_path` (`String`, default: derived): Binary directory override
 - `sentinel_bind` (`String`, default: `nil`): Optional bind address
@@ -31,6 +32,22 @@ Manages a single Redis Sentinel instance, including config, systemd unit, and se
 ```ruby
 redisio_sentinel_instance 'mycluster' do
   package_install true
+  masters [
+    {
+      master_name: 'mycluster_master',
+      master_ip: '127.0.0.1',
+      master_port: 6379,
+    },
+  ]
+end
+```
+
+### Create a Valkey sentinel
+
+```ruby
+redisio_sentinel_instance 'mycluster' do
+  package_install true
+  server_implementation 'valkey'
   masters [
     {
       master_name: 'mycluster_master',
