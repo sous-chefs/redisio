@@ -17,6 +17,9 @@
 <% if @job_control == 'initd' || @job_control == 'rcinit' %>
 daemonize yes
 <% end %>
+<% if @job_control == 'systemd' %>
+supervised systemd
+<% end %>
 
 # When running daemonized, Redis writes a pid file in /var/run/redis.pid by
 # default. You can specify a custom pid file location here.
@@ -650,7 +653,7 @@ replica-priority <%= @replicapriority %>
 # output buffers (but this is not needed if the policy is 'noeviction').
 #
 #maxmemory <bytes>
-<%= "maxmemory #{@maxmemory}" unless @maxmemory.empty? %>
+<%= "maxmemory #{@maxmemory}" unless @maxmemory.to_s.empty? %>
 
 # MAXMEMORY POLICY: how Redis will select what to remove when maxmemory
 # is reached. You can select among five behaviors:

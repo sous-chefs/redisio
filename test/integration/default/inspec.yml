@@ -1,0 +1,7 @@
+---
+name: default
+title: Default Redis instance tests
+maintainer: Sous Chefs
+license: Apache-2.0
+summary: Verifies the default Redis workflow
+version: 1.0.0
