@@ -7,7 +7,6 @@ provisioner:
   chef_license: accept-no-persist
 verifier:
   name: inspec
-  sudo: true
 
 platforms:
   - name: ubuntu-latest

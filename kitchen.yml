@@ -16,7 +16,6 @@ provisioner:
 
 verifier:
   name: inspec
-  sudo: true
 
 transport:
   name: dokken

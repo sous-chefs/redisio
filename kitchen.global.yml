@@ -13,4 +13,3 @@ provisioner:
 
 verifier:
   name: inspec
-  sudo: true

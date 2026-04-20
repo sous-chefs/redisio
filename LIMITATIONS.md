@@ -24,10 +24,10 @@
 
 ### Build Dependencies
 
-| Platform Family | Packages |
-|-----------------|----------|
-| Debian/Ubuntu | `tar`, `gcc`, `g++`, `make`, `libc6-dev`, `libssl-dev` |
-| Rocky/Amazon | `tar`, `gcc`, `gcc-c++`, `make`, `glibc-devel`, `openssl-devel` |
+| Platform Family | Packages                                                        |
+|-----------------|-----------------------------------------------------------------|
+| Debian/Ubuntu   | `tar`, `gcc`, `g++`, `make`, `libc6-dev`, `libssl-dev`          |
+| Rocky/Amazon    | `tar`, `gcc`, `gcc-c++`, `make`, `glibc-devel`, `openssl-devel` |
 
 - Redis upstream documents source builds for Linux and macOS using a C compiler and `libc`, with OpenSSL development libraries required for TLS builds.
 - This cookbook preserves source installs primarily as a compatibility path where package installs are not suitable.
