@@ -3,7 +3,7 @@
 [![Cookbook Version](https://img.shields.io/cookbook/v/redisio.svg)](https://supermarket.chef.io/cookbooks/redisio)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
 
-`redisio` is a resource-first Sous Chefs cookbook for installing Redis and managing Redis server and Sentinel instances with systemd.
+`redisio` is a resource-first Sous Chefs cookbook for installing Redis or Valkey and managing server and Sentinel instances with systemd.
 
 ## Supported Platforms
 
@@ -40,6 +40,20 @@ end
 
 redisio_server '6379' do
   package_install true
+end
+```
+
+### Install Valkey from packages and start one instance
+
+```ruby
+redisio_install 'default' do
+  package_install true
+  server_implementation 'valkey'
+end
+
+redisio_server '6379' do
+  package_install true
+  server_implementation 'valkey'
 end
 ```
 

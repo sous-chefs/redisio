@@ -50,4 +50,30 @@ describe 'redisio_server' do
     it { is_expected.to render_file('/etc/redis/savetest.conf').with_content(/save 60 10000/) }
     it { is_expected.to create_file('/var/log/redis/redis-16379.log') }
   end
+
+  context 'with a valkey package-backed instance' do
+    before do
+      version_output = 'Valkey server v=8.0.6 sha=00000000:1 malloc=jemalloc-5.3.0 bits=64 build=00000000'
+
+      stub_service_inactive('valkey@6379')
+      allow(File).to receive(:exist?).with('/usr/bin/valkey-server').and_return(true)
+      allow_any_instance_of(Chef::Mixin::ShellOut).to receive(:shell_out!)
+        .with('/usr/bin/valkey-server -v')
+        .and_return(double(stdout: version_output))
+    end
+
+    recipe do
+      redisio_server '6379' do
+        package_install true
+        server_implementation 'valkey'
+      end
+    end
+
+    it { is_expected.to create_directory('/etc/valkey') }
+    it { is_expected.to create_directory('/var/lib/valkey') }
+    it { is_expected.to create_template('/etc/valkey/6379.conf') }
+    it { is_expected.to create_systemd_unit('valkey@6379.service') }
+    it { is_expected.to enable_service('valkey@6379') }
+    it { is_expected.to start_service('valkey@6379') }
+  end
 end

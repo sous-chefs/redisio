@@ -26,16 +26,20 @@ property :client_reconfig_script, String
 action_class do
   include RedisioCookbook::Helpers
 
+  def resolved_user
+    new_resource.user
+  end
+
   def resolved_instance_name
     (new_resource.name_override || new_resource.instance_name).to_s
   end
 
   def resolved_group
-    new_resource.group || platform_default_group
+    new_resource.group || platform_default_group(server_implementation: new_resource.server_implementation)
   end
 
   def resolved_homedir
-    new_resource.homedir || platform_default_home
+    new_resource.homedir || platform_default_home(server_implementation: new_resource.server_implementation)
   end
 
   def resolved_shell
@@ -43,7 +47,7 @@ action_class do
   end
 
   def resolved_configdir
-    new_resource.configdir || platform_default_config_dir
+    new_resource.configdir || platform_default_config_dir(server_implementation: new_resource.server_implementation)
   end
 
   def resolved_bin_path
@@ -51,7 +55,7 @@ action_class do
   end
 
   def resolved_package_name
-    new_resource.package_name || platform_package_name
+    new_resource.package_name || platform_package_name(server_implementation: new_resource.server_implementation)
   end
 
   def resolved_version_hash
@@ -60,7 +64,12 @@ action_class do
               elsif new_resource.package_install
                 '7.0.0'
               else
-                installed_redis_version(resolved_bin_path, package_install: new_resource.package_install, package_name: resolved_package_name)
+                installed_redis_version(
+                  resolved_bin_path,
+                  package_install: new_resource.package_install,
+                  package_name: resolved_package_name,
+                  server_implementation: new_resource.server_implementation
+                )
               end
 
     redis_version_to_hash(version || '0.0.0')
@@ -137,11 +146,20 @@ action_class do
   end
 
   def service_name
-    sentinel_service_name(resolved_instance_name)
+    sentinel_service_name(resolved_instance_name, server_implementation: new_resource.server_implementation)
+  end
+
+  def implementation_name
+    new_resource.server_implementation == 'valkey' ? 'Valkey Sentinel' : 'Redis Sentinel'
   end
 end
 
 action :create do
+  validate_server_implementation!(
+    package_install: new_resource.package_install,
+    server_implementation: new_resource.server_implementation
+  )
+
   user new_resource.user do
     comment 'Redis service account'
     manage_home true
@@ -159,7 +177,7 @@ action :create do
   end
 
   directory resolved_piddir do
-    owner new_resource.user
+    owner resolved_user
     group resolved_group
     mode '0755'
     recursive true
@@ -167,7 +185,7 @@ action :create do
 
   unless resolved_log_directory.nil?
     directory resolved_log_directory do
-      owner new_resource.user
+      owner resolved_user
       group resolved_group
       mode '0755'
       recursive true
@@ -176,7 +194,7 @@ action :create do
 
   unless resolved_log_file.nil?
     file resolved_log_file do
-      owner new_resource.user
+      owner resolved_user
       group resolved_group
       mode '0644'
       backup false
@@ -187,7 +205,7 @@ action :create do
   template config_path do
     source 'sentinel.conf.erb'
     cookbook 'redisio'
-    owner new_resource.user
+    owner resolved_user
     group resolved_group
     mode '0644'
     variables(
@@ -243,13 +261,18 @@ action :create do
   systemd_unit "#{service_name}.service" do
     content(
       Unit: {
-        Description: "Redis Sentinel (#{resolved_instance_name})",
+        Description: "#{implementation_name} (#{resolved_instance_name})",
         After: 'network.target',
       },
       Service: {
         Type: 'notify',
-        ExecStart: "#{redis_server_binary(resolved_bin_path, package_install: new_resource.package_install, package_name: resolved_package_name)} #{config_path} --sentinel --daemonize no",
-        User: new_resource.user,
+        ExecStart: "#{redis_server_binary(
+          resolved_bin_path,
+          package_install: new_resource.package_install,
+          package_name: resolved_package_name,
+          server_implementation: new_resource.server_implementation
+        )} #{config_path} --sentinel --daemonize no",
+        User: resolved_user,
         Group: resolved_group,
         LimitNOFILE: new_resource.maxclients + 32,
       },
@@ -267,6 +290,11 @@ action :create do
 end
 
 action :delete do
+  validate_server_implementation!(
+    package_install: new_resource.package_install,
+    server_implementation: new_resource.server_implementation
+  )
+
   service service_name do
     action %i(stop disable)
     supports status: true, restart: true

@@ -6,6 +6,7 @@ unified_mode true
 property :package_install, [true, false], default: false
 property :package_name, [String, NilClass]
 property :version, [String, NilClass]
+property :server_implementation, String, equal_to: %w(redis valkey), default: 'redis'
 property :download_url, [String, NilClass]
 property :download_dir, String, default: lazy { Chef::Config[:file_cache_path] }
 property :artifact_type, String, default: 'tar.gz'
@@ -16,8 +17,14 @@ property :install_dir, [String, NilClass]
 action_class do
   include RedisioCookbook::Helpers
 
+  def resolved_package_names
+    return Array(new_resource.package_name) if new_resource.package_name
+
+    platform_package_names(server_implementation: new_resource.server_implementation, include_sentinel: true)
+  end
+
   def resolved_package_name
-    new_resource.package_name || platform_package_name
+    resolved_package_names.first
   end
 
   def resolved_version
@@ -40,7 +47,12 @@ action_class do
   end
 
   def resolved_server_binary
-    redis_server_binary(resolved_bin_path, package_install: new_resource.package_install, package_name: resolved_package_name)
+    redis_server_binary(
+      resolved_bin_path,
+      package_install: new_resource.package_install,
+      package_name: resolved_package_name,
+      server_implementation: new_resource.server_implementation
+    )
   end
 
   def tarball_name
@@ -56,29 +68,47 @@ action_class do
   end
 
   def package_service_name
-    platform_default_service_name
+    platform_default_service_name(server_implementation: new_resource.server_implementation)
+  end
+
+  def package_service_names
+    package_default_service_names(server_implementation: new_resource.server_implementation)
   end
 end
 
 action :create do
+  validate_server_implementation!(
+    package_install: new_resource.package_install,
+    server_implementation: new_resource.server_implementation
+  )
+
   if new_resource.package_install
     if platform_family?('debian')
       apt_update 'redisio-package-cache'
     end
 
-    package resolved_package_name do
-      version resolved_version unless resolved_version.nil?
+    resolved_package_names.each do |package_name|
+      package package_name do
+        version resolved_version unless resolved_version.nil?
+      end
     end
 
-    service package_service_name do
-      action %i(stop disable)
+    package_service_names.each do |service_name|
+      service service_name do
+        action %i(stop disable)
+      end
     end
   else
     source_build_packages.each do |build_package|
       package build_package
     end
 
-    current_version = installed_redis_version(resolved_bin_path, package_install: new_resource.package_install, package_name: resolved_package_name)
+    current_version = installed_redis_version(
+      resolved_bin_path,
+      package_install: new_resource.package_install,
+      package_name: resolved_package_name,
+      server_implementation: new_resource.server_implementation
+    )
     converge_if_changed :version do
       if current_version == resolved_version || (current_version && new_resource.safe_install)
         Chef::Log.info("Skipping Redis source install because #{current_version} is already present")
@@ -112,18 +142,44 @@ action :create do
 end
 
 action :delete do
+  validate_server_implementation!(
+    package_install: new_resource.package_install,
+    server_implementation: new_resource.server_implementation
+  )
+
   if new_resource.package_install
-    service package_service_name do
-      action %i(stop disable)
+    package_service_names.each do |service_name|
+      service service_name do
+        action %i(stop disable)
+      end
     end
 
-    package resolved_package_name do
-      action :remove
+    resolved_package_names.each do |package_name|
+      package package_name do
+        action :remove
+      end
     end
   else
-    binaries = %w(redis-benchmark redis-check-aof redis-check-rdb redis-sentinel)
-    binaries.unshift(redis_server_binary_name(package_install: new_resource.package_install, package_name: resolved_package_name))
-    binaries.unshift(redis_cli_binary_name(package_install: new_resource.package_install, package_name: resolved_package_name))
+    binaries = if new_resource.server_implementation == 'valkey'
+                 %w(valkey-benchmark valkey-check-aof valkey-check-rdb valkey-sentinel valkey-server valkey-cli)
+               else
+                 binaries = %w(redis-benchmark redis-check-aof redis-check-rdb redis-sentinel)
+                 binaries.unshift(
+                   redis_server_binary_name(
+                     package_install: new_resource.package_install,
+                     package_name: resolved_package_name,
+                     server_implementation: new_resource.server_implementation
+                   )
+                 )
+                 binaries.unshift(
+                   redis_cli_binary_name(
+                     package_install: new_resource.package_install,
+                     package_name: resolved_package_name,
+                     server_implementation: new_resource.server_implementation
+                   )
+                 )
+                 binaries
+               end
 
     binaries.each do |binary|
       file ::File.join(resolved_bin_path, binary) do

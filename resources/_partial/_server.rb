@@ -7,7 +7,7 @@ property :tcpbacklog, String, default: '511'
 property :address, default: nil
 property :databases, String, default: '16'
 property :backuptype, String, default: 'rdb'
-property :datadir, String, default: '/var/lib/redis'
+property :datadir, String, default: lazy { server_implementation == 'valkey' ? '/var/lib/valkey' : '/var/lib/redis' }
 property :unixsocket, default: nil
 property :unixsocketperm, default: nil
 property :timeout, String, default: '0'
