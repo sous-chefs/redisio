@@ -7,6 +7,7 @@ driver:
 
 provisioner:
   name: dokken
+  policyfile_path: Policyfile.rb
   product_name: chef
   product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
   chef_license: accept-no-persist
@@ -67,11 +68,11 @@ x-verifiers:
 
 suites:
   - name: default
-    run_list: *default_run_list
+    named_run_list: default
     verifier: *default_verifier
   - name: sentinel
-    run_list: *sentinel_run_list
+    named_run_list: sentinel
     verifier: *sentinel_verifier
   - name: multisentinel
-    run_list: *multisentinel_run_list
+    named_run_list: multisentinel
     verifier: *multisentinel_verifier

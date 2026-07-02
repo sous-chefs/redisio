@@ -3,6 +3,7 @@ driver: { name: exec }
 transport: { name: exec }
 provisioner:
   name: chef_infra
+  policyfile_path: Policyfile.rb
   chef_omnibus_install: false
   chef_license: accept-no-persist
 verifier:
