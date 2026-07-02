@@ -5,7 +5,9 @@ driver:
   chef_version: <%= ENV['CHEF_VERSION'] || 'current' %>
 
 transport: { name: dokken }
-provisioner: { name: dokken }
+provisioner:
+  name: dokken
+  policyfile_path: Policyfile.rb
 
 platforms:
   - name: amazonlinux-2023
