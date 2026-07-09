@@ -4,9 +4,10 @@ provides :redisio_configure
 unified_mode true
 
 property :version, [String, NilClass]
-property :base_piddir, String, default: '/var/run/redis'
-property :user, String, default: 'redis'
-property :group, String, default: 'redis'
+property :server_implementation, String, equal_to: %w(redis valkey), default: 'redis'
+property :base_piddir, String, default: lazy { server_implementation == 'valkey' ? '/var/run/valkey' : '/var/run/redis' }
+property :user, String, default: lazy { server_implementation == 'valkey' ? 'valkey' : 'redis' }
+property :group, String, default: lazy { server_implementation == 'valkey' ? 'valkey' : 'redis' }
 property :default_settings, Hash, default: {}
 property :servers, [Array, NilClass], default: nil
 property :package_install, [true, false], default: false
@@ -35,6 +36,7 @@ action :create do
 
     redisio_server instance_name do
       version new_resource.version || merged['version']
+      server_implementation new_resource.server_implementation
       base_piddir new_resource.base_piddir
       user merged.fetch('user', new_resource.user)
       group merged.fetch('group', new_resource.group)

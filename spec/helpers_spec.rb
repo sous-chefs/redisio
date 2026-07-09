@@ -7,6 +7,10 @@ RSpec.describe RedisioCookbook::Helpers do
   let(:helper_class) do
     Class.new do
       include RedisioCookbook::Helpers
+
+      def platform_family?(*families)
+        families.include?('debian')
+      end
     end
   end
 
@@ -23,5 +27,16 @@ RSpec.describe RedisioCookbook::Helpers do
 
   it 'normalizes nested hashes to string keys' do
     expect(helper.deep_stringify_keys(foo: { bar: 1 })).to eq('foo' => { 'bar' => 1 })
+  end
+
+  it 'resolves valkey package names on debian' do
+    expect(helper.platform_package_names(server_implementation: 'valkey', include_sentinel: true)).to eq(
+      %w(valkey-server valkey-tools valkey-sentinel)
+    )
+  end
+
+  it 'builds valkey instance service names' do
+    expect(helper.redis_service_name('6379', server_implementation: 'valkey')).to eq('valkey@6379')
+    expect(helper.sentinel_service_name('cluster', server_implementation: 'valkey')).to eq('valkey-sentinel@cluster')
   end
 end

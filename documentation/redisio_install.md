@@ -1,6 +1,6 @@
 # redisio_install
 
-Installs or removes Redis either from distro packages or from source.
+Installs or removes Redis or Valkey either from distro packages or from source.
 
 ## Actions
 
@@ -10,6 +10,7 @@ Installs or removes Redis either from distro packages or from source.
 ## Properties
 
 - `package_install` (`Boolean`, default: `false`): Install from OS packages instead of source
+- `server_implementation` (`String`, default: `redis`): Select `redis` or `valkey`
 - `package_name` (`String`, default: platform specific): Package name override
 - `version` (`String`, default: source installs use `3.2.11`): Redis version to install
 - `download_url` (`String`, default: derived): Tarball URL for source installs
@@ -29,6 +30,15 @@ redisio_install 'default' do
 end
 ```
 
+### Install Valkey from packages
+
+```ruby
+redisio_install 'default' do
+  package_install true
+  server_implementation 'valkey'
+end
+```
+
 ### Install a specific source release
 
 ```ruby
@@ -36,3 +46,5 @@ redisio_install 'default' do
   version '7.4.8'
 end
 ```
+
+Valkey support in this resource is currently package-only. Source installs still target Redis.
