@@ -93,4 +93,24 @@ describe 'redisio_install' do
         .with(source: 'https://example.test/custom-redis.tar.gz')
     end
   end
+
+  context 'with the stable source alias' do
+    platform 'ubuntu', '24.04'
+
+    before do
+      allow(File).to receive(:exist?).and_call_original
+      allow(File).to receive(:exist?).with('/usr/local/bin/redis-server').and_return(false)
+    end
+
+    recipe do
+      redisio_install 'default' do
+        version 'redis-stable'
+      end
+    end
+
+    it do
+      is_expected.to create_remote_file("#{Chef::Config[:file_cache_path]}/redis-stable.tar.gz")
+        .with(source: 'https://download.redis.io/redis-stable.tar.gz')
+    end
+  end
 end

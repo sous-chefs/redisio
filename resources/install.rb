@@ -31,8 +31,9 @@ action_class do
     return new_resource.download_url if new_resource.download_url
 
     version = resolved_version || 'redis-stable'
+    base_url = version == 'redis-stable' ? 'https://download.redis.io' : 'https://download.redis.io/releases'
     file_name = version == 'redis-stable' ? version : "#{new_resource.base_name}#{version}"
-    "https://download.redis.io/releases/#{file_name}.#{new_resource.artifact_type}"
+    "#{base_url}/#{file_name}.#{new_resource.artifact_type}"
   end
 
   def resolved_bin_path
