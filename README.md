@@ -5,6 +5,8 @@
 
 `redisio` is a resource-first Sous Chefs cookbook for installing Redis and managing Redis server and Sentinel instances with systemd.
 
+Upgrading from version 7 requires recipe and attribute migrations. Read the [version 8 upgrade guide](UPGRADING.md) before changing the cookbook constraint.
+
 ## Supported Platforms
 
 - Amazon Linux 2023
