@@ -2,6 +2,24 @@
 
 This file is used to list changes made in each version of the redisio cookbook.
 
+## [8.0.0](https://github.com/sous-chefs/redisio/compare/7.2.4...v8.0.0) (2026-08-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* prepare Redisio 8 release ([#532](https://github.com/sous-chefs/redisio/issues/532))
+* migrate redisio to Chef 16 resources ([#519](https://github.com/sous-chefs/redisio/issues/519))
+
+### Features
+
+* migrate redisio to Chef 16 resources ([#519](https://github.com/sous-chefs/redisio/issues/519)) ([c26030e](https://github.com/sous-chefs/redisio/commit/c26030ea34c4559f14e240031d8f4adc245bac7f))
+* prepare Redisio 8 release ([#532](https://github.com/sous-chefs/redisio/issues/532)) ([057dc7b](https://github.com/sous-chefs/redisio/commit/057dc7ba25a61119ad223cd2141a0db962fb8786))
+
+
+### Bug Fixes
+
+* **ci:** Update workflows to use release pipeline ([#514](https://github.com/sous-chefs/redisio/issues/514)) ([5703855](https://github.com/sous-chefs/redisio/commit/570385541ab982d92c9ea0d4ff385bd6fd14082e))
+
 ## 7.2.4 - *2025-09-04*
 
 ## 7.2.3 - *2024-11-18*
