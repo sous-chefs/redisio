@@ -14,8 +14,6 @@ Upgrading from version 7 requires recipe and attribute migrations. Read the [ver
 - Rocky Linux 9
 - Ubuntu 22.04 and 24.04
 
-See [LIMITATIONS.md](LIMITATIONS.md) for package and source-build constraints.
-
 ## Resources
 
 ### Preferred resources

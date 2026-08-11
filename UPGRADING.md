@@ -60,6 +60,38 @@ Likewise, replace `redisio::sentinel` and `redisio::sentinel_enable` with `redis
 
 The removed `redisio::redis_gem` recipe has no resource wrapper. Manage the required Ruby gem explicitly with `chef_gem` or `gem_package` in the consuming cookbook.
 
+## Update explicit resource actions
+
+The version 7 `redisio_install`, `redisio_configure`, and `redisio_sentinel` resources exposed `:run` as their only action. Version 8 does not support `:run`; replace every explicit `action :run` with `action :create`. Omitting the action also selects `:create` by default.
+
+For example, replace:
+
+```ruby
+redisio_install 'redis-installation' do
+  version '7.4.8'
+  action :run
+end
+```
+
+with:
+
+```ruby
+redisio_install 'redis-installation' do
+  version '7.4.8'
+  action :create
+end
+```
+
+Version 8 resource actions are:
+
+- `redisio_install`: `:create` and `:delete`
+- `redisio_server`: `:create` and `:delete`
+- `redisio_sentinel_instance`: `:create` and `:delete`
+- `redisio_configure`: `:create` only
+- `redisio_sentinel`: `:create` only
+
+Use `:delete` deliberately. `redisio_install` removes the managed package or source-installed binaries. `redisio_server` stops and disables the service and removes its instance files, including the configured data directory. `redisio_sentinel_instance` stops and disables the service and removes its instance configuration and runtime files. Back up Redis data before deleting an instance. The compatibility wrapper resources do not provide a bulk `:delete` action; use the per-instance resources for teardown.
+
 ## Account for platform changes
 
 Version 8 supports Amazon Linux 2023, Debian 12 and 13, Rocky Linux 9, and Ubuntu 22.04 and 24.04. Support for CentOS, Fedora, Red Hat Enterprise Linux, Scientific Linux, SUSE, FreeBSD, and older releases of the retained platforms has been removed.
@@ -70,4 +102,4 @@ Only systemd services are supported. The init.d, Upstart, and rc.d implementatio
 
 `redisio_install` builds Redis from source by default. Set `package_install true` on the install, server, and Sentinel resources when using packages. The cookbook installs from configured operating-system repositories; it does not add the upstream Redis APT or RPM repository. Declare any additional repository in the wrapper cookbook before `redisio_install`.
 
-See the [resource documentation](documentation/) for all properties and [installation limitations](LIMITATIONS.md) for package availability constraints.
+See the [resource documentation](documentation/) for all properties.

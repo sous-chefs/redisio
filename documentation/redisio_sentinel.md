@@ -5,7 +5,6 @@ Compatibility wrapper that expands the legacy `sentinel_defaults` plus `sentinel
 ## Actions
 
 - `:create`: Creates all sentinel instances from the payload
-- `:delete`: Removes all sentinel instances from the payload
 
 ## Properties
 

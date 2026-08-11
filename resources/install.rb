@@ -32,7 +32,7 @@ action_class do
 
     version = resolved_version || 'redis-stable'
     file_name = version == 'redis-stable' ? version : "#{new_resource.base_name}#{version}"
-    "https://download.redis.io/#{file_name}.#{new_resource.artifact_type}"
+    "https://download.redis.io/releases/#{file_name}.#{new_resource.artifact_type}"
   end
 
   def resolved_bin_path

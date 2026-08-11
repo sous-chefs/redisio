@@ -5,7 +5,6 @@ Compatibility wrapper that expands the legacy `default_settings` plus `servers` 
 ## Actions
 
 - `:create`: Creates all server instances from the payload
-- `:delete`: Removes all server instances from the payload
 
 ## Properties
 
