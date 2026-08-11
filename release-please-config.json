@@ -1,9 +1,11 @@
 {
+  "last-release-sha": "b68590fe972f64e7a5bc715d9e3d03230e701d6c",
   "packages": {
     ".": {
       "package-name": "redisio",
       "changelog-path": "CHANGELOG.md",
       "release-type": "ruby",
+      "release-as": "8.0.0",
       "include-component-in-tag": false,
       "version-file": "metadata.rb"
     }
