@@ -11,6 +11,7 @@ Installs or removes Redis either from distro packages or from source.
 
 - `package_install` (`Boolean`, default: `false`): Install from OS packages instead of source
 - `package_name` (`String`, default: platform specific): Package name override
+- `default_release` (`String`, default: `nil`): APT target release, such as `bookworm-backports`; requires a Debian-family package install and a configured repository
 - `version` (`String`, default: source installs use `3.2.11`): Redis version to install
 - `download_url` (`String`, default: derived): Tarball URL for source installs
 - `download_dir` (`String`, default: Chef file cache path): Download/extract directory
@@ -26,6 +27,15 @@ Installs or removes Redis either from distro packages or from source.
 ```ruby
 redisio_install 'default' do
   package_install true
+end
+```
+
+To select a configured Debian backports repository:
+
+```ruby
+redisio_install 'default' do
+  package_install true
+  default_release 'bookworm-backports'
 end
 ```
 
