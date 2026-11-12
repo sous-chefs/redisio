@@ -5,6 +5,7 @@ unified_mode true
 
 property :package_install, [true, false], default: false
 property :package_name, [String, NilClass]
+property :default_release, [String, NilClass]
 property :version, [String, NilClass]
 property :download_url, [String, NilClass]
 property :download_dir, String, default: lazy { Chef::Config[:file_cache_path] }
@@ -62,13 +63,24 @@ action_class do
 end
 
 action :create do
+  if new_resource.default_release && (!new_resource.package_install || !platform_family?('debian'))
+    raise ArgumentError, 'default_release requires package_install on a Debian-family platform'
+  end
+
   if new_resource.package_install
     if platform_family?('debian')
       apt_update 'redisio-package-cache'
     end
 
-    package resolved_package_name do
-      version resolved_version unless resolved_version.nil?
+    if new_resource.default_release
+      apt_package resolved_package_name do
+        version resolved_version unless resolved_version.nil?
+        default_release new_resource.default_release
+      end
+    else
+      package resolved_package_name do
+        version resolved_version unless resolved_version.nil?
+      end
     end
 
     service package_service_name do
@@ -92,11 +104,14 @@ action :create do
           recursive true
         end
 
+        # Chef 16 archive_file does not support stripping the top-level directory.
+        # cookstyle:disable Chef/Modernize/ExecuteArchiveExtract
         execute "extract-#{source_directory}" do
           cwd new_resource.download_dir
           command "tar zxf #{Shellwords.escape(tarball_name)} --strip-components=1 -C #{Shellwords.escape(source_directory)} --no-same-owner"
           creates "#{new_resource.download_dir}/#{source_directory}/src/redis-server"
         end
+        # cookstyle:enable Chef/Modernize/ExecuteArchiveExtract
 
         execute "build-#{source_directory}" do
           cwd "#{new_resource.download_dir}/#{source_directory}"

@@ -32,6 +32,35 @@ describe 'redisio_install' do
     it { is_expected.to disable_service('redis6') }
   end
 
+  context 'with an APT target release' do
+    platform 'debian', '12'
+
+    recipe do
+      redisio_install 'default' do
+        package_install true
+        default_release 'bookworm-backports'
+        version '7.0.15-1'
+      end
+    end
+
+    it { is_expected.to install_apt_package('redis-server').with(default_release: 'bookworm-backports', version: '7.0.15-1') }
+  end
+
+  context 'with an APT target release on a non-Debian platform' do
+    platform 'amazon', '2023'
+
+    recipe do
+      redisio_install 'default' do
+        package_install true
+        default_release 'bookworm-backports'
+      end
+    end
+
+    it 'rejects the unsupported target release' do
+      expect { chef_run }.to raise_error(ArgumentError, /requires package_install on a Debian-family platform/)
+    end
+  end
+
   context 'with default source install' do
     platform 'ubuntu', '24.04'
 

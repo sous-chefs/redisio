@@ -2,6 +2,7 @@
 
 redisio_install 'default' do
   package_install true
+  default_release 'bookworm' if platform?('debian') && node['platform_version'].to_i == 12
 end
 
 redisio_server '6379' do
