@@ -2,6 +2,13 @@
 
 This file is used to list changes made in each version of the redisio cookbook.
 
+## [8.0.0](https://github.com/sous-chefs/redisio/compare/v8.0.0...v8.0.0) (2026-11-12)
+
+
+### Features
+
+* select Redis APT release ([#537](https://github.com/sous-chefs/redisio/issues/537)) ([8b8b2b2](https://github.com/sous-chefs/redisio/commit/8b8b2b2a7cc7582332fc88b61f2c1f1eba09cb09))
+
 ## [8.0.0](https://github.com/sous-chefs/redisio/compare/7.2.4...v8.0.0) (2026-08-11)
 
 
