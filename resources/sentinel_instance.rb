@@ -240,6 +240,10 @@ action :create do
     action :create_if_missing
   end
 
+  # Source builds may lack libsystemd, so systemd must not wait for READY=1.
+  service_type = new_resource.package_install ? 'notify' : 'simple'
+  supervision_option = ' --supervised no' unless new_resource.package_install
+
   systemd_unit "#{service_name}.service" do
     content(
       Unit: {
@@ -247,8 +251,8 @@ action :create do
         After: 'network.target',
       },
       Service: {
-        Type: 'notify',
-        ExecStart: "#{redis_server_binary(resolved_bin_path, package_install: new_resource.package_install, package_name: resolved_package_name)} #{config_path} --sentinel --daemonize no",
+        Type: service_type,
+        ExecStart: "#{redis_server_binary(resolved_bin_path, package_install: new_resource.package_install, package_name: resolved_package_name)} #{config_path} --sentinel --daemonize no#{supervision_option}",
         User: new_resource.user,
         Group: resolved_group,
         LimitNOFILE: new_resource.maxclients + 32,

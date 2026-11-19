@@ -37,4 +37,23 @@ describe 'redisio_sentinel_instance' do
   it { is_expected.to create_systemd_unit('redis-sentinel@cluster.service') }
   it { is_expected.to enable_service('redis-sentinel@cluster') }
   it { is_expected.to start_service('redis-sentinel@cluster') }
+
+  it 'keeps readiness notifications for package installations' do
+    unit = chef_run.systemd_unit('redis-sentinel@cluster.service')
+    expect(unit.content[:Service]).to include(Type: 'notify')
+    expect(unit.content[:Service][:ExecStart]).to end_with('--sentinel --daemonize no')
+  end
+
+  it 'starts source-built Sentinel without waiting for a readiness notification' do
+    run = chef_runner_instance.converge_block do
+      redisio_sentinel_instance 'cluster' do
+        version '7.4.8'
+        masters [{ master_name: 'master6379', master_ip: '127.0.0.1', master_port: 6379 }]
+      end
+    end
+
+    unit = run.systemd_unit('redis-sentinel@cluster.service')
+    expect(unit.content[:Service]).to include(Type: 'simple')
+    expect(unit.content[:Service][:ExecStart]).to end_with('--sentinel --daemonize no --supervised no')
+  end
 end

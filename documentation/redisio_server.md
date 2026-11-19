@@ -27,7 +27,13 @@ Manages a single Redis server instance, including config, systemd unit, runtime 
 - `requirepass` (`String`, default: `nil`): Optional auth password
 - `masterauth` (`String`, default: `nil`): Optional replication auth password
 - `data_bag_name`, `data_bag_item`, `data_bag_key` (`String`): Optional data bag lookup for passwords
-- `breadcrumb` (`Boolean`, default: `true`): Write-once config guard
+- `breadcrumb` (`Boolean`, default: `true`): Preserve the Redis configuration when Chef template inputs are unchanged
+
+## Configuration updates
+
+With `breadcrumb true`, Chef records a fingerprint of the configuration inputs. Subsequent runs preserve the existing configuration until those inputs change. Chef renders the configuration if the file is missing. When the generated file changes, Chef schedules a Redis restart. A re-render replaces Redis runtime edits that were saved to the same file.
+
+On the first run with a legacy breadcrumb and an existing configuration file, Chef records the current inputs and preserves the existing file. To apply inputs already changed before upgrading or to pick up a template edit at the same source path, use `breadcrumb false` for a converge.
 
 ## Examples
 

@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'digest'
+require 'json'
+
 provides :redisio_server
 unified_mode true
 
@@ -42,6 +45,10 @@ action_class do
 
   def resolved_package_name
     new_resource.package_name || platform_package_name
+  end
+
+  def resolved_server_binary
+    redis_server_binary(resolved_bin_path, package_install: new_resource.package_install, package_name: resolved_package_name)
   end
 
   def resolved_version
@@ -126,6 +133,12 @@ action_class do
     "#{config_path}.breadcrumb"
   end
 
+  def read_breadcrumb
+    ::File.read(breadcrumb_path).strip
+  rescue Errno::ENOENT
+    nil
+  end
+
   def service_name
     redis_service_name(resolved_instance_name)
   end
@@ -175,6 +188,20 @@ action :create do
 
   if selinux_enabled?
     selinux_install 'install'
+
+    unless new_resource.package_install
+      binary = resolved_server_binary
+      selinux_fcontext Regexp.escape(binary) do
+        secontext 'redis_exec_t'
+        notifies :restart, "service[#{service_name}]", :delayed
+      end
+
+      execute "restore Redis executable context for #{binary}" do
+        command ['restorecon', binary]
+        not_if { shell_out('matchpathcon', '-V', binary).exitstatus.zero? }
+        notifies :restart, "service[#{service_name}]", :delayed
+      end
+    end
 
     selinux_fcontext "#{resolved_configdir}(/.*)?" do
       secontext 'redis_conf_t'
@@ -227,113 +254,144 @@ action :create do
     mode '0644'
   end
 
+  config_variables = {
+    version: resolved_version_hash,
+    piddir: resolved_piddir,
+    name: resolved_instance_name,
+    job_control: 'systemd',
+    port: new_resource.port,
+    tcpbacklog: new_resource.tcpbacklog,
+    address: new_resource.address,
+    databases: new_resource.databases,
+    backuptype: new_resource.backuptype,
+    datadir: new_resource.datadir,
+    unixsocket: new_resource.unixsocket,
+    unixsocketperm: new_resource.unixsocketperm,
+    timeout: new_resource.timeout,
+    keepalive: new_resource.keepalive,
+    loglevel: new_resource.loglevel,
+    logfile: new_resource.logfile,
+    syslogenabled: new_resource.syslogenabled,
+    syslogfacility: new_resource.syslogfacility,
+    save: resolved_save,
+    stopwritesonbgsaveerror: new_resource.stopwritesonbgsaveerror,
+    rdbcompression: new_resource.rdbcompression,
+    rdbchecksum: new_resource.rdbchecksum,
+    dbfilename: new_resource.dbfilename,
+    replicaof: new_resource.replicaof,
+    protected_mode: new_resource.protected_mode,
+    masterauth: secrets.fetch(:masterauth, new_resource.masterauth),
+    replicaservestaledata: new_resource.replicaservestaledata,
+    replicareadonly: new_resource.replicareadonly,
+    repldisklesssync: new_resource.repldisklesssync,
+    repldisklesssyncdelay: new_resource.repldisklesssyncdelay,
+    replpingreplicaperiod: new_resource.replpingreplicaperiod,
+    repltimeout: new_resource.repltimeout,
+    repldisabletcpnodelay: new_resource.repldisabletcpnodelay,
+    replbacklogsize: new_resource.replbacklogsize,
+    replbacklogttl: new_resource.replbacklogttl,
+    replicapriority: new_resource.replicapriority,
+    requirepass: secrets.fetch(:requirepass, new_resource.requirepass),
+    rename_commands: new_resource.rename_commands,
+    maxclients: new_resource.maxclients,
+    maxmemory: resolved_maxmemory,
+    maxmemorypolicy: new_resource.maxmemorypolicy,
+    maxmemorysamples: new_resource.maxmemorysamples,
+    appendfilename: new_resource.appendfilename,
+    appendfsync: new_resource.appendfsync,
+    noappendfsynconrewrite: new_resource.noappendfsynconrewrite,
+    aofrewritepercentage: new_resource.aofrewritepercentage,
+    aofrewriteminsize: new_resource.aofrewriteminsize,
+    aofloadtruncated: new_resource.aofloadtruncated,
+    luatimelimit: new_resource.luatimelimit,
+    slowloglogslowerthan: new_resource.slowloglogslowerthan,
+    slowlogmaxlen: new_resource.slowlogmaxlen,
+    notifykeyspaceevents: new_resource.notifykeyspaceevents,
+    hashmaxziplistentries: new_resource.hashmaxziplistentries,
+    hashmaxziplistvalue: new_resource.hashmaxziplistvalue,
+    setmaxintsetentries: new_resource.setmaxintsetentries,
+    zsetmaxziplistentries: new_resource.zsetmaxziplistentries,
+    zsetmaxziplistvalue: new_resource.zsetmaxziplistvalue,
+    hllsparsemaxbytes: new_resource.hllsparsemaxbytes,
+    activerehasing: new_resource.activerehasing,
+    clientoutputbufferlimit: new_resource.clientoutputbufferlimit,
+    hz: new_resource.hz,
+    aofrewriteincrementalfsync: new_resource.aofrewriteincrementalfsync,
+    clusterenabled: new_resource.clusterenabled,
+    clusterconfigfile: new_resource.clusterconfigfile,
+    clusternodetimeout: new_resource.clusternodetimeout,
+    clusterport: new_resource.clusterport,
+    includes: new_resource.includes,
+    aclfile: new_resource.aclfile,
+    minreplicastowrite: new_resource.minreplicastowrite,
+    minreplicasmaxlag: new_resource.minreplicasmaxlag,
+    tlsport: new_resource.tlsport,
+    tlscertfile: new_resource.tlscertfile,
+    tlskeyfile: new_resource.tlskeyfile,
+    tlskeyfilepass: new_resource.tlskeyfilepass,
+    tlsclientcertfile: new_resource.tlsclientcertfile,
+    tlsclientkeyfile: new_resource.tlsclientkeyfile,
+    tlsclientkeyfilepass: new_resource.tlsclientkeyfilepass,
+    tlsdhparamsfile: new_resource.tlsdhparamsfile,
+    tlscacertfile: new_resource.tlscacertfile,
+    tlscacertdir: new_resource.tlscacertdir,
+    tlsauthclients: new_resource.tlsauthclients,
+    tlsreplication: new_resource.tlsreplication,
+    tlscluster: new_resource.tlscluster,
+    tlsprotocols: new_resource.tlsprotocols,
+    tlsciphers: new_resource.tlsciphers,
+    tlsciphersuites: new_resource.tlsciphersuites,
+    tlspreferserverciphers: new_resource.tlspreferserverciphers,
+    tlssessioncaching: new_resource.tlssessioncaching,
+    tlssessioncachesize: new_resource.tlssessioncachesize,
+    tlssessioncachetimeout: new_resource.tlssessioncachetimeout,
+  }
+
+  if new_resource.breadcrumb
+    config_inputs = [
+      new_resource.template_cookbook,
+      new_resource.template_source,
+      resolved_user,
+      resolved_group,
+      new_resource.permissions,
+      config_variables,
+    ]
+    fingerprint = Digest::SHA256.hexdigest(JSON.generate(config_inputs))
+    previous_fingerprint = read_breadcrumb
+    # Establish a baseline for older installations without overwriting runtime changes.
+    legacy_breadcrumb = [
+      'This file prevents the Chef cookbook from overwriting the redis config more than once',
+      'This file prevents the chef cookbook from overwritting the redis config more than once',
+    ].include?(previous_fingerprint)
+  end
+
   template config_path do
     cookbook new_resource.template_cookbook
     source new_resource.template_source
     owner resolved_user
     group resolved_group
     mode new_resource.permissions
-    variables(
-      version: resolved_version_hash,
-      piddir: resolved_piddir,
-      name: resolved_instance_name,
-      job_control: 'systemd',
-      port: new_resource.port,
-      tcpbacklog: new_resource.tcpbacklog,
-      address: new_resource.address,
-      databases: new_resource.databases,
-      backuptype: new_resource.backuptype,
-      datadir: new_resource.datadir,
-      unixsocket: new_resource.unixsocket,
-      unixsocketperm: new_resource.unixsocketperm,
-      timeout: new_resource.timeout,
-      keepalive: new_resource.keepalive,
-      loglevel: new_resource.loglevel,
-      logfile: new_resource.logfile,
-      syslogenabled: new_resource.syslogenabled,
-      syslogfacility: new_resource.syslogfacility,
-      save: resolved_save,
-      stopwritesonbgsaveerror: new_resource.stopwritesonbgsaveerror,
-      rdbcompression: new_resource.rdbcompression,
-      rdbchecksum: new_resource.rdbchecksum,
-      dbfilename: new_resource.dbfilename,
-      replicaof: new_resource.replicaof,
-      protected_mode: new_resource.protected_mode,
-      masterauth: secrets.fetch(:masterauth, new_resource.masterauth),
-      replicaservestaledata: new_resource.replicaservestaledata,
-      replicareadonly: new_resource.replicareadonly,
-      repldisklesssync: new_resource.repldisklesssync,
-      repldisklesssyncdelay: new_resource.repldisklesssyncdelay,
-      replpingreplicaperiod: new_resource.replpingreplicaperiod,
-      repltimeout: new_resource.repltimeout,
-      repldisabletcpnodelay: new_resource.repldisabletcpnodelay,
-      replbacklogsize: new_resource.replbacklogsize,
-      replbacklogttl: new_resource.replbacklogttl,
-      replicapriority: new_resource.replicapriority,
-      requirepass: secrets.fetch(:requirepass, new_resource.requirepass),
-      rename_commands: new_resource.rename_commands,
-      maxclients: new_resource.maxclients,
-      maxmemory: resolved_maxmemory,
-      maxmemorypolicy: new_resource.maxmemorypolicy,
-      maxmemorysamples: new_resource.maxmemorysamples,
-      appendfilename: new_resource.appendfilename,
-      appendfsync: new_resource.appendfsync,
-      noappendfsynconrewrite: new_resource.noappendfsynconrewrite,
-      aofrewritepercentage: new_resource.aofrewritepercentage,
-      aofrewriteminsize: new_resource.aofrewriteminsize,
-      aofloadtruncated: new_resource.aofloadtruncated,
-      luatimelimit: new_resource.luatimelimit,
-      slowloglogslowerthan: new_resource.slowloglogslowerthan,
-      slowlogmaxlen: new_resource.slowlogmaxlen,
-      notifykeyspaceevents: new_resource.notifykeyspaceevents,
-      hashmaxziplistentries: new_resource.hashmaxziplistentries,
-      hashmaxziplistvalue: new_resource.hashmaxziplistvalue,
-      setmaxintsetentries: new_resource.setmaxintsetentries,
-      zsetmaxziplistentries: new_resource.zsetmaxziplistentries,
-      zsetmaxziplistvalue: new_resource.zsetmaxziplistvalue,
-      hllsparsemaxbytes: new_resource.hllsparsemaxbytes,
-      activerehasing: new_resource.activerehasing,
-      clientoutputbufferlimit: new_resource.clientoutputbufferlimit,
-      hz: new_resource.hz,
-      aofrewriteincrementalfsync: new_resource.aofrewriteincrementalfsync,
-      clusterenabled: new_resource.clusterenabled,
-      clusterconfigfile: new_resource.clusterconfigfile,
-      clusternodetimeout: new_resource.clusternodetimeout,
-      clusterport: new_resource.clusterport,
-      includes: new_resource.includes,
-      aclfile: new_resource.aclfile,
-      minreplicastowrite: new_resource.minreplicastowrite,
-      minreplicasmaxlag: new_resource.minreplicasmaxlag,
-      tlsport: new_resource.tlsport,
-      tlscertfile: new_resource.tlscertfile,
-      tlskeyfile: new_resource.tlskeyfile,
-      tlskeyfilepass: new_resource.tlskeyfilepass,
-      tlsclientcertfile: new_resource.tlsclientcertfile,
-      tlsclientkeyfile: new_resource.tlsclientkeyfile,
-      tlsclientkeyfilepass: new_resource.tlsclientkeyfilepass,
-      tlsdhparamsfile: new_resource.tlsdhparamsfile,
-      tlscacertfile: new_resource.tlscacertfile,
-      tlscacertdir: new_resource.tlscacertdir,
-      tlsauthclients: new_resource.tlsauthclients,
-      tlsreplication: new_resource.tlsreplication,
-      tlscluster: new_resource.tlscluster,
-      tlsprotocols: new_resource.tlsprotocols,
-      tlsciphers: new_resource.tlsciphers,
-      tlsciphersuites: new_resource.tlsciphersuites,
-      tlspreferserverciphers: new_resource.tlspreferserverciphers,
-      tlssessioncaching: new_resource.tlssessioncaching,
-      tlssessioncachesize: new_resource.tlssessioncachesize,
-      tlssessioncachetimeout: new_resource.tlssessioncachetimeout
-    )
-    not_if { new_resource.breadcrumb && ::File.exist?(breadcrumb_path) }
+    variables config_variables
+    not_if do
+      new_resource.breadcrumb && ::File.exist?(config_path) &&
+        (previous_fingerprint == fingerprint || legacy_breadcrumb)
+    end
     notifies :restart, "service[#{service_name}]", :delayed
   end
 
-  file breadcrumb_path do
-    content 'This file prevents the Chef cookbook from overwriting the redis config more than once'
-    action :create_if_missing
-    only_if { new_resource.breadcrumb }
+  if new_resource.breadcrumb
+    file breadcrumb_path do
+      content fingerprint
+      owner 'root'
+      mode '0600'
+      sensitive true
+      backup false
+    end
   end
+
+  # Source builds may lack libsystemd, so systemd must not wait for READY=1.
+  service_type = new_resource.package_install ? 'notify' : 'simple'
+  supervision_option = ' --supervised no' unless new_resource.package_install
 
   systemd_unit "#{service_name}.service" do
     content(
@@ -343,8 +401,8 @@ action :create do
         After: 'network-online.target',
       },
       Service: {
-        Type: 'notify',
-        ExecStart: "#{redis_server_binary(resolved_bin_path, package_install: new_resource.package_install, package_name: resolved_package_name)} #{config_path} --daemonize no",
+        Type: service_type,
+        ExecStart: "#{resolved_server_binary} #{config_path} --daemonize no#{supervision_option}",
         User: resolved_user,
         Group: resolved_group,
         LimitNOFILE: resolved_descriptors,
