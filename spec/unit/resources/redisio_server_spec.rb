@@ -28,6 +28,12 @@ describe 'redisio_server' do
 
     it { is_expected.to create_directory('/etc/redis') }
     it { is_expected.to create_template('/etc/redis/6379.conf') }
+    it 'keeps readiness notifications for package installations' do
+      unit = chef_run.systemd_unit('redis@6379.service')
+      expect(unit.content[:Service]).to include(Type: 'notify')
+      expect(unit.content[:Service][:ExecStart]).to end_with('--daemonize no')
+    end
+
     it { is_expected.to create_systemd_unit('redis@6379.service') }
     it { is_expected.to enable_service('redis@6379') }
     it { is_expected.to start_service('redis@6379') }
@@ -114,6 +120,12 @@ describe 'redisio_server' do
         install_dir '/opt/redis'
         version '7.4.8'
       end
+    end
+
+    it 'starts a foreground source build without waiting for a readiness notification' do
+      unit = chef_run.systemd_unit('redis@6379.service')
+      expect(unit.content[:Service]).to include(Type: 'simple')
+      expect(unit.content[:Service][:ExecStart]).to end_with('--daemonize no --supervised no')
     end
 
     it 'labels the executable before starting the service' do

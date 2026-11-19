@@ -389,6 +389,10 @@ action :create do
     end
   end
 
+  # Source builds may lack libsystemd, so systemd must not wait for READY=1.
+  service_type = new_resource.package_install ? 'notify' : 'simple'
+  supervision_option = ' --supervised no' unless new_resource.package_install
+
   systemd_unit "#{service_name}.service" do
     content(
       Unit: {
@@ -397,8 +401,8 @@ action :create do
         After: 'network-online.target',
       },
       Service: {
-        Type: 'notify',
-        ExecStart: "#{resolved_server_binary} #{config_path} --daemonize no",
+        Type: service_type,
+        ExecStart: "#{resolved_server_binary} #{config_path} --daemonize no#{supervision_option}",
         User: resolved_user,
         Group: resolved_group,
         LimitNOFILE: resolved_descriptors,
