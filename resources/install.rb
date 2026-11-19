@@ -92,37 +92,36 @@ action :create do
     end
 
     current_version = installed_redis_version(resolved_bin_path, package_install: new_resource.package_install, package_name: resolved_package_name)
-    converge_if_changed :version do
-      if current_version == resolved_version || (current_version && new_resource.safe_install)
-        Chef::Log.info("Skipping Redis source install because #{current_version} is already present")
-      else
-        remote_file "#{new_resource.download_dir}/#{tarball_name}" do
-          source resolved_download_url
-        end
+    if current_version == resolved_version || (current_version && new_resource.safe_install)
+      Chef::Log.info("Skipping Redis source install because #{current_version} is already present")
+      return
+    end
 
-        directory "#{new_resource.download_dir}/#{source_directory}" do
-          recursive true
-        end
+    remote_file "#{new_resource.download_dir}/#{tarball_name}" do
+      source resolved_download_url
+    end
 
-        # Chef 16 archive_file does not support stripping the top-level directory.
-        # cookstyle:disable Chef/Modernize/ExecuteArchiveExtract
-        execute "extract-#{source_directory}" do
-          cwd new_resource.download_dir
-          command "tar zxf #{Shellwords.escape(tarball_name)} --strip-components=1 -C #{Shellwords.escape(source_directory)} --no-same-owner"
-          creates "#{new_resource.download_dir}/#{source_directory}/src/redis-server"
-        end
-        # cookstyle:enable Chef/Modernize/ExecuteArchiveExtract
+    directory "#{new_resource.download_dir}/#{source_directory}" do
+      recursive true
+    end
 
-        execute "build-#{source_directory}" do
-          cwd "#{new_resource.download_dir}/#{source_directory}"
-          command 'make clean && make'
-        end
+    # Chef 16 archive_file does not support stripping the top-level directory.
+    # cookstyle:disable Chef/Modernize/ExecuteArchiveExtract
+    execute "extract-#{source_directory}" do
+      cwd new_resource.download_dir
+      command "tar zxf #{Shellwords.escape(tarball_name)} --strip-components=1 -C #{Shellwords.escape(source_directory)} --no-same-owner"
+      creates "#{new_resource.download_dir}/#{source_directory}/src/redis-server"
+    end
+    # cookstyle:enable Chef/Modernize/ExecuteArchiveExtract
 
-        execute "install-#{source_directory}" do
-          cwd "#{new_resource.download_dir}/#{source_directory}"
-          command new_resource.install_dir ? "make PREFIX=#{Shellwords.escape(new_resource.install_dir)} install" : 'make install'
-        end
-      end
+    execute "build-#{source_directory}" do
+      cwd "#{new_resource.download_dir}/#{source_directory}"
+      command 'make clean && make'
+    end
+
+    execute "install-#{source_directory}" do
+      cwd "#{new_resource.download_dir}/#{source_directory}"
+      command new_resource.install_dir ? "make PREFIX=#{Shellwords.escape(new_resource.install_dir)} install" : 'make install'
     end
   end
 end

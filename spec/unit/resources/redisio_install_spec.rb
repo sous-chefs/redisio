@@ -102,6 +102,43 @@ describe 'redisio_install' do
     it { is_expected.to run_execute('install-redis-7.4.8') }
   end
 
+  context 'with an installed source build' do
+    platform 'ubuntu', '24.04'
+
+    before do
+      allow(File).to receive(:exist?).and_call_original
+      allow(File).to receive(:exist?).with('/usr/local/bin/redis-server').and_return(true)
+      allow_any_instance_of(Chef::Mixin::ShellOut).to receive(:shell_out!).and_call_original
+      allow_any_instance_of(Chef::Mixin::ShellOut).to receive(:shell_out!)
+        .with('/usr/local/bin/redis-server -v', timeout: 30)
+        .and_return(double(stdout: 'Redis server v=7.2.5'))
+    end
+
+    it 'does not rebuild an installed version even when upgrades are allowed' do
+      run = converge_source_install('7.2.5', safe_install: false)
+      expect(run).not_to run_execute('install-redis-7.2.5')
+    end
+
+    it 'skips a version change with safe_install enabled' do
+      run = converge_source_install('7.4.8', safe_install: true)
+      expect(run).not_to run_execute('install-redis-7.4.8')
+    end
+
+    it 'installs a different version when upgrades are allowed' do
+      run = converge_source_install('7.4.8', safe_install: false)
+      expect(run).to run_execute('install-redis-7.4.8')
+    end
+
+    def converge_source_install(desired_version, safe_install:)
+      chef_runner_instance.converge_block do
+        redisio_install 'source' do
+          version desired_version
+          safe_install safe_install
+        end
+      end
+    end
+  end
+
   context 'with an explicit source download URL' do
     platform 'ubuntu', '24.04'
 
