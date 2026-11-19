@@ -34,7 +34,7 @@ describe 'redisio_configure' do
     recipe do
       redisio_configure 'default' do
         package_install true
-        default_settings('permissions' => '0644')
+        default_settings('permissions' => '0644', 'rename_commands' => { 'FLUSHALL' => 'flushall_custom' })
         servers(
           [
             {
@@ -48,5 +48,6 @@ describe 'redisio_configure' do
     end
 
     it { is_expected.to create_template('/etc/redis/savetest.conf').with(mode: '0640') }
+    it { is_expected.to render_file('/etc/redis/savetest.conf').with_content(/^\s*rename-command FLUSHALL flushall_custom$/) }
   end
 end
