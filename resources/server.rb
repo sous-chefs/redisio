@@ -347,7 +347,10 @@ action :create do
     tlssessioncachetimeout: new_resource.tlssessioncachetimeout,
   }
 
-  if new_resource.breadcrumb
+  previous_fingerprint = read_breadcrumb
+  track_config_inputs = new_resource.breadcrumb || !previous_fingerprint.nil?
+
+  if track_config_inputs
     config_inputs = [
       new_resource.template_cookbook,
       new_resource.template_source,
@@ -357,7 +360,6 @@ action :create do
       config_variables,
     ]
     fingerprint = Digest::SHA256.hexdigest(JSON.generate(config_inputs))
-    previous_fingerprint = read_breadcrumb
     # Establish a baseline for older installations without overwriting runtime changes.
     legacy_breadcrumb = [
       'This file prevents the Chef cookbook from overwriting the redis config more than once',
@@ -379,7 +381,7 @@ action :create do
     notifies :restart, "service[#{service_name}]", :delayed
   end
 
-  if new_resource.breadcrumb
+  if track_config_inputs
     file breadcrumb_path do
       content fingerprint
       owner 'root'

@@ -33,7 +33,7 @@ Manages a single Redis server instance, including config, systemd unit, runtime 
 
 With `breadcrumb true`, Chef records a fingerprint of the configuration inputs. Subsequent runs preserve the existing configuration until those inputs change. Chef renders the configuration if the file is missing. When the generated file changes, Chef schedules a Redis restart. A re-render replaces Redis runtime edits that were saved to the same file.
 
-On the first run with a legacy breadcrumb and an existing configuration file, Chef records the current inputs and preserves the existing file. To apply inputs already changed before upgrading or to pick up a template edit at the same source path, use `breadcrumb false` for a converge.
+On the first run with a legacy breadcrumb and an existing configuration file, Chef records the current inputs and preserves the existing file. To apply inputs already changed before upgrading or to pick up a template edit at the same source path, use `breadcrumb false` for a converge. Chef refreshes an existing breadcrumb with the inputs it applies during that run.
 
 ## Examples
 

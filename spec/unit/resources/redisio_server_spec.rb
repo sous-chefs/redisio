@@ -84,9 +84,24 @@ describe 'redisio_server' do
       expect(converge_server).to create_template(config_path)
     end
 
-    it 'applies the configuration when breadcrumb protection is disabled' do
+    it 'refreshes the existing breadcrumb when protection is disabled for one run' do
+      allow(File).to receive(:read).with(breadcrumb_path).and_raise(Errno::ENOENT)
+      original_run = converge_server
       allow(File).to receive(:read).with(breadcrumb_path)
-                                   .and_return('This file prevents the Chef cookbook from overwriting the redis config more than once')
+                                   .and_return(original_run.file(breadcrumb_path).content)
+
+      override_run = converge_server(maxclients: 5000, breadcrumb: false)
+      expect(override_run).to render_file(config_path).with_content(/^maxclients 5000$/)
+      expect(override_run).to create_file(breadcrumb_path)
+      expect(override_run.file(breadcrumb_path).content).not_to eq(original_run.file(breadcrumb_path).content)
+      allow(File).to receive(:read).with(breadcrumb_path).and_return(override_run.file(breadcrumb_path).content)
+
+      expect(converge_server(maxclients: 5000)).not_to create_template(config_path)
+      expect(converge_server).to render_file(config_path).with_content(/^maxclients 10000$/)
+    end
+
+    it 'does not create a breadcrumb when protection is disabled and no breadcrumb exists' do
+      allow(File).to receive(:read).with(breadcrumb_path).and_raise(Errno::ENOENT)
 
       run = converge_server(breadcrumb: false)
       expect(run).to create_template(config_path)
